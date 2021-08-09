@@ -1,5 +1,6 @@
 package br.com.sankhya.commercial.analisegiro.resultmodel;
 
+import br.com.sankhya.commercial.analisegiro.model.ChaveGiro;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +9,7 @@ import java.sql.Timestamp;
 
 @Setter
 @Getter
-public class UltimaCompraResult {
+public class UltimaCompraResult extends ChaveGiro {
 
     private BigDecimal CODPROD;
     private BigDecimal CODEMP;
@@ -19,4 +20,8 @@ public class UltimaCompraResult {
     private BigDecimal ALIQICMS;
     private BigDecimal QTDNEG;
     private BigDecimal VLRTOT;
+
+    public UltimaCompraResult(BigDecimal codProd) {
+        super(codProd);
+    }
 }

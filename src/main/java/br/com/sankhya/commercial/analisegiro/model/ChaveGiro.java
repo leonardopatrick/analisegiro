@@ -1,23 +1,16 @@
 package br.com.sankhya.commercial.analisegiro.model;
 
-import br.com.sankhya.commercial.analisegiro.resultmodel.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-
-
 @Getter
 @Setter
 @Embeddable
 public class ChaveGiro implements Serializable {
-
 
 	@Column(name="CODPROD")
 	private BigDecimal codProd;

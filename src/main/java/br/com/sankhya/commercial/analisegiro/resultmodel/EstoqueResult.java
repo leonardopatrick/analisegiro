@@ -1,5 +1,6 @@
 package br.com.sankhya.commercial.analisegiro.resultmodel;
 
+import br.com.sankhya.commercial.analisegiro.model.ChaveGiro;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +8,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class EstoqueResult {
+public class EstoqueResult extends ChaveGiro {
 
     private BigDecimal CODPROD;
     private BigDecimal CODEMP;
@@ -18,4 +19,7 @@ public class EstoqueResult {
     private BigDecimal ESTMAX;
     private BigDecimal WMSBLOQUEADO;
 
+    public EstoqueResult(BigDecimal codProd) {
+        super(codProd);
+    }
 }

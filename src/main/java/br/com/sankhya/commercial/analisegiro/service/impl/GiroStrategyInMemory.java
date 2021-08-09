@@ -45,8 +45,8 @@ public class GiroStrategyInMemory implements GiroStrategy {
         return (List<Giro>) giros.values();
     }
 
-    public Giro findGiroByObject(Object item){
+    /*public Giro findGiroByObject(Object item){
         return  findGiroByChaveGiro(modelMapper.map(item, ChaveGiro.class));
-    }
+    }*/
 
 }
