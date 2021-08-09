@@ -5,7 +5,7 @@ import br.com.sankhya.commercial.analisegiro.core.ParametroContextoRepository;
 import br.com.sankhya.commercial.analisegiro.model.ChaveGiro;
 import br.com.sankhya.commercial.analisegiro.model.Giro;
 import br.com.sankhya.commercial.analisegiro.repository.GiroCustomRepository;
-import br.com.sankhya.commercial.analisegiro.resultmodel.PedPenVdaResult;
+import br.com.sankhya.commercial.analisegiro.resultmodel.PedidoPendenteResult;
 import br.com.sankhya.commercial.analisegiro.repository.PedidoPendenteRepository;
 import br.com.sankhya.commercial.analisegiro.repository.ProdutoRepository;
 import br.com.sankhya.commercial.analisegiro.resultmodel.GiroResult;
@@ -31,6 +31,9 @@ public class CalculoGiro {
     private Boolean controlaCustoPorControle = Boolean.FALSE;
     private Boolean utilizarLocal = Boolean.FALSE;
     private Boolean utilizarControle = Boolean.FALSE;
+    private Boolean subtrairDaSugestaoAQtdeBloqueadaNoWMS = Boolean.FALSE;
+    private Boolean subtrairDoEsotqueAReserva =  Boolean.FALSE; ; // criar param no xml.
+
     private String usarEmpresa = "N";
     private int nroPeriodos = 0;
     private BigDecimal nuTab = BigDecimal.ONE.negate();
@@ -57,7 +60,7 @@ public class CalculoGiro {
     PedidoPendenteRepository pedidoPendenteRepository;
 
     @Autowired
-    PedPenVdaStrategyInMemory pedPenVdaStrategyInMemory;
+    PedidoPendenteStrategyInMemory pedPenVdaStrategyInMemory;
 
     public void gerar() throws Exception {
 
@@ -70,73 +73,20 @@ public class CalculoGiro {
         nroPeriodos = buscarGiro();
 
         buscarPedVdaPend();
+        buscarPedCpaVdaPend();
+
     }
 
-    private  void buscarPedVdaPend(){
-
-        pedPenVdaStrategyInMemory.deleteAll();
-
-        List<PedPenVdaResult> pedPenVdaResults = pedidoPendenteRepository.findPedidosPendentes(
-                 utilizarLocal,
-                 usarEmpresa,
-                 matrizConf,
-                 utilizarControle
-        );
-
-   for (PedPenVdaResult pedido :  pedPenVdaResults ){
-            ChaveGiro chave = new ChaveGiro(pedido);
-            pedPenVdaStrategyInMemory.save(chave, pedido.getQTDE());
-            Giro giro = giroRepository.findGiroByChaveGiro(chave);
-            giro.setPedVdaPend(pedido.getQTDE());
-            giroRepository.save(giro);
-            lisProdSemGiro.remove(pedido.getCODPROD());
-        }
-    }
-
-    private int buscarGiro() throws Exception {
-        Giro giro;
-        int i = 0;
-
-        Collection<Timestamp[]> periodos = matrizConf.buildPeriodos();
-
-        for (Timestamp[] periodo : periodos) {
-
-            Timestamp inicio = periodo[0];
-            Timestamp fim = periodo[1];
-            i++;
-
-            List<GiroResult> giroResults = giroCustomRepository.findGirobyQueryCustom(sqlGroup.toString(),
-                    usarEmpresa,
-                    sqlChave.toString(),
-                    matrizConf,
-                    inicio,
-                    fim
-            );
-
-            for (GiroResult giroResult : giroResults) {
-
-                PeriodoGiro perGiro = new PeriodoGiro(giroResult);
-                perGiro.setIndice(i);
-                perGiro.setDiasUteis(i); //TODO FUNCAO DIAS UTEIS
-                giro = giroRepository.findGiroByChaveGiro(
-                                            new ChaveGiro(giroResult));
-
-                giro.setLeadTime(
-                        BigDecimalUtil.getValueOrZero(giroResult.getLEADTIME()));
-                giro.setCodGrupoProd(giroResult.getCODGRUPOPROD());
-                giro.setMarca(giroResult.getMARCA());
-                giro.setPeso(giroResult.getPESOBRUTO());
-                ///giro.addPeriodo(perGiro); //TODO AJUSTAR RELACIONAMENTO PERIODO
-
-                giroRepository.save(giro);
-                lisProdSemGiro.remove(giroResult.getCODPROD());
-
-            }
-        }
-        return i;
+    public void gerarListaProdutos() throws Exception {
+        //TODO strCodProd
+        List<BigDecimal> lista = produtoRepository.listProdutosCalGiro();
+        lisProdSemGiro.addAll(lista);
     }
 
     private void prepararVariaveisComuns() throws Exception {
+        //TODO AJUSTAR CHAVE
+        subtrairDaSugestaoAQtdeBloqueadaNoWMS = parametroRepo.getParameterAsBoolean("subtrair.da.sug.compra.qtd.bloq.wms");
+        subtrairDoEsotqueAReserva = parametroRepo.getParameterAsBoolean("subtrair.do.estoque.a.reserva"); // criar param no xml.
 
         controlaCustoPorLocal = parametroRepo.getParameterAsBoolean("UTILIZALOCAL");
         controlaCustoPorControle =parametroRepo.getParameterAsBoolean("UTILIZACONTROLE");
@@ -198,9 +148,90 @@ public class CalculoGiro {
         // TODO: filtroGiro, filtroEstoque, filtroPedVdaPend, filtroPedCpaPend; = ... ver ProcessadorMatriz prepararFiltros;
     }
 
-    public void gerarListaProdutos() throws Exception {
-        //TODO strCodProd
-        List<BigDecimal> lista = produtoRepository.listProdutosCalGiro();
-        lisProdSemGiro.addAll(lista);
+
+    private int buscarGiro() throws Exception {
+        Giro giro;
+        int i = 0;
+
+        Collection<Timestamp[]> periodos = matrizConf.buildPeriodos();
+
+        for (Timestamp[] periodo : periodos) {
+
+            Timestamp inicio = periodo[0];
+            Timestamp fim = periodo[1];
+            i++;
+
+            List<GiroResult> giroResults = giroCustomRepository.findGirobyQueryCustom(sqlGroup.toString(),
+                    usarEmpresa,
+                    sqlChave.toString(),
+                    matrizConf,
+                    inicio,
+                    fim
+            );
+
+            for (GiroResult giroResult : giroResults) {
+
+                PeriodoGiro perGiro = new PeriodoGiro(giroResult);
+                perGiro.setIndice(i);
+                perGiro.setDiasUteis(i); //TODO FUNCAO DIAS UTEIS
+                giro = giroRepository.findGiroByChaveGiro(
+                        new ChaveGiro(giroResult));
+
+                giro.setLeadTime(
+                        BigDecimalUtil.getValueOrZero(giroResult.getLEADTIME()));
+                giro.setCodGrupoProd(giroResult.getCODGRUPOPROD());
+                giro.setMarca(giroResult.getMARCA());
+                giro.setPeso(giroResult.getPESOBRUTO());
+                ///giro.addPeriodo(perGiro); //TODO AJUSTAR RELACIONAMENTO PERIODO
+
+                giroRepository.save(giro);
+                lisProdSemGiro.remove(giroResult.getCODPROD());
+
+            }
+        }
+        return i;
     }
+
+    private  void buscarPedVdaPend(){
+        //pedPenVdaStrategyInMemory.deleteAll();
+        // TODO FILTRO PED VENDA
+        List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes(
+                 utilizarLocal,
+                 usarEmpresa,
+                 matrizConf,
+                 utilizarControle
+        );
+
+   for (PedidoPendenteResult item :  pedPenResults ){
+            ChaveGiro chave = new ChaveGiro(item);
+            //pedPenVdaStrategyInMemory.save(chave, item.getQTDE());
+            Giro giro = giroRepository.findGiroByChaveGiro(chave);
+            giro.setPedVdaPend(item.getQTDE());
+            giroRepository.save(giro);
+            lisProdSemGiro.remove(item.getCODPROD());
+        }
+    }
+
+    private  void buscarPedCpaVdaPend(){
+
+        //pedPenVdaStrategyInMemory.deleteAll();
+        //TODO FILTRO PED COMPRA
+        List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes(
+                utilizarLocal,
+                usarEmpresa,
+                matrizConf,
+                utilizarControle
+        );
+        for (PedidoPendenteResult item :  pedPenResults ){
+            ChaveGiro chave = new ChaveGiro(item);
+           // pedPenVdaStrategyInMemory.save(chave, item.getQTDE());
+            Giro giro = giroRepository.findGiroByChaveGiro(chave);
+            giro.setPedCpaPend(item.getQTDE());
+            giroRepository.save(giro);
+            lisProdSemGiro.remove(item.getCODPROD());
+        }
+    }
+
+
+
 }

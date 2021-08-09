@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class PedPenVdaStrategyInMemory  {
+public class PedidoPendenteStrategyInMemory {
 
     private Map<ChaveGiro, BigDecimal> pedidos = new HashMap<ChaveGiro, BigDecimal>();
 

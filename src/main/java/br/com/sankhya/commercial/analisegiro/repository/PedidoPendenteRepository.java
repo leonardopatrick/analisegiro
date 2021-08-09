@@ -1,7 +1,7 @@
 package br.com.sankhya.commercial.analisegiro.repository;
 
 import br.com.sankhya.commercial.analisegiro.configuration.MatrizGiroConfiguracao;
-import br.com.sankhya.commercial.analisegiro.resultmodel.PedPenVdaResult;
+import br.com.sankhya.commercial.analisegiro.resultmodel.PedidoPendenteResult;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
@@ -19,10 +19,10 @@ public class PedidoPendenteRepository {
         this.em = em;
     }
 
-    public List<PedPenVdaResult> findPedidosPendentes(Boolean utilizarLocal,
-                                                      String usarEmpresa,
-                                                      MatrizGiroConfiguracao matrizConf,
-                                                      Boolean utilizarControle
+    public List<PedidoPendenteResult> findPedidosPendentes(Boolean utilizarLocal,
+                                                           String usarEmpresa,
+                                                           MatrizGiroConfiguracao matrizConf,
+                                                           Boolean utilizarControle
                             ){
         StringBuffer sql = new StringBuffer();
 
@@ -96,8 +96,8 @@ public class PedidoPendenteRepository {
         }
 
         Session session = em.unwrap(Session.class);
-        List<PedPenVdaResult> rs = session.createSQLQuery(sql.toString())
-                .setResultTransformer(Transformers.aliasToBean(PedPenVdaResult.class)).list();
+        List<PedidoPendenteResult> rs = session.createSQLQuery(sql.toString())
+                .setResultTransformer(Transformers.aliasToBean(PedidoPendenteResult.class)).list();
         return rs;
     }
 

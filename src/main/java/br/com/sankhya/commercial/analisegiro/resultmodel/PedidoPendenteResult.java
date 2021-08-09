@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Setter
 @Getter
-public class PedPenVdaResult {
+public class PedidoPendenteResult {
 
     private BigDecimal CODPROD;
     private BigDecimal CODEMP;
