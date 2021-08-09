@@ -31,8 +31,7 @@ public class CustoRepository {
                                           BigDecimal codProd,
                                           BigDecimal codLocal,
                                           BigDecimal codEmp,
-                                          char controle,
-
+                                          char controle
                             ){
         StringBuffer sqlBuf = new StringBuffer();
 

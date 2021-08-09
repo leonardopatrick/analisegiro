@@ -225,6 +225,7 @@ public class Giro {
                     durEst = estoq.divide(giroDiario).intValue();
                     durEstPosCpa = estoq.add(sugCompra).divide(giroDiario).intValue();
 
+                    //TODO AJUSTAR FERIADO
                     /*if(calcularDiasUteisParaLeadTime) {
                         estMinGir = giroDiario.multiply(BigDecimal.valueOf(
                                 FeriadoUtil.getDiasUteis(hoje, TimeUtils.dataAddDay(hoje, leadTime.intValue()), chave.getCodEmp())));
