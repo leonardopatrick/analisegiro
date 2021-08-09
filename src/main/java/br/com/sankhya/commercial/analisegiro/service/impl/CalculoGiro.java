@@ -74,18 +74,21 @@ public class CalculoGiro {
 
     public void gerar() throws Exception {
 
-      //  prepararVariaveisComuns();
+        prepararVariaveisComuns();
 
         lisProdSemGiro.clear();
         if("S".equals(matrizConf.getIncluirSemEstoque())) {
-     //       gerarListaProdutos();
+            gerarListaProdutos();
         }
-      //  nroPeriodos = buscarGiro();
+        nroPeriodos = buscarGiro();
 
-       // buscarPedVdaPend();
-       /// buscarPedCpaVdaPend();
-       /// buscarEstoques();
+        buscarPedVdaPend();
+        buscarPedCpaVdaPend();
+        buscarEstoques();
+        buscarUltimaCompra();
         buscarUltimaVenda();
+        acrescentarSemGiro();
+        calcular();
 
     }
 
@@ -321,6 +324,18 @@ public class CalculoGiro {
         //TODO APLICAR FILTRO
         //if("S".equals(matrizConf.getIncluirSemEstoque()))
         //TODO 	chaveAnt = new ChaveGiro(rs);
+    }
+
+    private void acrescentarSemGiro() {
+        for(BigDecimal codProd : lisProdSemGiro){
+            Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(codProd));
+            giroRepository.save(giro);
+        }
+        lisProdSemGiro.clear();
+    }
+
+    private void calcular(){
+
     }
 
 }

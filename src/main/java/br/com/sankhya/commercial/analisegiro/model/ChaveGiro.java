@@ -51,13 +51,6 @@ public class ChaveGiro implements Serializable {
 		this.controle = pr.getCONTROLE();
 	}
 
-	public boolean equals(ChaveGiro chave) {
-		return codProd.equals(chave.getCodProd()) &
-			codEmp.equals(chave.getCodEmp()) &
-			codLocal.equals(chave.getCodLocal()) &
-			controle == chave.getControle();
-	}
-
 	public ChaveGiro(UltimaVendaResult pr) {
 		this.codProd = pr.getCODPROD();
 		this.codEmp = pr.getCODEMP();
@@ -71,4 +64,21 @@ public class ChaveGiro implements Serializable {
 		this.codLocal = pr.getCODLOCAL();
 		this.controle = pr.getCONTROLE();
 	}
+
+	public ChaveGiro(BigDecimal codProd) {
+		this.codProd = codProd;
+		this.codEmp = BigDecimal.ZERO;
+		this.codLocal = BigDecimal.ZERO;
+		this.controle = Character.valueOf(' ');
+	}
+
+
+	public boolean equals(ChaveGiro chave) {
+		return codProd.equals(chave.getCodProd()) &
+			codEmp.equals(chave.getCodEmp()) &
+			codLocal.equals(chave.getCodLocal()) &
+			controle == chave.getControle();
+	}
+
+
 }
