@@ -2,6 +2,7 @@ package br.com.sankhya.commercial.analisegiro.util;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class TimeUtils {
     public static Timestamp getNow() {
@@ -20,6 +21,14 @@ public class TimeUtils {
         calendar.clear(Calendar.SECOND);
         calendar.clear(Calendar.MILLISECOND);
         calendar.clear(Calendar.AM_PM);
+    }
+
+    public static long add(long timestamp, int amount, int field) {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTimeInMillis(timestamp);
+        calendar.add(field, amount);
+
+        return calendar.getTimeInMillis();
     }
 
     }

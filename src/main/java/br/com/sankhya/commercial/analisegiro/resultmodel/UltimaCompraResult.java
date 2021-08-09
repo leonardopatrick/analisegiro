@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 @Setter
 @Getter
-public class UltimaVendaResult {
+public class UltimaCompraResult {
 
     private BigDecimal CODPROD;
     private BigDecimal CODEMP;
@@ -16,14 +16,7 @@ public class UltimaVendaResult {
     private char CONTROLE;
     private String TIPMOV;
     private Timestamp DTREF;
-
-    /*CODPROD,
-    CODEMP,
-    CODLOCALORIG,
-    CONTROLE,
-    RESERVA,
-    DTREF,
-    QTDNEG,
-    ALIQICMS,
-    VLRTOT*/
+    private BigDecimal ALIQICMS;
+    private BigDecimal QTDNEG;
+    private BigDecimal VLRTOT;
 }

@@ -1,8 +1,10 @@
 package br.com.sankhya.commercial.analisegiro.repository;
 
+import br.com.sankhya.commercial.analisegiro.util.BigDecimalUtil;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.math.BigDecimal;
 
 @Repository
 public class SingleQueryExecutor {
@@ -30,5 +32,14 @@ public class SingleQueryExecutor {
         Object result = q.getSingleResult();
 
         return result;
+    }
+
+    public Boolean existe(String campo,
+                                    String tabela,
+                                    String condicao){
+
+        BigDecimal result = (BigDecimal) execute(campo, tabela, condicao);
+
+        return BigDecimalUtil.getValueOrZero(result).compareTo(BigDecimal.ZERO)==1;
     }
 }

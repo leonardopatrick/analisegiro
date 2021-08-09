@@ -4,11 +4,8 @@ import br.com.sankhya.commercial.analisegiro.configuration.MatrizGiroConfiguraca
 import br.com.sankhya.commercial.analisegiro.core.ParametroContextoRepository;
 import br.com.sankhya.commercial.analisegiro.model.ChaveGiro;
 import br.com.sankhya.commercial.analisegiro.model.Giro;
-import br.com.sankhya.commercial.analisegiro.resultmodel.UltimaVendaResult;
+import br.com.sankhya.commercial.analisegiro.resultmodel.*;
 import br.com.sankhya.commercial.analisegiro.repository.*;
-import br.com.sankhya.commercial.analisegiro.resultmodel.EstoqueResult;
-import br.com.sankhya.commercial.analisegiro.resultmodel.PedidoPendenteResult;
-import br.com.sankhya.commercial.analisegiro.resultmodel.GiroResult;
 import br.com.sankhya.commercial.analisegiro.struct.PeriodoGiro;
 import br.com.sankhya.commercial.analisegiro.util.BigDecimalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +64,9 @@ public class CalculoGiro {
 
     @Autowired
     UltimaVendaRepository ultimaVendaRepository;
+
+    @Autowired
+    UltimaCompraRepository ultimaCompraRepository;
 
     @Autowired
     SingleQueryExecutor  singleQueryExecutor;
@@ -167,11 +167,9 @@ public class CalculoGiro {
         Collection<Timestamp[]> periodos = matrizConf.buildPeriodos();
 
         for (Timestamp[] periodo : periodos) {
-
             Timestamp inicio = periodo[0];
             Timestamp fim = periodo[1];
             i++;
-
             List<GiroResult> giroResults = giroCustomRepository.findGirobyQueryCustom(sqlGroup.toString(),
                     usarEmpresa,
                     sqlChave.toString(),
@@ -181,7 +179,6 @@ public class CalculoGiro {
             );
 
             for (GiroResult giroResult : giroResults) {
-
                 PeriodoGiro perGiro = new PeriodoGiro(giroResult);
                 perGiro.setIndice(i);
                 perGiro.setDiasUteis(i); //TODO FUNCAO DIAS UTEIS
@@ -231,7 +228,6 @@ public class CalculoGiro {
                 utilizarControle
         );
         for (PedidoPendenteResult item :  pedPenResults ){
-
             Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
             giro.setPedCpaPend(item.getQTDE());
             giroRepository.save(giro);
@@ -251,7 +247,6 @@ public class CalculoGiro {
         );
 
         for (EstoqueResult item :  estoqueResults ){
-
             Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
             giro.setEstMin(item.getESTMIN());
             giro.setEstMax(item.getESTMAX());
@@ -260,19 +255,72 @@ public class CalculoGiro {
             giroRepository.save(giro);
             lisProdSemGiro.remove(item.getCODPROD());
         }
-
     }
 
     private void buscarUltimaVenda() throws Exception {
 
-
-        BigDecimal qtd = (BigDecimal) singleQueryExecutor.execute("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND IN ('E', 'G', 'M')" );
-        Boolean temUltVenda = BigDecimalUtil.getValueOrZero(qtd).compareTo(BigDecimal.ZERO)==1;
+        Boolean temUltVenda = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND IN ('F', 'G', 'S')" );
+        Boolean temUltVendaSaida = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND ='S' " );
+        Boolean temUltVendaFaturamento = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND ='F' " );
+        int  mesesRetroagir = 1;/*parametroRepo.getParameterAsInt("UTILIZALOCAL");*/ //TODO AJUSTAR PARAMETRO
 
         if(temUltVenda)
-            ultimaVendaRepository.atualizarTGFUVC();
-        
+            ultimaVendaRepository.atualizarTGFUVC(
+                    temUltVendaSaida,
+                    temUltVendaFaturamento,
+                    mesesRetroagir);
 
-        List<UltimaVendaResult> rs = ultimaVendaRepository.findUltimaVenda();
+        List<UltimaVendaResult> ultimaVendaResutls = ultimaVendaRepository.findUltimaVenda(
+                 matrizConf,
+                 usarEmpresa,
+                 utilizarLocal,
+                 utilizarControle
+        );
+
+        for (UltimaVendaResult item :  ultimaVendaResutls ) {
+            Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
+            giro.setUltVenda(item.getDTREF());
+            giroRepository.save(giro);
+            lisProdSemGiro.remove(item.getCODPROD());
+        }
+
+        //TODO APLICAR FILTRO
+        //if("S".equals(matrizConf.getIncluirSemEstoque()))
     }
+
+    private void buscarUltimaCompra() throws Exception {
+
+        Boolean temUltVenda = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND IN ('F', 'G', 'S')" );
+        Boolean temUltVendaSaida = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND ='S' " );
+        Boolean temUltVendaFaturamento = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND ='F' " );
+        int  mesesRetroagir = 1;/*parametroRepo.getParameterAsInt("UTILIZALOCAL");*/ //TODO AJUSTAR PARAMETRO
+
+        if(temUltVenda)
+            ultimaVendaRepository.atualizarTGFUVC(
+                    temUltVendaSaida,
+                    temUltVendaFaturamento,
+                    mesesRetroagir);
+
+        List<UltimaCompraResult> ultimaVendaResutls = ultimaCompraRepository.findUltimaCompra(
+                matrizConf,
+                usarEmpresa,
+                utilizarLocal,
+                utilizarControle
+        );
+
+        for (UltimaCompraResult item :  ultimaVendaResutls ) {
+            Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
+            giro.setUltCompra( item.getDTREF());
+            giro.setQtdUltCompra(item.getQTDNEG());
+            giro.setAliqCred(item.getALIQICMS());
+            giro.setVlrUltCompra(item.getVLRTOT());
+            giroRepository.save(giro);
+            lisProdSemGiro.remove(item.getCODPROD());
+        }
+
+        //TODO APLICAR FILTRO
+        //if("S".equals(matrizConf.getIncluirSemEstoque()))
+        //TODO 	chaveAnt = new ChaveGiro(rs);
+    }
+
 }
