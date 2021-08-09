@@ -31,5 +31,13 @@ public class TimeUtils {
         return calendar.getTimeInMillis();
     }
 
+    public static Timestamp dataAddDay(Timestamp data, int amount) {
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(data.getTime());
+        cal.add(Calendar.DAY_OF_MONTH, amount);
+
+        return new Timestamp(cal.getTimeInMillis());
+    }
+
     }
 

@@ -4,6 +4,7 @@ import br.com.sankhya.commercial.analisegiro.configuration.MatrizGiroConfiguraca
 import br.com.sankhya.commercial.analisegiro.core.ParametroContextoRepository;
 import br.com.sankhya.commercial.analisegiro.model.ChaveGiro;
 import br.com.sankhya.commercial.analisegiro.model.Giro;
+import br.com.sankhya.commercial.analisegiro.model.Produto;
 import br.com.sankhya.commercial.analisegiro.resultmodel.*;
 import br.com.sankhya.commercial.analisegiro.repository.*;
 import br.com.sankhya.commercial.analisegiro.struct.PeriodoGiro;
@@ -30,7 +31,7 @@ public class CalculoGiro {
     private Boolean utilizarControle = Boolean.FALSE;
     private Boolean subtrairDaSugestaoAQtdeBloqueadaNoWMS = Boolean.FALSE;
     private Boolean subtrairDoEsotqueAReserva =  Boolean.FALSE; ; // criar param no xml.
-
+    private Boolean controlaCustoPorEmpresa = Boolean.FALSE;
     private String usarEmpresa = "N";
     private int nroPeriodos = 0;
     private BigDecimal nuTab = BigDecimal.ONE.negate();
@@ -71,6 +72,8 @@ public class CalculoGiro {
     @Autowired
     SingleQueryExecutor  singleQueryExecutor;
 
+    @Autowired
+    CustoRepository custoRepository;
 
     public void gerar() throws Exception {
 
@@ -105,6 +108,7 @@ public class CalculoGiro {
 
         controlaCustoPorLocal = parametroRepo.getParameterAsBoolean("UTILIZALOCAL");
         controlaCustoPorControle =parametroRepo.getParameterAsBoolean("UTILIZACONTROLE");
+        controlaCustoPorEmpresa  =parametroRepo.getParameterAsBoolean("UTILIZACONTROLE");
         utilizarLocal = "S".equals(matrizConf.getApresentaLocal()) & parametroRepo.getParameterAsBoolean("UTILIZALOCAL");
         utilizarControle = "S".equals(matrizConf.getApresentaControle()) & parametroRepo.getParameterAsBoolean("UTILIZACONTROLE");
         if ("S".equals(matrizConf.getApresentaEmpresa())) {
@@ -193,7 +197,7 @@ public class CalculoGiro {
                 giro.setCodGrupoProd(giroResult.getCODGRUPOPROD());
                 giro.setMarca(giroResult.getMARCA());
                 giro.setPeso(giroResult.getPESOBRUTO());
-                ///giro.addPeriodo(perGiro); //TODO AJUSTAR RELACIONAMENTO PERIODO
+                giro.addPeriodo(perGiro); //TODO AJUSTAR RELACIONAMENTO PERIODO
 
                 giroRepository.save(giro);
                 lisProdSemGiro.remove(giroResult.getCODPROD());
@@ -240,7 +244,7 @@ public class CalculoGiro {
 
     private  void buscarEstoques(){
 
-        List<EstoqueResult> estoqueResults = estoqueRepository.findEstoques(
+        List<EstoqueResult> estoqueResults = estoqueRepository.findEstoque(
                  subtrairDaSugestaoAQtdeBloqueadaNoWMS,
                  subtrairDoEsotqueAReserva,
                  matrizConf,
@@ -347,8 +351,58 @@ public class CalculoGiro {
             temTGFPMA =  singleQueryExecutor.existe("COUNT(1) AS QTD","TGFPMA", "") ;
         }
 
-        
+        for(Giro giro : giroRepository.findAll()) {
+            String marca;
+          Optional<Produto> produtoOptional =  produtoRepository.findById(giro.getChave().getCodProd());
+            if(produtoOptional.isPresent()){
+                Produto produto = produtoOptional.get();
+                if(giro.getEstMin() == null) {
+                    giro.setEstMin(produto.getEstmin());
+                }
+                if(giro.getEstMax() == null) {
+                    giro.setEstMax(produto.getEstmax());
+                }
+                giro.setDescMax(produto.getDescmax());
+                giro.setCodParcForn(produto.getCodparcforn());
+                giro.setPermCompProd(produto.getPermcompprod());
+                giro.setDtAlterProduto(produto.getDtalter());
+                marca = produto.getMarca();
+            }
 
+            BigDecimal dobCustoRep = BigDecimal.ZERO;
+            BigDecimal dobCustoAtual = BigDecimal.ZERO;
+
+            if(custoRepDaTabCotacao) {
+               /* BigDecimal nuTabCot = getTabPrecoCot(giro.getCodParcForn());
+                if(nuTabCot.compareTo(BigDecimal.ZERO) >= 0) {
+                    dobCustoRep = obtemPreco(nuTabCot, giro.getCodProd(), giro.getCodLocal(), giro.getControle());
+                    if(temTGFPMA) {
+                        giro.setPercDescFornecedor(getPercDescFornecedor(giro.getCodProd(), giro.getCodParcForn(), marca));
+                    }
+                }*/
+            }
+
+           BigDecimal custo =  custoRepository.findCusto(
+                                    matrizConf,
+                                    controlaCustoPorEmpresa,
+                                    controlaCustoPorControle,
+                                    controlaCustoPorLocal,
+                                    giro.getChave().getCodProd(),
+                                    giro.getChave().getCodLocal(),
+                                    giro.getChave().getCodEmp(),
+                                    giro.getChave().getControle()
+                                    );
+            giro.setCustoGer(custo);
+            giro.setCustoRep(custo); //TODO Pegar Valores digerentes
+
+            Boolean temProdutoGenerico = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFGXE","CODPROD = " + giro.getChave().getCodProd().toString() );
+            if(temProdutoGenerico){
+                giro.setDescMax(BigDecimal.ZERO);
+            }/*else  if(nuTab != null) {
+				giro.setVlrTabPreco(obtemPreco(nuTab, giro.getCodProd(), giro.getCodLocal(), giro.getControle()));
+			}*/ //TODO A FAZER
+
+            giro.calcular(matrizConf, BigDecimal.valueOf(nroPeriodos), calcularSugCompraParaEstMax, calcularDiasUteisParaLeadTime, somarLeadTime);
+        }
     }
-
 }

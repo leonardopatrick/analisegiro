@@ -7,4 +7,5 @@ public interface GiroStrategy {
 
     Giro findGiroByChaveGiro(ChaveGiro chave);
     void save(Giro giro);
+
 }

@@ -1,6 +1,8 @@
 package br.com.sankhya.commercial.analisegiro.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,9 +24,17 @@ public class Produto implements Serializable {
 
 	@GeneratedValue(strategy =GenerationType.AUTO)
 	@Id
-	private Long codprod;
+	private BigDecimal codprod;
 
 	private String descrprod;
 	private String ativo;
 	private String percomprod;
+	private BigDecimal estmin;
+	private BigDecimal estmax;
+	private BigDecimal descmax;
+	private BigDecimal pesobruto;
+	private String permcompprod;
+	private Timestamp dtalter;
+	private BigDecimal codparcforn;
+	private String marca;
 }

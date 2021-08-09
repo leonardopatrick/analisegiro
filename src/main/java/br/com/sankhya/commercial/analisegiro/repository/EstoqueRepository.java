@@ -21,7 +21,7 @@ public class EstoqueRepository {
         this.em = em;
     }
 
-    public List<EstoqueResult> findEstoques(Boolean subtrairDaSugestaoAQtdeBloqueadaNoWMS,
+    public List<EstoqueResult> findEstoque(Boolean subtrairDaSugestaoAQtdeBloqueadaNoWMS,
                                             Boolean subtrairDoEsotqueAReserva,
                                             MatrizGiroConfiguracao matrizConf,
                                             String sqlChave,
@@ -57,6 +57,4 @@ public class EstoqueRepository {
                 .setResultTransformer(Transformers.aliasToBean(EstoqueResult.class)).list();
         return rs;
     }
-
-
 }

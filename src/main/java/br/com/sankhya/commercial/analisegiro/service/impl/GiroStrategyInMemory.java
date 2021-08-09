@@ -6,6 +6,7 @@ import br.com.sankhya.commercial.analisegiro.model.Giro;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -35,5 +36,8 @@ public class GiroStrategyInMemory implements GiroStrategy {
         }
     }
 
+    public List<Giro> findAll(){
+        return (List<Giro>) giros.values();
+    }
 
 }
