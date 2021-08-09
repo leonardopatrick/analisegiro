@@ -4,12 +4,10 @@ import br.com.sankhya.commercial.analisegiro.configuration.MatrizGiroConfiguraca
 import br.com.sankhya.commercial.analisegiro.core.ParametroContextoRepository;
 import br.com.sankhya.commercial.analisegiro.model.ChaveGiro;
 import br.com.sankhya.commercial.analisegiro.model.Giro;
-import br.com.sankhya.commercial.analisegiro.repository.EstoqueRepository;
-import br.com.sankhya.commercial.analisegiro.repository.GiroCustomRepository;
+import br.com.sankhya.commercial.analisegiro.resultmodel.UltimaVendaResult;
+import br.com.sankhya.commercial.analisegiro.repository.*;
 import br.com.sankhya.commercial.analisegiro.resultmodel.EstoqueResult;
 import br.com.sankhya.commercial.analisegiro.resultmodel.PedidoPendenteResult;
-import br.com.sankhya.commercial.analisegiro.repository.PedidoPendenteRepository;
-import br.com.sankhya.commercial.analisegiro.repository.ProdutoRepository;
 import br.com.sankhya.commercial.analisegiro.resultmodel.GiroResult;
 import br.com.sankhya.commercial.analisegiro.struct.PeriodoGiro;
 import br.com.sankhya.commercial.analisegiro.util.BigDecimalUtil;
@@ -28,8 +26,8 @@ public class CalculoGiro {
     private String filtroEstoque;
     private String filtroPedVdaPend;
     private String filtroPedCpaPend;
-    private StringBuffer sqlGroup;
-    private StringBuffer sqlChave;
+    private StringBuffer sqlGroup = new StringBuffer();;
+    private StringBuffer sqlChave = new StringBuffer();;
     private Boolean controlaCustoPorControle = Boolean.FALSE;
     private Boolean utilizarLocal = Boolean.FALSE;
     private Boolean utilizarControle = Boolean.FALSE;
@@ -67,6 +65,10 @@ public class CalculoGiro {
     @Autowired
     EstoqueRepository estoqueRepository;
 
+    @Autowired
+    UltimaVendaRepository ultimaVendaRepository;
+
+
     public void gerar() throws Exception {
 
         prepararVariaveisComuns();
@@ -79,7 +81,7 @@ public class CalculoGiro {
 
         buscarPedVdaPend();
         buscarPedCpaVdaPend();
-        bucarEstoques();
+        buscarEstoques();
 
     }
 
@@ -129,7 +131,6 @@ public class CalculoGiro {
             sqlGroup.append(" , ITE.CONTROLE ");
         }
 
-        sqlChave = new StringBuffer();
         sqlChave.append(" SELECT  ");
         sqlChave.append(strCodProd + " AS CODPROD ");
 
@@ -209,9 +210,7 @@ public class CalculoGiro {
         );
 
    for (PedidoPendenteResult item :  pedPenResults ){
-            ChaveGiro chave = new ChaveGiro(item);
-            //pedPenVdaStrategyInMemory.save(chave, item.getQTDE());
-            Giro giro = giroRepository.findGiroByChaveGiro(chave);
+            Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
             giro.setPedVdaPend(item.getQTDE());
             giroRepository.save(giro);
             lisProdSemGiro.remove(item.getCODPROD());
@@ -220,7 +219,6 @@ public class CalculoGiro {
 
     private  void buscarPedCpaVdaPend(){
 
-        //pedPenVdaStrategyInMemory.deleteAll();
         //TODO FILTRO PED COMPRA
         List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes(
                 utilizarLocal,
@@ -229,16 +227,15 @@ public class CalculoGiro {
                 utilizarControle
         );
         for (PedidoPendenteResult item :  pedPenResults ){
-            ChaveGiro chave = new ChaveGiro(item);
-           // pedPenVdaStrategyInMemory.save(chave, item.getQTDE());
-            Giro giro = giroRepository.findGiroByChaveGiro(chave);
+
+            Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
             giro.setPedCpaPend(item.getQTDE());
             giroRepository.save(giro);
             lisProdSemGiro.remove(item.getCODPROD());
         }
     }
 
-    private  void bucarEstoques(){
+    private  void buscarEstoques(){
 
         List<EstoqueResult> estoqueResults = estoqueRepository.findEstoques(
                  subtrairDaSugestaoAQtdeBloqueadaNoWMS,
@@ -250,9 +247,8 @@ public class CalculoGiro {
         );
 
         for (EstoqueResult item :  estoqueResults ){
-            ChaveGiro chave = new ChaveGiro(item);
-            // pedPenVdaStrategyInMemory.save(chave, item.getQTDE());
-            Giro giro = giroRepository.findGiroByChaveGiro(chave);
+
+            Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
             giro.setEstMin(item.getESTMIN());
             giro.setEstMax(item.getESTMAX());
             giro.setEstoque(item.getESTOQUE());
@@ -263,5 +259,10 @@ public class CalculoGiro {
 
     }
 
+    private void buscarUltimaVenda() throws Exception {
 
+        ultimaVendaRepository.atualizarTGFUVC();
+
+        List<UltimaVendaResult> rs = ultimaVendaRepository.findUltimaVenda();
+    }
 }
