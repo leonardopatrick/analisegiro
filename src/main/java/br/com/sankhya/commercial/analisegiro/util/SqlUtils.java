@@ -1,6 +1,9 @@
 package br.com.sankhya.commercial.analisegiro.util;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 
 public class SqlUtils {
 
@@ -27,6 +30,19 @@ public class SqlUtils {
 
     public static String loadSQLFromResource(Class baseClass, String resourcePath) throws Exception {
         return getStringBufferSQLFromResource(baseClass, resourcePath).toString();
+    }
+
+    public static StringBuffer loadSql(String fileName) throws IOException {
+
+        String prefixo = "sql/";
+
+        ClassLoader classLoader = SqlUtils.class.getClassLoader();
+
+        File file = new File(classLoader.getResource(prefixo+fileName).getFile());
+
+        String content = new String(Files.readAllBytes(file.toPath()));
+
+        return new StringBuffer(content);
     }
 
 }

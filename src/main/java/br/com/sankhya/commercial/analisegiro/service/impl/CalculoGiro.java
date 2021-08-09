@@ -71,17 +71,18 @@ public class CalculoGiro {
 
     public void gerar() throws Exception {
 
-        prepararVariaveisComuns();
+      //  prepararVariaveisComuns();
 
         lisProdSemGiro.clear();
         if("S".equals(matrizConf.getIncluirSemEstoque())) {
-            gerarListaProdutos();
+     //       gerarListaProdutos();
         }
-        nroPeriodos = buscarGiro();
+      //  nroPeriodos = buscarGiro();
 
-        buscarPedVdaPend();
-        buscarPedCpaVdaPend();
-        buscarEstoques();
+       // buscarPedVdaPend();
+       /// buscarPedCpaVdaPend();
+       /// buscarEstoques();
+        buscarUltimaVenda();
 
     }
 
@@ -93,8 +94,8 @@ public class CalculoGiro {
 
     private void prepararVariaveisComuns() throws Exception {
         //TODO AJUSTAR CHAVE
-        subtrairDaSugestaoAQtdeBloqueadaNoWMS = parametroRepo.getParameterAsBoolean("subtrair.da.sug.compra.qtd.bloq.wms");
-        subtrairDoEsotqueAReserva = parametroRepo.getParameterAsBoolean("subtrair.do.estoque.a.reserva"); // criar param no xml.
+       // subtrairDaSugestaoAQtdeBloqueadaNoWMS = parametroRepo.getParameterAsBoolean("subtrair.da.sug.compra.qtd.bloq.wms");
+      //  subtrairDoEsotqueAReserva = parametroRepo.getParameterAsBoolean("subtrair.do.estoque.a.reserva"); // criar param no xml.
 
         controlaCustoPorLocal = parametroRepo.getParameterAsBoolean("UTILIZALOCAL");
         controlaCustoPorControle =parametroRepo.getParameterAsBoolean("UTILIZACONTROLE");
