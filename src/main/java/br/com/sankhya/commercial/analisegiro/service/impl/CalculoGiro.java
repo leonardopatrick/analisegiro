@@ -334,7 +334,20 @@ public class CalculoGiro {
         lisProdSemGiro.clear();
     }
 
-    private void calcular(){
+    private void calcular() throws Exception {
+
+        Boolean custoRepDaTabCotacao =parametroRepo.getParameterAsBoolean("TABCOTFORMTZ");
+        Boolean calcularSugCompraParaEstMax =parametroRepo.getParameterAsBoolean("SUGCOMPMIMAMTZ");
+        Boolean calcularDiasUteisParaLeadTime =parametroRepo.getParameterAsBoolean("CONSDIASUTEIS");
+        Boolean somarLeadTime =parametroRepo.getParameterAsBoolean("SOMALEADTIME");
+
+        Boolean temTGFPMA = Boolean.FALSE;
+
+        if(custoRepDaTabCotacao) {
+            temTGFPMA =  singleQueryExecutor.existe("COUNT(1) AS QTD","TGFPMA", "") ;
+        }
+
+        
 
     }
 
