@@ -1,5 +1,6 @@
 package br.com.sankhya.commercial.analisegiro.model;
 
+import br.com.sankhya.commercial.analisegiro.resultmodel.EstoqueResult;
 import br.com.sankhya.commercial.analisegiro.resultmodel.GiroResult;
 import br.com.sankhya.commercial.analisegiro.resultmodel.PedidoPendenteResult;
 import lombok.Getter;
@@ -39,6 +40,13 @@ public class ChaveGiro implements Serializable {
 	}
 
 	public ChaveGiro(PedidoPendenteResult pr) {
+		this.codProd = pr.getCODPROD();
+		this.codEmp = pr.getCODEMP();
+		this.codLocal = pr.getCODLOCAL();
+		this.controle = pr.getCONTROLE();
+	}
+
+	public ChaveGiro(EstoqueResult pr) {
 		this.codProd = pr.getCODPROD();
 		this.codEmp = pr.getCODEMP();
 		this.codLocal = pr.getCODLOCAL();

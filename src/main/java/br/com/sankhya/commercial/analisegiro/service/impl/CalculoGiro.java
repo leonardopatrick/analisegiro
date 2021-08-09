@@ -4,7 +4,9 @@ import br.com.sankhya.commercial.analisegiro.configuration.MatrizGiroConfiguraca
 import br.com.sankhya.commercial.analisegiro.core.ParametroContextoRepository;
 import br.com.sankhya.commercial.analisegiro.model.ChaveGiro;
 import br.com.sankhya.commercial.analisegiro.model.Giro;
+import br.com.sankhya.commercial.analisegiro.repository.EstoqueRepository;
 import br.com.sankhya.commercial.analisegiro.repository.GiroCustomRepository;
+import br.com.sankhya.commercial.analisegiro.resultmodel.EstoqueResult;
 import br.com.sankhya.commercial.analisegiro.resultmodel.PedidoPendenteResult;
 import br.com.sankhya.commercial.analisegiro.repository.PedidoPendenteRepository;
 import br.com.sankhya.commercial.analisegiro.repository.ProdutoRepository;
@@ -59,8 +61,11 @@ public class CalculoGiro {
     @Autowired
     PedidoPendenteRepository pedidoPendenteRepository;
 
+    //@Autowired
+    //PedidoPendenteStrategyInMemory pedPenVdaStrategyInMemory;
+
     @Autowired
-    PedidoPendenteStrategyInMemory pedPenVdaStrategyInMemory;
+    EstoqueRepository estoqueRepository;
 
     public void gerar() throws Exception {
 
@@ -74,6 +79,7 @@ public class CalculoGiro {
 
         buscarPedVdaPend();
         buscarPedCpaVdaPend();
+        bucarEstoques();
 
     }
 
@@ -232,6 +238,30 @@ public class CalculoGiro {
         }
     }
 
+    private  void bucarEstoques(){
+
+        List<EstoqueResult> estoqueResults = estoqueRepository.findEstoques(
+                 subtrairDaSugestaoAQtdeBloqueadaNoWMS,
+                 subtrairDoEsotqueAReserva,
+                 matrizConf,
+                 sqlChave.toString(),
+                 sqlGroup.toString(),
+                 filtroEstoque
+        );
+
+        for (EstoqueResult item :  estoqueResults ){
+            ChaveGiro chave = new ChaveGiro(item);
+            // pedPenVdaStrategyInMemory.save(chave, item.getQTDE());
+            Giro giro = giroRepository.findGiroByChaveGiro(chave);
+            giro.setEstMin(item.getESTMIN());
+            giro.setEstMax(item.getESTMAX());
+            giro.setEstoque(item.getESTOQUE());
+            giro.setWmsBloqueado(item.getWMSBLOQUEADO());
+            giroRepository.save(giro);
+            lisProdSemGiro.remove(item.getCODPROD());
+        }
+
+    }
 
 
 }
