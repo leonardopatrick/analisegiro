@@ -34,10 +34,8 @@ public class CustoRepository {
                             ){
         StringBuffer sqlBuf = new StringBuffer();
 
-
       //  sqlBuf.append(" SELECT CUS.CUSREP, CUS.CUSGER, CUS.CUSMED, CUS.CUSMEDICM, CUS.CUSSEMICM, CUS.ENTRADACOMICMS, CUS.ENTRADASEMICMS, CUS.CUSVARIAVEL, CUS.DTATUAL");
         sqlBuf.append(" SELECT CUS.CUSREP ");
-
 
         sqlBuf.append(" FROM TGFCUS CUS");
         sqlBuf.append(" WHERE CUS.CODPROD = :CODPROD");
