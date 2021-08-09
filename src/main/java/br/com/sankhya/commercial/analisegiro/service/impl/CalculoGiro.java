@@ -67,7 +67,6 @@ public class CalculoGiro {
         if("S".equals(matrizConf.getIncluirSemEstoque())) {
             gerarListaProdutos();
         }
-
         nroPeriodos = buscarGiro();
 
         buscarPedVdaPend();
@@ -85,9 +84,12 @@ public class CalculoGiro {
         );
 
    for (PedPenVdaResult pedido :  pedPenVdaResults ){
-
             ChaveGiro chave = new ChaveGiro(pedido);
             pedPenVdaStrategyInMemory.save(chave, pedido.getQTDE());
+            Giro giro = giroRepository.findGiroByChaveGiro(chave);
+            giro.setPedVdaPend(pedido.getQTDE());
+            giroRepository.save(giro);
+            lisProdSemGiro.remove(pedido.getCODPROD());
         }
     }
 
