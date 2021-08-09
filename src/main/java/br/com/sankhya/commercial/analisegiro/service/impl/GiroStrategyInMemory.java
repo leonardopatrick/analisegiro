@@ -3,6 +3,8 @@ package br.com.sankhya.commercial.analisegiro.service.impl;
 import br.com.sankhya.commercial.analisegiro.core.GiroStrategy;
 import br.com.sankhya.commercial.analisegiro.model.ChaveGiro;
 import br.com.sankhya.commercial.analisegiro.model.Giro;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -11,6 +13,9 @@ import java.util.Map;
 
 @Service
 public class GiroStrategyInMemory implements GiroStrategy {
+
+    @Autowired
+    ModelMapper modelMapper;
 
     private Map<ChaveGiro, Giro> giros = new HashMap<ChaveGiro, Giro>();
 
@@ -38,6 +43,10 @@ public class GiroStrategyInMemory implements GiroStrategy {
 
     public List<Giro> findAll(){
         return (List<Giro>) giros.values();
+    }
+
+    public Giro findGiroByObject(Object item){
+        return  findGiroByChaveGiro(modelMapper.map(item, ChaveGiro.class));
     }
 
 }

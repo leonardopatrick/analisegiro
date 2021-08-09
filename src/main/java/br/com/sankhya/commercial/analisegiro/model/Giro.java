@@ -140,7 +140,7 @@ public class Giro {
 
         int cont = 0;
         for(PeriodoGiro periodo :  periodos){
-            qtdVenda = periodo.getQtde();//TODO QTDE
+            qtdVenda = periodo.getQtde();//TODO: Verificar se realmente é esse valor esperado para a variavel
             qtdVendaDiaUtil = periodo.getQtdVendDiaUtil();
             cont++;
             if(cont == 1) {

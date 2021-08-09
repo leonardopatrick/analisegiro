@@ -67,7 +67,6 @@ public class CustoRepository {
         Session session = em.unwrap(Session.class);
         NativeQuery nativeSql = session.createSQLQuery(sqlBuf.toString());
 
-
         nativeSql.setParameter("CODPROD", codProd);
         if (controlaCustoPorEmpresa) {
             nativeSql.setParameter("CODEMP", BigDecimalUtil.getValueOrZero(codEmp));

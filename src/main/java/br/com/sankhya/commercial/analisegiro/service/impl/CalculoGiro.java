@@ -9,11 +9,13 @@ import br.com.sankhya.commercial.analisegiro.resultmodel.*;
 import br.com.sankhya.commercial.analisegiro.repository.*;
 import br.com.sankhya.commercial.analisegiro.struct.PeriodoGiro;
 import br.com.sankhya.commercial.analisegiro.util.BigDecimalUtil;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Timestamp;
 import java.util.*;
+
 
 public class CalculoGiro {
 
@@ -74,6 +76,10 @@ public class CalculoGiro {
 
     @Autowired
     CustoRepository custoRepository;
+
+
+    @Autowired
+    ModelMapper modelMapper;
 
     public void gerar() throws Exception {
 
@@ -185,22 +191,21 @@ public class CalculoGiro {
                     fim
             );
 
-            for (GiroResult giroResult : giroResults) {
-                PeriodoGiro perGiro = new PeriodoGiro(giroResult);
+            for (GiroResult item : giroResults) {
+                PeriodoGiro perGiro = new PeriodoGiro(item);
                 perGiro.setIndice(i);
                 perGiro.setDiasUteis(i); //TODO FUNCAO DIAS UTEIS
-                giro = giroRepository.findGiroByChaveGiro(
-                        new ChaveGiro(giroResult));
+                giro = giroRepository.findGiroByObject(item);
 
                 giro.setLeadTime(
-                        BigDecimalUtil.getValueOrZero(giroResult.getLEADTIME()));
-                giro.setCodGrupoProd(giroResult.getCODGRUPOPROD());
-                giro.setMarca(giroResult.getMARCA());
-                giro.setPeso(giroResult.getPESOBRUTO());
+                        BigDecimalUtil.getValueOrZero(item.getLEADTIME()));
+                giro.setCodGrupoProd(item.getCODGRUPOPROD());
+                giro.setMarca(item.getMARCA());
+                giro.setPeso(item.getPESOBRUTO());
                 giro.addPeriodo(perGiro); //TODO AJUSTAR RELACIONAMENTO PERIODO
 
                 giroRepository.save(giro);
-                lisProdSemGiro.remove(giroResult.getCODPROD());
+                lisProdSemGiro.remove(item.getCODPROD());
 
             }
         }
@@ -218,7 +223,8 @@ public class CalculoGiro {
         );
 
    for (PedidoPendenteResult item :  pedPenResults ){
-            Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
+            Giro giro = giroRepository.findGiroByObject(item);
+            //Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
             giro.setPedVdaPend(item.getQTDE());
             giroRepository.save(giro);
             lisProdSemGiro.remove(item.getCODPROD());
@@ -235,7 +241,8 @@ public class CalculoGiro {
                 utilizarControle
         );
         for (PedidoPendenteResult item :  pedPenResults ){
-            Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
+            Giro giro = giroRepository.findGiroByObject(item);
+           // Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
             giro.setPedCpaPend(item.getQTDE());
             giroRepository.save(giro);
             lisProdSemGiro.remove(item.getCODPROD());
@@ -254,7 +261,7 @@ public class CalculoGiro {
         );
 
         for (EstoqueResult item :  estoqueResults ){
-            Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
+            Giro giro = giroRepository.findGiroByObject(item);
             giro.setEstMin(item.getESTMIN());
             giro.setEstMax(item.getESTMAX());
             giro.setEstoque(item.getESTOQUE());
@@ -269,7 +276,7 @@ public class CalculoGiro {
         Boolean temUltVenda = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND IN ('F', 'G', 'S')" );
         Boolean temUltVendaSaida = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND ='S' " );
         Boolean temUltVendaFaturamento = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND ='F' " );
-        int  mesesRetroagir = 1;/*parametroRepo.getParameterAsInt("UTILIZALOCAL");*/ //TODO AJUSTAR PARAMETRO
+        int  mesesRetroagir = 1;/*parametroRepo.getParameterAsInt("UTILIZALOCAL");*/ //TODO: verificar qual parametro é responsável por armazenar os dias a retroceder.
 
         if(temUltVenda)
             ultimaVendaRepository.atualizarTGFUVC(
@@ -285,13 +292,13 @@ public class CalculoGiro {
         );
 
         for (UltimaVendaResult item :  ultimaVendaResutls ) {
-            Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
+            Giro giro = giroRepository.findGiroByObject(item);
             giro.setUltVenda(item.getDTREF());
             giroRepository.save(giro);
             lisProdSemGiro.remove(item.getCODPROD());
         }
 
-        //TODO APLICAR FILTRO
+        //TODO: Ajustar a aplicação dos filtros.
         //if("S".equals(matrizConf.getIncluirSemEstoque()))
     }
 
@@ -300,7 +307,7 @@ public class CalculoGiro {
         Boolean temUltVenda = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND IN ('F', 'G', 'S')" );
         Boolean temUltVendaSaida = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND ='S' " );
         Boolean temUltVendaFaturamento = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND ='F' " );
-        int  mesesRetroagir = 1;/*parametroRepo.getParameterAsInt("UTILIZALOCAL");*/ //TODO AJUSTAR PARAMETRO
+        int  mesesRetroagir = 1;/*parametroRepo.getParameterAsInt("UTILIZALOCAL");*/ //TODO: Verificar qual parametro é responsável pelo dias a retroceder
 
         if(temUltVenda)
             ultimaVendaRepository.atualizarTGFUVC(
@@ -316,7 +323,7 @@ public class CalculoGiro {
         );
 
         for (UltimaCompraResult item :  ultimaVendaResutls ) {
-            Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
+            Giro giro = giroRepository.findGiroByObject(item);
             giro.setUltCompra( item.getDTREF());
             giro.setQtdUltCompra(item.getQTDNEG());
             giro.setAliqCred(item.getALIQICMS());
@@ -325,9 +332,9 @@ public class CalculoGiro {
             lisProdSemGiro.remove(item.getCODPROD());
         }
 
-        //TODO APLICAR FILTRO
+        //TODO: Ajustar a inclusão dos filstros
         //if("S".equals(matrizConf.getIncluirSemEstoque()))
-        //TODO 	chaveAnt = new ChaveGiro(rs);
+        //TODO: Verificar o pq de utilizar a chave anterior --> chaveAnt = new ChaveGiro(rs);
     }
 
     private void acrescentarSemGiro() {
@@ -392,14 +399,14 @@ public class CalculoGiro {
                                     giro.getChave().getControle()
                                     );
             giro.setCustoGer(custo);
-            giro.setCustoRep(custo); //TODO Pegar Valores digerentes
+            giro.setCustoRep(custo); //TODO: Ajustar para pegar o objeto de custo e entrar mais a fundo na logica do repositorio
 
             Boolean temProdutoGenerico = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFGXE","CODPROD = " + giro.getChave().getCodProd().toString() );
             if(temProdutoGenerico){
                 giro.setDescMax(BigDecimal.ZERO);
             }/*else  if(nuTab != null) {
 				giro.setVlrTabPreco(obtemPreco(nuTab, giro.getCodProd(), giro.getCodLocal(), giro.getControle()));
-			}*/ //TODO A FAZER
+			}*/ //TODO: Por hora não estamos implementando a busca na tabela de preço por conta do custo.
 
             giro.calcular(matrizConf, BigDecimal.valueOf(nroPeriodos), calcularSugCompraParaEstMax, calcularDiasUteisParaLeadTime, somarLeadTime);
         }

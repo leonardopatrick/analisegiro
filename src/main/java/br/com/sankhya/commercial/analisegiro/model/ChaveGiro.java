@@ -3,16 +3,21 @@ package br.com.sankhya.commercial.analisegiro.model;
 import br.com.sankhya.commercial.analisegiro.resultmodel.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+
+
 @Getter
 @Setter
 @Embeddable
 public class ChaveGiro implements Serializable {
+
 
 	@Column(name="CODPROD")
 	private BigDecimal codProd;
@@ -23,6 +28,21 @@ public class ChaveGiro implements Serializable {
 	@Column(name="CONTROLE")
 	private char controle =  Character.valueOf(' ');
 
+	public ChaveGiro(BigDecimal codProd) {
+		this.codProd = codProd;
+		this.codEmp = BigDecimal.ZERO;
+		this.codLocal = BigDecimal.ZERO;
+		this.controle = Character.valueOf(' ');
+	}
+
+	public boolean equals(ChaveGiro chave) {
+		return codProd.equals(chave.getCodProd()) &
+				codEmp.equals(chave.getCodEmp()) &
+				codLocal.equals(chave.getCodLocal()) &
+				controle == chave.getControle();
+	}
+
+	/*
 	public ChaveGiro(BigDecimal codProd, BigDecimal codEmp, BigDecimal codLocal, String controle) {
 		this.codProd = codProd;
 		this.codEmp = BigDecimal.ZERO;
@@ -64,21 +84,5 @@ public class ChaveGiro implements Serializable {
 		this.codLocal = pr.getCODLOCAL();
 		this.controle = pr.getCONTROLE();
 	}
-
-	public ChaveGiro(BigDecimal codProd) {
-		this.codProd = codProd;
-		this.codEmp = BigDecimal.ZERO;
-		this.codLocal = BigDecimal.ZERO;
-		this.controle = Character.valueOf(' ');
-	}
-
-
-	public boolean equals(ChaveGiro chave) {
-		return codProd.equals(chave.getCodProd()) &
-			codEmp.equals(chave.getCodEmp()) &
-			codLocal.equals(chave.getCodLocal()) &
-			controle == chave.getControle();
-	}
-
-
+*/
 }
