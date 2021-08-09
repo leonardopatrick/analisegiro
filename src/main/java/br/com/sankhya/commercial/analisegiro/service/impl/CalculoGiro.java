@@ -68,6 +68,9 @@ public class CalculoGiro {
     @Autowired
     UltimaVendaRepository ultimaVendaRepository;
 
+    @Autowired
+    SingleQueryExecutor  singleQueryExecutor;
+
 
     public void gerar() throws Exception {
 
@@ -262,7 +265,13 @@ public class CalculoGiro {
 
     private void buscarUltimaVenda() throws Exception {
 
-        ultimaVendaRepository.atualizarTGFUVC();
+
+        BigDecimal qtd = (BigDecimal) singleQueryExecutor.execute("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND IN ('E', 'G', 'M')" );
+        Boolean temUltVenda = BigDecimalUtil.getValueOrZero(qtd).compareTo(BigDecimal.ZERO)==1;
+
+        if(temUltVenda)
+            ultimaVendaRepository.atualizarTGFUVC();
+        
 
         List<UltimaVendaResult> rs = ultimaVendaRepository.findUltimaVenda();
     }
