@@ -24,8 +24,7 @@ public class CustoRepository {
         this.em = em;
     }
 
-    public BigDecimal findCusto(MatrizGiroConfiguracao matrizConf,
-                                          Boolean controlaCustoPorEmpresa,
+    public BigDecimal findCusto(        Boolean controlaCustoPorEmpresa,
                                           Boolean controlaCustoPorControle,
                                           Boolean controlaCustoPorLocal,
                                           BigDecimal codProd,

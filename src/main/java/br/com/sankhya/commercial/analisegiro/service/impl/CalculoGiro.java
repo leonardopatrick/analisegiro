@@ -383,7 +383,6 @@ public class CalculoGiro {
             }
 
            BigDecimal custo =  custoRepository.findCusto(
-                                    matrizConf,
                                     controlaCustoPorEmpresa,
                                     controlaCustoPorControle,
                                     controlaCustoPorLocal,

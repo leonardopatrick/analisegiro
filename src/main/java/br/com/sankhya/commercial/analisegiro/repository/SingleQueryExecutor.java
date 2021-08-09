@@ -18,7 +18,6 @@ public class SingleQueryExecutor {
 
     public Object execute(String campo, String tabela, String condicao
                             ){
-
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT ");
         sql.append(campo);
@@ -28,18 +27,13 @@ public class SingleQueryExecutor {
         sql.append(condicao);
 
         Query q = em.createNativeQuery(sql.toString());
-
         Object result = q.getSingleResult();
 
         return result;
     }
 
-    public Boolean existe(String campo,
-                                    String tabela,
-                                    String condicao){
-
+    public Boolean existe(String campo, String tabela, String condicao){
         BigDecimal result = (BigDecimal) execute(campo, tabela, condicao);
-
         return BigDecimalUtil.getValueOrZero(result).compareTo(BigDecimal.ZERO)==1;
     }
 }

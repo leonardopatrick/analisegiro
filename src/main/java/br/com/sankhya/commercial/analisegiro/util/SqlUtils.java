@@ -27,21 +27,15 @@ public class SqlUtils {
         return sqlBuf;
     }
 
-
     public static String loadSQLFromResource(Class baseClass, String resourcePath) throws Exception {
         return getStringBufferSQLFromResource(baseClass, resourcePath).toString();
     }
 
     public static StringBuffer loadSql(String fileName) throws IOException {
-
         String prefixo = "sql/";
-
         ClassLoader classLoader = SqlUtils.class.getClassLoader();
-
         File file = new File(classLoader.getResource(prefixo+fileName).getFile());
-
         String content = new String(Files.readAllBytes(file.toPath()));
-
         return new StringBuffer(content);
     }
 
