@@ -5,7 +5,7 @@ import br.com.sankhya.commercial.analisegiro.core.ParametroContextoRepository;
 import br.com.sankhya.commercial.analisegiro.model.ChaveGiro;
 import br.com.sankhya.commercial.analisegiro.model.Giro;
 import br.com.sankhya.commercial.analisegiro.repository.GiroCustomRepository;
-import br.com.sankhya.commercial.analisegiro.repository.PedPenVdaResult;
+import br.com.sankhya.commercial.analisegiro.resultmodel.PedPenVdaResult;
 import br.com.sankhya.commercial.analisegiro.repository.PedidoPendenteRepository;
 import br.com.sankhya.commercial.analisegiro.repository.ProdutoRepository;
 import br.com.sankhya.commercial.analisegiro.resultmodel.GiroResult;

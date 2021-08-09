@@ -1,13 +1,12 @@
 package br.com.sankhya.commercial.analisegiro.repository;
 
 import br.com.sankhya.commercial.analisegiro.configuration.MatrizGiroConfiguracao;
-import br.com.sankhya.commercial.analisegiro.resultmodel.GiroResult;
+import br.com.sankhya.commercial.analisegiro.resultmodel.PedPenVdaResult;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.sql.Timestamp;
 import java.util.List;
 
 @SuppressWarnings("ALL")
@@ -21,9 +20,9 @@ public class PedidoPendenteRepository {
     }
 
     public List<PedPenVdaResult> findPedidosPendentes(Boolean utilizarLocal,
-                                                  String usarEmpresa,
-                                                  MatrizGiroConfiguracao matrizConf,
-                                                    Boolean utilizarControle
+                                                      String usarEmpresa,
+                                                      MatrizGiroConfiguracao matrizConf,
+                                                      Boolean utilizarControle
                             ){
 
         StringBuffer sql = new StringBuffer();
