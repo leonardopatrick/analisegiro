@@ -56,6 +56,9 @@ public class CalculoGiro {
     @Autowired
     PedidoPendenteRepository pedidoPendenteRepository;
 
+    @Autowired
+    PedPenVdaStrategyInMemory pedPenVdaStrategyInMemory;
+
     public void gerar() throws Exception {
 
         prepararVariaveisComuns();
@@ -72,6 +75,8 @@ public class CalculoGiro {
 
     private  void buscarPedVdaPend(){
 
+        pedPenVdaStrategyInMemory.deleteAll();
+
         List<PedPenVdaResult> pedPenVdaResults = pedidoPendenteRepository.findPedidosPendentes(
                  utilizarLocal,
                  usarEmpresa,
@@ -79,6 +84,11 @@ public class CalculoGiro {
                  utilizarControle
         );
 
+   for (PedPenVdaResult pedido :  pedPenVdaResults ){
+
+            ChaveGiro chave = new ChaveGiro(pedido);
+            pedPenVdaStrategyInMemory.save(chave, pedido.getQTDE());
+        }
     }
 
     private int buscarGiro() throws Exception {

@@ -1,6 +1,7 @@
 package br.com.sankhya.commercial.analisegiro.model;
 
 import br.com.sankhya.commercial.analisegiro.resultmodel.GiroResult;
+import br.com.sankhya.commercial.analisegiro.resultmodel.PedPenVdaResult;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.List;
 
 @Getter
 @Setter
@@ -36,6 +38,13 @@ public class ChaveGiro implements Serializable {
 		this.codEmp = gr.getCODEMP();
 		this.codLocal = gr.getCODLOCAL();
 		this.controle = gr.getCONTROLE();
+	}
+
+	public ChaveGiro(PedPenVdaResult pr) {
+		this.codProd = pr.getCODPROD();
+		this.codEmp = pr.getCODEMP();
+		this.codLocal = pr.getCODLOCAL();
+		this.controle = pr.getCONTROLE();
 	}
 
 	public boolean equals(ChaveGiro chave) {

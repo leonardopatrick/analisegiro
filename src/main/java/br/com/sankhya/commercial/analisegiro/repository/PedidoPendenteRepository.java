@@ -24,7 +24,6 @@ public class PedidoPendenteRepository {
                                                       MatrizGiroConfiguracao matrizConf,
                                                       Boolean utilizarControle
                             ){
-
         StringBuffer sql = new StringBuffer();
 
       sql.append(" SELECT  ");
