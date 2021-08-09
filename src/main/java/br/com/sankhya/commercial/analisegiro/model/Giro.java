@@ -200,7 +200,7 @@ public class Giro {
 
         if(somarLeadTime) {
             leadTime = leadTime.add(matrizConf.getDiasEstocagem());
-        } else if(leadTime.intValue() == 0) {
+        } else if(leadTime.compareTo(BigDecimal.ZERO) == 0) {
             leadTime =  leadTime.add(matrizConf.getDiasEstocagem());
         }
 
