@@ -28,6 +28,8 @@ public class PeriodoGiro {
 	private BigDecimal partGastoVar = BigDecimal.ZERO;
 	private BigDecimal partMargCont = BigDecimal.ZERO;
 	private BigDecimal partPeso = BigDecimal.ZERO;
+
+	private BigDecimal qtdVenda = BigDecimal.ZERO;
 	
 	private String curvaQtd = "C";
 	private String curvaTot = "C";

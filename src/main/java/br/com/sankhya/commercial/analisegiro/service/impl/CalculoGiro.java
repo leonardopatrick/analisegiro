@@ -192,6 +192,7 @@ public class CalculoGiro {
             );
 
             for (GiroResult item : giroResults) {
+
                 PeriodoGiro perGiro = new PeriodoGiro(item);
                 perGiro.setIndice(i);
                 perGiro.setDiasUteis(i); //TODO FUNCAO DIAS UTEIS

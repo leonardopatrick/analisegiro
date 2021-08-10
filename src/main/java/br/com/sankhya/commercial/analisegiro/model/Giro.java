@@ -120,9 +120,81 @@ public class Giro {
     @Column(name="PESO")
     private BigDecimal peso;
 
+    /*
+    private BigDecimal partMargCont;
+    private BigDecimal curvaMargCont;
+    private BigDecimal partTot;
+    private BigDecimal curvaTot;
+    */
     private Collection<PeriodoGiro> periodos = new ArrayList<PeriodoGiro>();
     public void addPeriodo(PeriodoGiro periodo) {
         periodos.add(periodo);
+    }
+
+    public BigDecimal getPartQtd(int indice) {
+        BigDecimal result = BigDecimal.ZERO;
+        for(PeriodoGiro periodo : periodos) {
+            if(periodo.getIndice() == indice) {
+                result = periodo.getPartQtd();
+            }
+        }
+        return result;
+    }
+    public BigDecimal getPartTot(int indice) {
+        BigDecimal result = BigDecimal.ZERO;
+        for(PeriodoGiro periodo : periodos) {
+            if(periodo.getIndice() == indice) {
+                result = periodo.getPartTot();
+            }
+        }
+        return result;
+    }
+    public BigDecimal getPartPeso(int indice) {
+        BigDecimal result = BigDecimal.ZERO;
+        for(PeriodoGiro periodo : periodos) {
+            if(periodo.getIndice() == indice) {
+                result = periodo.getPartPeso();
+            }
+        }
+        return result;
+    }
+    public BigDecimal getPartMargCont(int indice) {
+        BigDecimal result = BigDecimal.ZERO;
+        for(PeriodoGiro periodo : periodos) {
+            if(periodo.getIndice() == indice) {
+                result = periodo.getPartMargCont();
+            }
+        }
+        return result;
+    }
+    public void setCurvaQtd(int indice, String curva) {
+        for(PeriodoGiro periodo : periodos) {
+            if(periodo.getIndice() == indice) {
+                periodo.setCurvaQtd(curva);
+            }
+        }
+    }
+    public void setCurvaTot(int indice, String curva) {
+        for(PeriodoGiro periodo : periodos) {
+            if(periodo.getIndice() == indice) {
+                periodo.setCurvaTot(curva);
+            }
+        }
+    }
+    public void setCurvaPeso(int indice, String curva) {
+        for(PeriodoGiro periodo : periodos) {
+            if(periodo.getIndice() == indice) {
+                periodo.setCurvaPeso(curva);
+            }
+        }
+    }
+    public void setCurvaMargCont(int indice, String curva) {
+        for(PeriodoGiro periodo : periodos) {
+            if(periodo.getIndice() == indice) {
+                periodo.setCurvaMargCont(curva);
+                break;
+            }
+        }
     }
 
     public void calcular(MatrizGiroConfiguracao matrizConf, BigDecimal nroPeriodos, boolean calcularSugCompraParaEstMax, boolean calcularDiasUteisParaLeadTime, boolean somarLeadTime) throws Exception {
