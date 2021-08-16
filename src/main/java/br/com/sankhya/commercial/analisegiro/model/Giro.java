@@ -259,8 +259,8 @@ public class Giro {
                 cont--;
             }
         }
-
-        estMin = estMin.add(estMin.multiply(matrizConf.getPercAcrescimoSugestao()).divide(BigDecimalUtil.CEM_VALUE));
+        estMin = BigDecimalUtil.getValueOrZero(estMin);
+        estMin = estMin.add(estMin.multiply(BigDecimalUtil.getValueOrZero(matrizConf.getPercAcrescimoSugestao())).divide(BigDecimalUtil.CEM_VALUE));
         BigDecimal estoq = estoque.add(pedCpaPend).subtract(pedVdaPend);
 
         BigDecimal divisor;
@@ -270,6 +270,8 @@ public class Giro {
             divisor = BigDecimal.valueOf(cont);
         }
 
+        leadTime = BigDecimalUtil.getValueOrZero(leadTime);
+        
         if(somarLeadTime) {
             leadTime = leadTime.add(matrizConf.getDiasEstocagem());
         } else if(leadTime.compareTo(BigDecimal.ZERO) == 0) {

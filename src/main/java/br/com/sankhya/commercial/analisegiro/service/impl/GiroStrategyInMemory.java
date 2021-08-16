@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,8 +42,8 @@ public class GiroStrategyInMemory implements GiroStrategy {
         }
     }
 
-    public List<Giro> findAll(){
-        return (List<Giro>) giros.values();
+    public Collection<Giro> findAll(){
+        return giros.values();
     }
 
     /*public Giro findGiroByObject(Object item){

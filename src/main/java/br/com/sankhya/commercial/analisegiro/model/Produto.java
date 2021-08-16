@@ -28,7 +28,6 @@ public class Produto implements Serializable {
 
 	private String descrprod;
 	private String ativo;
-	private String percomprod;
 	private BigDecimal estmin;
 	private BigDecimal estmax;
 	private BigDecimal descmax;

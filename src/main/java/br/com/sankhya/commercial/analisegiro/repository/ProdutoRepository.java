@@ -11,4 +11,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, BigDecimal> {
 
     @Query("SELECT DISTINCT codprod FROM Produto p WHERE ativo = 'S' AND permcompprod = 'S' ")
     List<BigDecimal> listProdutosCalGiro();
+
+    Produto findByCodprod(BigDecimal codprod);
+
 }

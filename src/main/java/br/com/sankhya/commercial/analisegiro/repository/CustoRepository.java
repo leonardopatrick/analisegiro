@@ -8,9 +8,11 @@ import br.com.sankhya.commercial.analisegiro.util.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.Transformers;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -46,7 +48,7 @@ public class CustoRepository {
             sqlBuf.append(" AND CUS.CODLOCAL = :CODLOCAL");
         }
         if (controlaCustoPorControle) {
-            sqlBuf.append("AND CUS.CONTROLE = :CONTROLE");
+            sqlBuf.append(" AND CUS.CONTROLE = :CONTROLE");
         }
         sqlBuf.append(" AND CUS.DTATUAL <= SYSDATE");
         sqlBuf.append(" AND CUS.DTATUAL = (SELECT MAX(CN.DTATUAL)");
@@ -59,13 +61,13 @@ public class CustoRepository {
             sqlBuf.append(" AND CN.CODLOCAL = :CODLOCAL");
         }
         if (controlaCustoPorControle) {
-            sqlBuf.append("AND CN.CONTROLE = :CONTROLE");
+            sqlBuf.append(" AND CN.CONTROLE = :CONTROLE");
         }
         sqlBuf.append(" AND CUS.DTATUAL <= SYSDATE)"); // TODO: é suficiente sysdate para oracle e sql server ?
         sqlBuf.append(" ORDER BY CUS.ENTRADACOMICMS DESC");
 
         Session session = em.unwrap(Session.class);
-        NativeQuery nativeSql = session.createSQLQuery(sqlBuf.toString());
+        NativeQuery nativeSql = session.createNativeQuery(sqlBuf.toString());
 
         nativeSql.setParameter("CODPROD", codProd);
         if (controlaCustoPorEmpresa) {
@@ -78,7 +80,22 @@ public class CustoRepository {
             nativeSql.setParameter("CONTROLE", (StringUtils.getEmptyAsNull(controle) != null) ? controle : " ");
         }
 
-        BigDecimal custo = (BigDecimal) nativeSql.getSingleResult();
+        BigDecimal custo = BigDecimal.ZERO;
+
+        Object result = null;
+
+        try {
+            Object o = nativeSql.getSingleResult();
+
+        }catch (EmptyResultDataAccessException e){
+            result = null;
+        }catch (NoResultException e){
+            result = null;
+        }
+
+        if(result!=null){
+            custo = (BigDecimal) result;
+        }
 
         return custo;
     }

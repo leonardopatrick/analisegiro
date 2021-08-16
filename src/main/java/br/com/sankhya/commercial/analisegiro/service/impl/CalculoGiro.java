@@ -350,18 +350,24 @@ public class CalculoGiro {
 
         Boolean custoRepDaTabCotacao = MGEParameters.asBoolean("TABCOTFORMTZ");
         Boolean calcularSugCompraParaEstMax = MGEParameters.asBoolean("SUGCOMPMIMAMTZ");
-        Boolean calcularDiasUteisParaLeadTime = MGEParameters.asBoolean("CONSDIASUTEIS");
+        Boolean calcularDiasUteisParaLeadTime = Boolean.FALSE;//MGEParameters.asBoolean("CONSDIASUTEIS"); //TODO: CRIAR PARAMETRO CONSDIASUTEIS
         Boolean somarLeadTime = MGEParameters.asBoolean("SOMALEADTIME");
+
+        if(calcularDiasUteisParaLeadTime){
+            throw new Exception("Configuração calcular dias úteis para lead time não implementada.");
+        }
 
         Boolean temTGFPMA = Boolean.FALSE;
 
         if(custoRepDaTabCotacao) {
-            temTGFPMA =  singleQueryExecutor.existe("COUNT(1) AS QTD","TGFPMA", "") ;
+            temTGFPMA =  singleQueryExecutor.existe("COUNT(1) AS QTD","TGFPMA", "1=1") ;
         }
 
         for(Giro giro : giroRepository.findAll()) {
+
             String marca;
-          Optional<Produto> produtoOptional =  produtoRepository.findById(giro.getChave().getCodProd());
+            Optional<Produto>  produtoOptional =  produtoRepository.findById(giro.getChave().getCodProd());
+
             if(produtoOptional.isPresent()){
                 Produto produto = produtoOptional.get();
                 if(giro.getEstMin() == null) {
@@ -375,7 +381,7 @@ public class CalculoGiro {
                 giro.setPermCompProd(produto.getPermcompprod());
                 giro.setDtAlterProduto(produto.getDtalter());
                 marca = produto.getMarca();
-            }
+          }
 
             BigDecimal dobCustoRep = BigDecimal.ZERO;
             BigDecimal dobCustoAtual = BigDecimal.ZERO;
