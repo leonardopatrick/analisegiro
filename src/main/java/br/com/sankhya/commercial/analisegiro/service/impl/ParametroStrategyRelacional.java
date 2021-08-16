@@ -81,6 +81,11 @@ public class ParametroStrategyRelacional implements ParametroStrategy {
     }
 
     @Override
+    public Boolean asBoolean(String chave) throws Exception {
+        return (Boolean) getValueParameter(chave);
+    }
+
+    @Override
     public String getParameterAsString(String paramName) throws Exception {
         return null;
     }

@@ -1,6 +1,6 @@
 package br.com.sankhya.commercial.analisegiro.configuration;
 
-import br.com.sankhya.commercial.analisegiro.core.ParametroContextoRepository;
+import br.com.sankhya.commercial.analisegiro.core.MGEParameters;
 import br.com.sankhya.commercial.analisegiro.service.impl.ParametroStrategyRelacional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -9,15 +9,15 @@ import org.springframework.context.annotation.Primary;
 
 @Primary
 @Configuration
-public class ParametroContextoRepositoryConfig {
+public class MGEParametersConfig {
 
     @Autowired
     ParametroStrategyRelacional parametro;
 
     @Bean
-    public ParametroContextoRepository parametroContextoRepository(){
+    public MGEParameters MGEParameters(){
 
-        ParametroContextoRepository parametroContextoRepository = new ParametroContextoRepository();
+        MGEParameters parametroContextoRepository = new MGEParameters();
         parametroContextoRepository.setStrategy(parametro);
 
         return parametroContextoRepository;

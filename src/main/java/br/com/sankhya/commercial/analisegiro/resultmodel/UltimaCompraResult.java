@@ -11,10 +11,10 @@ import java.sql.Timestamp;
 @Getter
 public class UltimaCompraResult extends ChaveGiro {
 
-    private BigDecimal CODPROD;
+   /* private BigDecimal CODPROD;
     private BigDecimal CODEMP;
     private BigDecimal CODLOCAL;
-    private char CONTROLE;
+    private char CONTROLE;*/
     private String TIPMOV;
     private Timestamp DTREF;
     private BigDecimal ALIQICMS;

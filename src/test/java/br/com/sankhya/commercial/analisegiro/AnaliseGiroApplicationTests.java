@@ -1,7 +1,7 @@
 package br.com.sankhya.commercial.analisegiro;
 
-import br.com.sankhya.commercial.analisegiro.configuration.ParametroContextoRepositoryConfig;
-import br.com.sankhya.commercial.analisegiro.core.ParametroContextoRepository;
+import br.com.sankhya.commercial.analisegiro.configuration.MGEParametersConfig;
+import br.com.sankhya.commercial.analisegiro.core.MGEParameters;
 import br.com.sankhya.commercial.analisegiro.model.Parametro;
 import br.com.sankhya.commercial.analisegiro.repository.ProdutoRepository;
 import br.com.sankhya.commercial.analisegiro.service.impl.ParametroStrategyRelacional;
@@ -19,7 +19,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@Import({ParametroContextoRepositoryConfig.class, ParametroStrategyRelacional.class})
+@Import({MGEParametersConfig.class, ParametroStrategyRelacional.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class AnaliseGiroApplicationTests {
 
@@ -27,7 +27,7 @@ class AnaliseGiroApplicationTests {
 	ProdutoRepository produtoRepository;
 
 	@Autowired
-	ParametroContextoRepository paramRepository;
+    MGEParameters paramRepository;
 
 	@Test
 	void buscaParametroUsaControle() throws Exception {

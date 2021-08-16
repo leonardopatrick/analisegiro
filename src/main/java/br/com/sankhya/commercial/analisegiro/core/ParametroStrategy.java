@@ -32,4 +32,6 @@ public interface ParametroStrategy {
     public List<Parametro> getAllParameters(String name) throws Exception;
 
     public List<Parametro> getAllParameters(Iterable<String> chaves) throws Exception;
+
+    public Boolean asBoolean(String paramName) throws Exception;
 }

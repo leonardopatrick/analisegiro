@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import br.com.sankhya.commercial.analisegiro.configuration.MatrizGiroConfiguracao;
-import br.com.sankhya.commercial.analisegiro.core.ParametroContextoRepository;
+import br.com.sankhya.commercial.analisegiro.core.MGEParameters;
 import br.com.sankhya.commercial.analisegiro.model.ChaveGiro;
 import br.com.sankhya.commercial.analisegiro.model.Giro;
 import br.com.sankhya.commercial.analisegiro.struct.PeriodoGiro;
@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class CalculoCurva {
 
 	@Autowired
-	ParametroContextoRepository parametroRepo;
+	MGEParameters MGEParameters;
 
 	private MatrizGiroConfiguracao matrizConf;
 
@@ -271,9 +271,9 @@ public class CalculoCurva {
 	public void calcularCurvas(Map<ChaveGiro, Giro> giros, int nroPeriodos) throws Exception {
 		calcularParticipacao(giros);
 
-		//TODO: Resolver parametros 
-		BigDecimal limCurvaB = BigDecimal.valueOf(parametroRepo.getParameterAsInt("limite.curva.b.matriz"));//(BigDecimal) MGECoreParameter.getParameter("limite.curva.b.matriz");
-		BigDecimal limCurvaC = BigDecimal.valueOf(parametroRepo.getParameterAsInt("limite.curva.c.matriz"));//(BigDecimal) MGECoreParameter.getParameter("limite.curva.c.matriz");
+		//TODO: Resolver parametros
+		BigDecimal limCurvaB = BigDecimal.valueOf(MGEParameters.getParameterAsInt("limite.curva.b.matriz"));//(BigDecimal) MGECoreParameter.getParameter("limite.curva.b.matriz");
+		BigDecimal limCurvaC = BigDecimal.valueOf(MGEParameters.getParameterAsInt("limite.curva.c.matriz"));//(BigDecimal) MGECoreParameter.getParameter("limite.curva.c.matriz");
 		BigDecimal limiteCurvaB = BigDecimalUtil.CEM_VALUE.subtract((limCurvaB.add(limCurvaC)));
 		BigDecimal limiteCurvaC = BigDecimalUtil.CEM_VALUE.subtract(limCurvaC);
 		

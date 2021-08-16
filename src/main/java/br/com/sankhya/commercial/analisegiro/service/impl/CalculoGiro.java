@@ -1,7 +1,7 @@
 package br.com.sankhya.commercial.analisegiro.service.impl;
 
 import br.com.sankhya.commercial.analisegiro.configuration.MatrizGiroConfiguracao;
-import br.com.sankhya.commercial.analisegiro.core.ParametroContextoRepository;
+import br.com.sankhya.commercial.analisegiro.core.MGEParameters;
 import br.com.sankhya.commercial.analisegiro.model.ChaveGiro;
 import br.com.sankhya.commercial.analisegiro.model.Giro;
 import br.com.sankhya.commercial.analisegiro.model.Produto;
@@ -48,7 +48,7 @@ public class CalculoGiro {
     ProdutoRepository produtoRepository;
 
     @Autowired
-    ParametroContextoRepository parametroRepo;
+    MGEParameters MGEParameters;
 
     @Autowired
     GiroCustomRepository giroCustomRepository;
@@ -102,21 +102,21 @@ public class CalculoGiro {
     }
 
     public void gerarListaProdutos() throws Exception {
-        //TODO strCodProd
+        //TODO: Adicionar a String strCodProd para buscar no repositório
         List<BigDecimal> lista = produtoRepository.listProdutosCalGiro();
         lisProdSemGiro.addAll(lista);
     }
 
     private void prepararVariaveisComuns() throws Exception {
-        //TODO AJUSTAR CHAVE
-       // subtrairDaSugestaoAQtdeBloqueadaNoWMS = parametroRepo.getParameterAsBoolean("subtrair.da.sug.compra.qtd.bloq.wms");
-      //  subtrairDoEsotqueAReserva = parametroRepo.getParameterAsBoolean("subtrair.do.estoque.a.reserva"); // criar param no xml.
-
-        controlaCustoPorLocal = parametroRepo.getParameterAsBoolean("UTILIZALOCAL");
-        controlaCustoPorControle =parametroRepo.getParameterAsBoolean("UTILIZACONTROLE");
-        controlaCustoPorEmpresa  =parametroRepo.getParameterAsBoolean("UTILIZACONTROLE");
-        utilizarLocal = "S".equals(matrizConf.getApresentaLocal()) & parametroRepo.getParameterAsBoolean("UTILIZALOCAL");
-        utilizarControle = "S".equals(matrizConf.getApresentaControle()) & parametroRepo.getParameterAsBoolean("UTILIZACONTROLE");
+        /*  TODO: Ajustar Chave dos parametros abaixo
+            subtrairDaSugestaoAQtdeBloqueadaNoWMS = parametroRepo.getParameterAsBoolean("subtrair.da.sug.compra.qtd.bloq.wms");
+            subtrairDoEsotqueAReserva = parametroRepo.getParameterAsBoolean("subtrair.do.estoque.a.reserva"); // criar param no xml.
+        */
+        controlaCustoPorLocal = MGEParameters.asBoolean("UTILIZALOCAL");
+        controlaCustoPorControle = MGEParameters.asBoolean("UTILIZACONTROLE");
+        controlaCustoPorEmpresa  = MGEParameters.asBoolean("UTILIZACONTROLE"); //TODO: Custo por empresa
+        utilizarLocal = "S".equals(matrizConf.getApresentaLocal()) & MGEParameters.asBoolean("UTILIZALOCAL");
+        utilizarControle = "S".equals(matrizConf.getApresentaControle()) & MGEParameters.asBoolean("UTILIZACONTROLE");
         if ("S".equals(matrizConf.getApresentaEmpresa())) {
             usarEmpresa = "S".equals(matrizConf.getApresentaMatriz()) ? "M" : "S";
         } else {
@@ -316,21 +316,21 @@ public class CalculoGiro {
                     temUltVendaFaturamento,
                     mesesRetroagir);
 
-        List<UltimaCompraResult> ultimaVendaResutls = ultimaCompraRepository.findUltimaCompra(
+        List<UltimaCompraResult> ultimaCompraResults = ultimaCompraRepository.findUltimaCompra(
                 matrizConf,
                 usarEmpresa,
                 utilizarLocal,
                 utilizarControle
         );
 
-        for (UltimaCompraResult item :  ultimaVendaResutls ) {
+        for (UltimaCompraResult item :  ultimaCompraResults) {
             Giro giro = giroRepository.findGiroByChaveGiro(item);
             giro.setUltCompra( item.getDTREF());
             giro.setQtdUltCompra(item.getQTDNEG());
             giro.setAliqCred(item.getALIQICMS());
             giro.setVlrUltCompra(item.getVLRTOT());
             giroRepository.save(giro);
-            lisProdSemGiro.remove(item.getCODPROD());
+           // lisProdSemGiro.remove(item.getCODPROD());
         }
 
         //TODO: Ajustar a inclusão dos filstros
@@ -348,10 +348,10 @@ public class CalculoGiro {
 
     private void calcular() throws Exception {
 
-        Boolean custoRepDaTabCotacao =parametroRepo.getParameterAsBoolean("TABCOTFORMTZ");
-        Boolean calcularSugCompraParaEstMax =parametroRepo.getParameterAsBoolean("SUGCOMPMIMAMTZ");
-        Boolean calcularDiasUteisParaLeadTime =parametroRepo.getParameterAsBoolean("CONSDIASUTEIS");
-        Boolean somarLeadTime =parametroRepo.getParameterAsBoolean("SOMALEADTIME");
+        Boolean custoRepDaTabCotacao = MGEParameters.asBoolean("TABCOTFORMTZ");
+        Boolean calcularSugCompraParaEstMax = MGEParameters.asBoolean("SUGCOMPMIMAMTZ");
+        Boolean calcularDiasUteisParaLeadTime = MGEParameters.asBoolean("CONSDIASUTEIS");
+        Boolean somarLeadTime = MGEParameters.asBoolean("SOMALEADTIME");
 
         Boolean temTGFPMA = Boolean.FALSE;
 

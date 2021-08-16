@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ParametroContextoRepository implements ParametroStrategy{
+public class MGEParameters implements ParametroStrategy{
 
     private ParametroStrategy strategy;
 
@@ -76,5 +76,10 @@ public class ParametroContextoRepository implements ParametroStrategy{
     @Override
     public List<Parametro> getAllParameters(Iterable<String> chaves) throws Exception {
         return strategy.getAllParameters(chaves);
+    }
+
+    @Override
+    public Boolean asBoolean(String paramName) throws Exception {
+        return strategy.asBoolean(paramName);
     }
 }

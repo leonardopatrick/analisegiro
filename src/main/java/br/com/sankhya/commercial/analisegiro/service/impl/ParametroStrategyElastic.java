@@ -28,8 +28,13 @@ public class ParametroStrategyElastic implements ParametroStrategy {
     }
 
     @Override
+    public Boolean asBoolean(String paramName) throws Exception {
+        return Boolean.FALSE;
+    }
+
+    @Override
     public Boolean getParameterAsBoolean(String paramName) throws Exception {
-        return false;
+        return Boolean.FALSE;
     }
 
     @Override
