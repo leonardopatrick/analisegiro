@@ -19,5 +19,7 @@ public class EstoqueResult  {
     private BigDecimal ESTMAX;
     private BigDecimal WMSBLOQUEADO;
 
-
+    public ChaveGiro toChaveGiro() {
+        return new ChaveGiro(CODPROD, CODEMP, CODLOCAL, CONTROLE);
+    }
 }

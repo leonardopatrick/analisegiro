@@ -25,4 +25,7 @@ public class GiroResult {
     private String MARCA;
     private BigDecimal PESOBRUTO;
 
+    public ChaveGiro toChaveGiro() {
+        return new ChaveGiro(CODPROD, CODEMP, CODLOCAL, CONTROLE);
+    }
 }

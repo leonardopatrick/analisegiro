@@ -18,4 +18,7 @@ public class UltimaVendaResult {
     private String TIPMOV;
     private Timestamp DTREF;
 
+    public ChaveGiro toChaveGiro() {
+        return new ChaveGiro(CODPROD, CODEMP, CODLOCAL, CONTROLE);
+    }
 }

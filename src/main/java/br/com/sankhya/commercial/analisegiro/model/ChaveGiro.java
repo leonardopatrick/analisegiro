@@ -14,13 +14,13 @@ import java.math.BigDecimal;
 public class ChaveGiro implements Serializable {
 
 	@Column(name="CODPROD")
-	protected BigDecimal codProd;
+	private BigDecimal codProd;
 	@Column(name="CODEMP")
-	protected BigDecimal codEmp;
+	private BigDecimal codEmp;
 	@Column(name="CODLOCAL")
-	protected BigDecimal codLocal;
+	private BigDecimal codLocal;
 	@Column(name="CONTROLE")
-	protected char controle =  Character.valueOf(' ');
+	private char controle =  Character.valueOf(' ');
 
 	public ChaveGiro(BigDecimal codProd) {
 		this.codProd = codProd;
@@ -37,7 +37,7 @@ public class ChaveGiro implements Serializable {
 	}
 
 
-	public ChaveGiro(BigDecimal codProd, BigDecimal codEmp, BigDecimal codLocal, String controle) {
+	public ChaveGiro(BigDecimal codProd, BigDecimal codEmp, BigDecimal codLocal, char controle) {
 		this.codProd = codProd;
 		this.codEmp = BigDecimal.ZERO;
 		this.codLocal = BigDecimal.ZERO;

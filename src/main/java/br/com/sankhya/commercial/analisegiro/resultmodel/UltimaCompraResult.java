@@ -21,5 +21,7 @@ public class UltimaCompraResult {
     private BigDecimal QTDNEG;
     private BigDecimal VLRTOT;
 
-
+    public ChaveGiro toChaveGiro() {
+      return new ChaveGiro(CODPROD, CODEMP, CODLOCAL, CONTROLE);
+    }
 }

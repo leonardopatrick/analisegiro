@@ -1,5 +1,6 @@
 package br.com.sankhya.commercial.analisegiro.resultmodel;
 
+import br.com.sankhya.commercial.analisegiro.model.ChaveGiro;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +24,8 @@ public class CustoResult {
     private BigDecimal CUSVARIAVEL;
     private Timestamp DTATUAL;
 
-
+    public ChaveGiro toChaveGiro() {
+        return new ChaveGiro(CODPROD, CODEMP, CODLOCAL, CONTROLE);
+    }
 
 }
