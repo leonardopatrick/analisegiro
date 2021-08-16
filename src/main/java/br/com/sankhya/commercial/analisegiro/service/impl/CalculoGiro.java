@@ -94,8 +94,8 @@ public class CalculoGiro {
         buscarPedVdaPend();
         buscarPedCpaVdaPend();
        buscarEstoques();
-       /*  buscarUltimaCompra();
-        buscarUltimaVenda();
+         buscarUltimaCompra();
+      /*  buscarUltimaVenda();
         acrescentarSemGiro();
         calcular();*/
 
@@ -224,7 +224,7 @@ public class CalculoGiro {
         );
 
    for (PedidoPendenteResult item :  pedPenResults ){
-            Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
+            Giro giro = giroRepository.findGiroByChaveGiro(item.toChaveGiro());
             //Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
             giro.setPedVdaPend(item.getQTDE());
             giroRepository.save(giro);
