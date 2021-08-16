@@ -271,11 +271,11 @@ public class Giro {
         }
 
         leadTime = BigDecimalUtil.getValueOrZero(leadTime);
-        
+
         if(somarLeadTime) {
             leadTime = leadTime.add(matrizConf.getDiasEstocagem());
         } else if(leadTime.compareTo(BigDecimal.ZERO) == 0) {
-            leadTime =  leadTime.add(matrizConf.getDiasEstocagem());
+            leadTime =  leadTime.add(BigDecimalUtil.getValueOrZero(matrizConf.getDiasEstocagem()));
         }
 
         sugCompra = BigDecimal.ZERO;
@@ -306,7 +306,10 @@ public class Giro {
                     } else {*/
                         estMinGir = giroDiario.multiply(BigDecimal.valueOf(leadTime.intValue()));
                    // }
-                    BigDecimal estMinGirComp = estMinGir.add(estMinGir.multiply(matrizConf.getPercAcrescimoSugestao()).divide(BigDecimalUtil.CEM_VALUE)).setScale(0,RoundingMode.HALF_UP).abs();
+                    BigDecimal estMinGirComp = estMinGir.add(
+                                estMinGir.multiply(BigDecimalUtil.getValueOrZero(matrizConf.getPercAcrescimoSugestao()))
+                                                .divide(BigDecimalUtil.CEM_VALUE)).setScale(0,RoundingMode.HALF_UP).abs();
+
                     if(estoq.compareTo(estMinGirComp) < 0) {
                         sugCompraGir = estMinGirComp.subtract(estoq);
                         if(sugCompraGir.compareTo(BigDecimal.ZERO) == 0) {

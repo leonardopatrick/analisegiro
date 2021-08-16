@@ -78,7 +78,6 @@ public class GiroCustomRepository {
                 .setParameter("DTFIN",  dtFin)
                 .setResultTransformer(Transformers.aliasToBean(GiroResult.class)).list();
 
-
         return rs;
     }
 
