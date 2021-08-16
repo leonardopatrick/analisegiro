@@ -86,18 +86,18 @@ public class CalculoGiro {
         prepararVariaveisComuns();
 
         lisProdSemGiro.clear();
-        if("S".equals(matrizConf.getIncluirSemEstoque())) {
-            gerarListaProdutos();
-        }
-        nroPeriodos = buscarGiro();
+       if("S".equals(matrizConf.getIncluirSemEstoque())) {
+           gerarListaProdutos();
+       }
+       nroPeriodos = buscarGiro();
 
-        buscarPedVdaPend();
-        buscarPedCpaVdaPend();
+       buscarPedVdaPend();
+       buscarPedCpaVdaPend();
        buscarEstoques();
-         buscarUltimaCompra();
-      /*  buscarUltimaVenda();
-        acrescentarSemGiro();
-        calcular();*/
+       buscarUltimaCompra();
+       buscarUltimaVenda();
+       acrescentarSemGiro();
+       calcular();
 
     }
 
@@ -311,7 +311,7 @@ public class CalculoGiro {
         int  mesesRetroagir = 1;/*parametroRepo.getParameterAsInt("UTILIZALOCAL");*/ //TODO: Verificar qual parametro é responsável pelo dias a retroceder
 
         if(temUltVenda)
-            ultimaVendaRepository.atualizarTGFUVC(
+            ultimaCompraRepository.atualizarTGFUVC(
                     temUltVendaSaida,
                     temUltVendaFaturamento,
                     mesesRetroagir);

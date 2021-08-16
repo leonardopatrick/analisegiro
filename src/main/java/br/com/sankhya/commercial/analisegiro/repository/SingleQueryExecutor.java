@@ -2,6 +2,8 @@ package br.com.sankhya.commercial.analisegiro.repository;
 
 import br.com.sankhya.commercial.analisegiro.util.BigDecimalUtil;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.math.BigDecimal;

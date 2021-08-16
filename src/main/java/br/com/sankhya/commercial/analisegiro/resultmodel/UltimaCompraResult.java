@@ -22,6 +22,6 @@ public class UltimaCompraResult {
     private BigDecimal VLRTOT;
 
     public ChaveGiro toChaveGiro() {
-      return new ChaveGiro(CODPROD, CODEMP, CODLOCAL, CONTROLE);
+       return new ChaveGiro(CODPROD, CODEMP, CODLOCAL, CONTROLE);
     }
 }

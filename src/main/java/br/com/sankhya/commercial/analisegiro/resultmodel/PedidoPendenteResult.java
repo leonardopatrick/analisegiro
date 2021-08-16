@@ -17,7 +17,6 @@ public class PedidoPendenteResult  {
     private BigDecimal QTDE;
 
     public ChaveGiro toChaveGiro() {
-
         return new ChaveGiro(CODPROD, CODEMP, CODLOCAL, CONTROLE);
     }
 }

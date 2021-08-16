@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
@@ -75,7 +76,7 @@ public class UltimaCompraRepository {
         sql.append(" WHERE ITE.TIPMOV = 'C' ");
 
         sql.append(" GROUP BY  ");
-        if("M".equals(usarEmpresa)) {
+       /* if("M".equals(usarEmpresa)) {
             sql.append(" , NVL(EMP.CODEMPMATRIZ, EMP.CODEMP) ");
         } else if("S".equals(usarEmpresa)) {
             sql.append(", ITE.CODEMP ");
@@ -86,8 +87,33 @@ public class UltimaCompraRepository {
         }
         if(utilizarControle) {
             sql.append(" , ITE.CONTROLE ");
-        }
+        }*/
+        //TODO MESMA LÒGICA DO SELECT
 
+        if("S".equals(matrizConf.getAgrupaProdAltern())) {
+            sql.append("Snk_GetProdutoAgrupadoGiro(ITE.CODPROD, 'S')  ");
+        } else if("G".equals(matrizConf.getAgrupaProdAltern())) {
+            sql.append("Snk_GetProdutoAgrupadoGiro(ITE.CODPROD, 'G')  ");
+        } else {
+            sql.append("ITE.CODPROD");
+        }
+        if("M".equals(usarEmpresa)) {
+            sql.append(" , NVL(EMP.CODEMPMATRIZ, EMP.CODEMP) ");
+        } else if("S".equals(usarEmpresa)) {
+            sql.append(" , ITE.CODEMP ");
+        } else {
+            sql.append(" , 0 ");
+        }
+        if(utilizarLocal) {
+            sql.append(" , ITE.CODLOCALORIG ");
+        } else {
+            sql.append(" , 0 ");
+        }
+        if(utilizarControle) {
+            sql.append(" , ITE.CONTROLE ");
+        } else {
+            sql.append(" , ' ' ");
+        }
 
         Session session = em.unwrap(Session.class);
         List<UltimaCompraResult> rs = session.createSQLQuery(sql.toString())
@@ -96,6 +122,7 @@ public class UltimaCompraRepository {
         return rs;
     }
 
+    @Transactional
     public void atualizarTGFUVC(
             Boolean temUltCompraEntrada,
             Boolean temUltCompraMovimento,
@@ -126,16 +153,18 @@ public class UltimaCompraRepository {
     comeco.set(Calendar.DATE, 1);
     TimeUtils.clearTime(comeco);
 
-    while (comeco.compareTo(fim) <= 0) {
-        Timestamp inicio = new Timestamp(TimeUtils.add(fim.getTimeInMillis(), -10, Calendar.DATE));
+        while (comeco.compareTo(fim) <= 0) {
+            Timestamp dtIni = new Timestamp(TimeUtils.add(fim.getTimeInMillis(), -10, Calendar.DATE));
 
-      Query q = em.createNativeQuery(queUltCompra.toString())
-                        .setParameter("DTINI", inicio)
-                        .setParameter("DTFIM", fim);
+            Timestamp dtFim = new Timestamp(fim.getTimeInMillis());
 
-        q.executeUpdate();
+            Query q = em.createNativeQuery(queUltCompra.toString())
+                    .setParameter("DTINI", dtIni)
+                    .setParameter("DTFIM", dtFim);
+            q.executeUpdate();
 
-        fim.add(Calendar.DATE, -10);
-    }
+            fim.add(Calendar.DATE, -10);
+
+        }
     }
 }

@@ -10,7 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
+import javax.transaction.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.io.File;
@@ -78,7 +78,7 @@ public class UltimaVendaRepository {
         sql.append(" WHERE ITE.TIPMOV = 'V' ");
 
         sql.append(" GROUP BY  ");
-        if("M".equals(usarEmpresa)) {
+       /* if("M".equals(usarEmpresa)) {
             sql.append(" , NVL(EMP.CODEMPMATRIZ, EMP.CODEMP) ");
         } else if("S".equals(usarEmpresa)) {
             sql.append(", ITE.CODEMP ");
@@ -89,6 +89,33 @@ public class UltimaVendaRepository {
         }
         if(utilizarControle) {
             sql.append(" , ITE.CONTROLE ");
+        }*/
+
+        //TODO MESMA LÒGICA DO SELECT
+
+        if("S".equals(matrizConf.getAgrupaProdAltern())) {
+            sql.append("Snk_GetProdutoAgrupadoGiro(ITE.CODPROD, 'S')  ");
+        } else if("G".equals(matrizConf.getAgrupaProdAltern())) {
+            sql.append("Snk_GetProdutoAgrupadoGiro(ITE.CODPROD, 'G')  ");
+        } else {
+            sql.append("ITE.CODPROD");
+        }
+        if("M".equals(usarEmpresa)) {
+            sql.append(" , NVL(EMP.CODEMPMATRIZ, EMP.CODEMP) ");
+        } else if("S".equals(usarEmpresa)) {
+            sql.append(" , ITE.CODEMP ");
+        } else {
+            sql.append(" , 0 ");
+        }
+        if(utilizarLocal) {
+            sql.append(" , ITE.CODLOCALORIG ");
+        } else {
+            sql.append(" , 0 ");
+        }
+        if(utilizarControle) {
+            sql.append(" , ITE.CONTROLE ");
+        } else {
+            sql.append(" , ' ' ");
         }
 
 
@@ -99,46 +126,49 @@ public class UltimaVendaRepository {
         return rs;
     }
 
+    @Transactional
     public void atualizarTGFUVC(
             Boolean temUltVendaSaida,
             Boolean temUltVendaFaturamento,
             int mesesRetroagir
     ) throws Exception {
 
-    StringBuffer queUltVenda = SqlUtils.loadSql("queUltVenda.sql");
+        StringBuffer queUltVenda = SqlUtils.loadSql("queUltVenda.sql");
 
-    if (temUltVendaSaida) {
-        StringUtils.replaceString("/* TEM_ENTSAI INICIO */", "/* TEM_ENTSAI INICIO", queUltVenda);
-        StringUtils.replaceString("/* TEM_ENTSAI FIM */", " TEM_ENTSAI FIM */", queUltVenda);
-    }
-    if (temUltVendaFaturamento) {
-        StringUtils.replaceString("/* TEM_MOV INICIO */", "/* TEM_MOV INICIO", queUltVenda);
-        StringUtils.replaceString("/* TEM_MOV FIM */", " TEM_MOV FIM */", queUltVenda);
-    }
-    Calendar fim = Calendar.getInstance();
-    fim.setTimeInMillis(System.currentTimeMillis());
-    TimeUtils.clearTime(fim);
+        if (temUltVendaSaida) {
+            StringUtils.replaceString("/* TEM_ENTSAI INICIO */", "/* TEM_ENTSAI INICIO", queUltVenda);
+            StringUtils.replaceString("/* TEM_ENTSAI FIM */", " TEM_ENTSAI FIM */", queUltVenda);
+        }
+        if (temUltVendaFaturamento) {
+            StringUtils.replaceString("/* TEM_MOV INICIO */", "/* TEM_MOV INICIO", queUltVenda);
+            StringUtils.replaceString("/* TEM_MOV FIM */", " TEM_MOV FIM */", queUltVenda);
+        }
+        Calendar fim = Calendar.getInstance();
+        fim.setTimeInMillis(System.currentTimeMillis());
+        TimeUtils.clearTime(fim);
 
-    if (mesesRetroagir == 0) {
-        mesesRetroagir = 1;
-    }
+        if (mesesRetroagir == 0) {
+            mesesRetroagir = 24;
+        }
 
-    Calendar comeco = Calendar.getInstance();
-    comeco.setTimeInMillis(fim.getTimeInMillis());
-    comeco.add(Calendar.MONTH, mesesRetroagir * -1);
-    comeco.set(Calendar.DATE, 1);
-    TimeUtils.clearTime(comeco);
+        Calendar comeco = Calendar.getInstance();
+        comeco.setTimeInMillis(fim.getTimeInMillis());
+        comeco.add(Calendar.MONTH, mesesRetroagir * -1);
+        comeco.set(Calendar.DATE, 1);
+        TimeUtils.clearTime(comeco);
 
-    while (comeco.compareTo(fim) <= 0) {
-        Timestamp inicio = new Timestamp(TimeUtils.add(fim.getTimeInMillis(), -10, Calendar.DATE));
+        while (comeco.compareTo(fim) <= 0) {
+            Timestamp dtIni = new Timestamp(TimeUtils.add(fim.getTimeInMillis(), -10, Calendar.DATE));
 
-      Query q = em.createNativeQuery(queUltVenda.toString())
-                        .setParameter("DTINI", inicio)
-                        .setParameter("DTFIM", fim);
+            Timestamp dtFim = new Timestamp(fim.getTimeInMillis());
 
-        q.executeUpdate();
+            Query q = em.createNativeQuery(queUltVenda.toString())
+                    .setParameter("DTINI", dtIni)
+                    .setParameter("DTFIM", dtFim);
+            q.executeUpdate();
 
-        fim.add(Calendar.DATE, -10);
-    }
+            fim.add(Calendar.DATE, -10);
+
+        }
     }
 }
