@@ -196,7 +196,7 @@ public class CalculoGiro {
                 PeriodoGiro perGiro = new PeriodoGiro(item);
                 perGiro.setIndice(i);
                 perGiro.setDiasUteis(i); //TODO FUNCAO DIAS UTEIS
-                giro = giroRepository.findGiroByChaveGiro(item);
+                giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
 
                 giro.setLeadTime(
                         BigDecimalUtil.getValueOrZero(item.getLEADTIME()));
@@ -224,7 +224,7 @@ public class CalculoGiro {
         );
 
    for (PedidoPendenteResult item :  pedPenResults ){
-            Giro giro = giroRepository.findGiroByChaveGiro(item);
+            Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
             //Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
             giro.setPedVdaPend(item.getQTDE());
             giroRepository.save(giro);
@@ -242,7 +242,7 @@ public class CalculoGiro {
                 utilizarControle
         );
         for (PedidoPendenteResult item :  pedPenResults ){
-            Giro giro = giroRepository.findGiroByChaveGiro(item);
+            Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
            // Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
             giro.setPedCpaPend(item.getQTDE());
             giroRepository.save(giro);
@@ -262,7 +262,7 @@ public class CalculoGiro {
         );
 
         for (EstoqueResult item :  estoqueResults ){
-            Giro giro = giroRepository.findGiroByChaveGiro(item);
+            Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
             giro.setEstMin(item.getESTMIN());
             giro.setEstMax(item.getESTMAX());
             giro.setEstoque(item.getESTOQUE());
@@ -293,7 +293,7 @@ public class CalculoGiro {
         );
 
         for (UltimaVendaResult item :  ultimaVendaResutls ) {
-            Giro giro = giroRepository.findGiroByChaveGiro(item);
+            Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
             giro.setUltVenda(item.getDTREF());
             giroRepository.save(giro);
             lisProdSemGiro.remove(item.getCODPROD());
@@ -324,7 +324,7 @@ public class CalculoGiro {
         );
 
         for (UltimaCompraResult item :  ultimaCompraResults) {
-            Giro giro = giroRepository.findGiroByChaveGiro(item);
+            Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
             giro.setUltCompra( item.getDTREF());
             giro.setQtdUltCompra(item.getQTDNEG());
             giro.setAliqCred(item.getALIQICMS());

@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Setter
 @Getter
-public class GiroResult extends ChaveGiro {
+public class GiroResult {
 
     private BigDecimal CODPROD;
     private BigDecimal CODEMP;
@@ -25,7 +25,4 @@ public class GiroResult extends ChaveGiro {
     private String MARCA;
     private BigDecimal PESOBRUTO;
 
-    public GiroResult(BigDecimal codProd) {
-        super(codProd);
-    }
 }

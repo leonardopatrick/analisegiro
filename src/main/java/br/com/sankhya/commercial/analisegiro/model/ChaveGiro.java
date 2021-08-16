@@ -1,5 +1,6 @@
 package br.com.sankhya.commercial.analisegiro.model;
 
+import br.com.sankhya.commercial.analisegiro.resultmodel.*;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.Column;
@@ -13,13 +14,13 @@ import java.math.BigDecimal;
 public class ChaveGiro implements Serializable {
 
 	@Column(name="CODPROD")
-	private BigDecimal codProd;
+	protected BigDecimal codProd;
 	@Column(name="CODEMP")
-	private BigDecimal codEmp;
+	protected BigDecimal codEmp;
 	@Column(name="CODLOCAL")
-	private BigDecimal codLocal;
+	protected BigDecimal codLocal;
 	@Column(name="CONTROLE")
-	private char controle =  Character.valueOf(' ');
+	protected char controle =  Character.valueOf(' ');
 
 	public ChaveGiro(BigDecimal codProd) {
 		this.codProd = codProd;
@@ -35,7 +36,7 @@ public class ChaveGiro implements Serializable {
 				controle == chave.getControle();
 	}
 
-	/*
+
 	public ChaveGiro(BigDecimal codProd, BigDecimal codEmp, BigDecimal codLocal, String controle) {
 		this.codProd = codProd;
 		this.codEmp = BigDecimal.ZERO;
@@ -77,5 +78,5 @@ public class ChaveGiro implements Serializable {
 		this.codLocal = pr.getCODLOCAL();
 		this.controle = pr.getCONTROLE();
 	}
-*/
+
 }

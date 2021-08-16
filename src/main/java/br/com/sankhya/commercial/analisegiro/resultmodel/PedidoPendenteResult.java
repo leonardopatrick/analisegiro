@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 @Setter
 @Getter
-public class PedidoPendenteResult extends ChaveGiro {
+public class PedidoPendenteResult  {
 
     private BigDecimal CODPROD;
     private BigDecimal CODEMP;
@@ -16,7 +16,4 @@ public class PedidoPendenteResult extends ChaveGiro {
     private char CONTROLE;
     private BigDecimal QTDE;
 
-    public PedidoPendenteResult(BigDecimal codProd) {
-        super(codProd);
-    }
 }

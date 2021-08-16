@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class EstoqueResult extends ChaveGiro {
+public class EstoqueResult  {
 
     private BigDecimal CODPROD;
     private BigDecimal CODEMP;
@@ -19,7 +19,5 @@ public class EstoqueResult extends ChaveGiro {
     private BigDecimal ESTMAX;
     private BigDecimal WMSBLOQUEADO;
 
-    public EstoqueResult(BigDecimal codProd) {
-        super(codProd);
-    }
+
 }

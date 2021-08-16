@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 
 @Setter
 @Getter
-public class UltimaVendaResult extends ChaveGiro {
+public class UltimaVendaResult {
 
     private BigDecimal CODPROD;
     private BigDecimal CODEMP;
@@ -18,7 +18,4 @@ public class UltimaVendaResult extends ChaveGiro {
     private String TIPMOV;
     private Timestamp DTREF;
 
-    public UltimaVendaResult(BigDecimal codProd) {
-        super(codProd);
-    }
 }
