@@ -19,9 +19,9 @@ import java.util.Collection;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@Entity
-@Table(name = "TGFGIR1")
+//@Data
+//@Entity
+//@Table(name = "TGFGIR")
 public class Giro {
 
     @EmbeddedId
