@@ -93,11 +93,11 @@ public class CalculoGiro {
 
         buscarPedVdaPend();
         buscarPedCpaVdaPend();
-        buscarEstoques();
-        buscarUltimaCompra();
+       buscarEstoques();
+       /*  buscarUltimaCompra();
         buscarUltimaVenda();
         acrescentarSemGiro();
-        calcular();
+        calcular();*/
 
     }
 

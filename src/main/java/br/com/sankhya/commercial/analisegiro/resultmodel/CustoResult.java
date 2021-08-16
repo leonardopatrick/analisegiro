@@ -22,4 +22,7 @@ public class CustoResult {
     private BigDecimal ENTRADASEMICMS;
     private BigDecimal CUSVARIAVEL;
     private Timestamp DTATUAL;
+
+
+
 }
