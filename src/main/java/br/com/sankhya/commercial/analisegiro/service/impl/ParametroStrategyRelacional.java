@@ -86,6 +86,11 @@ public class ParametroStrategyRelacional implements ParametroStrategy {
     }
 
     @Override
+    public Double asDouble(String paramName) throws Exception {
+        return (Double) getValueParameter(paramName);
+    }
+
+    @Override
     public String getParameterAsString(String paramName) throws Exception {
         return null;
     }

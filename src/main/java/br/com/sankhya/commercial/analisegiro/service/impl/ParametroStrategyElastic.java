@@ -29,17 +29,22 @@ public class ParametroStrategyElastic implements ParametroStrategy {
 
     @Override
     public Boolean asBoolean(String paramName) throws Exception {
-        return Boolean.FALSE;
+        return (Boolean) resolveValue(getParameterInfo(paramName));
+    }
+
+    @Override
+    public Double asDouble(String paramName) throws Exception {
+        return (Double) resolveValue(getParameterInfo(paramName));
     }
 
     @Override
     public Boolean getParameterAsBoolean(String paramName) throws Exception {
-        return Boolean.FALSE;
+        return (Boolean) resolveValue(getParameterInfo(paramName));
     }
 
     @Override
     public String getParameterAsString(String paramName) throws Exception {
-        return null;
+        return (String) resolveValue(getParameterInfo(paramName));
     }
 
     @Override
@@ -104,5 +109,25 @@ public class ParametroStrategyElastic implements ParametroStrategy {
                         .spliterator(), false)
                 .map(this::toParametro)
                 .collect(Collectors.toList());
+    }
+
+    private Object resolveValue(Parametro p){
+
+        Object paramValue = null;
+
+        String tipo = p.getTipo();
+        if("L".equals(tipo)) {
+            paramValue = "S".equalsIgnoreCase(p.getLogico()) ? Boolean.TRUE : Boolean.FALSE ;
+
+        } else if("I".equals(tipo) || "C".equals(tipo)) {
+            paramValue = p.getInteiro();
+        } else if("D".equals(tipo)) {
+            paramValue = p.getTexto(); //TODO DATA
+        } else if("T".equals(tipo)) {
+            paramValue = p.getTexto();
+        } else if("F".equals(tipo)) {
+            paramValue = p.getNumdec();
+        }
+        return paramValue;
     }
 }

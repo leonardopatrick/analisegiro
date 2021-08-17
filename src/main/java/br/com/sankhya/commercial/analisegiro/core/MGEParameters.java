@@ -82,4 +82,9 @@ public class MGEParameters implements ParametroStrategy{
     public Boolean asBoolean(String paramName) throws Exception {
         return strategy.asBoolean(paramName);
     }
+
+    @Override
+    public Double asDouble(String paramName) throws Exception {
+        return strategy.asDouble(paramName);
+    }
 }
