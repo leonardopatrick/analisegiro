@@ -19,7 +19,6 @@ import java.util.*;
 
 public class CalculoGiro {
 
-    private  MatrizGiroConfiguracao matrizConf = new MatrizGiroConfiguracao();
     private Boolean controlaCustoPorLocal = Boolean.FALSE;
     private String 	strCodProd;
     private String filtroGiro;
@@ -77,9 +76,15 @@ public class CalculoGiro {
     @Autowired
     CustoRepository custoRepository;
 
+    @Autowired
+    CalculoCurva calculoCurva;
 
     @Autowired
     ModelMapper modelMapper;
+
+    @Autowired
+    MatrizGiroConfiguracao matrizConf;
+
 
     public void gerar() throws Exception {
 
@@ -98,6 +103,8 @@ public class CalculoGiro {
        buscarUltimaVenda();
        acrescentarSemGiro();
        calcular();
+
+       calculoCurva.calcularCurvas(giros, nroPeriodos);
 
     }
 

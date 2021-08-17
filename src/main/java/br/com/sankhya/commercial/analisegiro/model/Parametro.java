@@ -24,4 +24,6 @@ public class Parametro implements Serializable {
     private String descricao;
     private String tipo;
     private String logico;
+    private Integer inteiro;
+    private Double numdec;
 }

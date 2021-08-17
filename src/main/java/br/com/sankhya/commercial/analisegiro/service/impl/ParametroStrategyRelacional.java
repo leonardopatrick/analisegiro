@@ -104,13 +104,13 @@ public class ParametroStrategyRelacional implements ParametroStrategy {
             paramValue = "S".equalsIgnoreCase(p.getLogico()) ? Boolean.TRUE : Boolean.FALSE ;
 
         } else if("I".equals(tipo) || "C".equals(tipo)) {
-            paramValue = p.getTexto(); //TODO INTEIRO
+            paramValue = p.getInteiro();
         } else if("D".equals(tipo)) {
             paramValue = p.getTexto(); //TODO DATA
         } else if("T".equals(tipo)) {
             paramValue = p.getTexto();
         } else if("F".equals(tipo)) {
-            paramValue = p.getTexto();
+            paramValue = p.getNumdec();
         }
         return paramValue;
     }

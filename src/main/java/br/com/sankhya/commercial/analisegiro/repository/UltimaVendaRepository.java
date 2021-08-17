@@ -158,8 +158,8 @@ public class UltimaVendaRepository {
         TimeUtils.clearTime(comeco);
 
         while (comeco.compareTo(fim) <= 0) {
-            Timestamp dtIni = new Timestamp(TimeUtils.add(fim.getTimeInMillis(), -10, Calendar.DATE));
 
+            Timestamp dtIni = new Timestamp(TimeUtils.add(fim.getTimeInMillis(), -10, Calendar.DATE));
             Timestamp dtFim = new Timestamp(fim.getTimeInMillis());
 
             Query q = em.createNativeQuery(queUltVenda.toString())

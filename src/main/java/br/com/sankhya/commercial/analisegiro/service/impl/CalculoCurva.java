@@ -23,12 +23,8 @@ public class CalculoCurva {
 	@Autowired
 	MGEParameters MGEParameters;
 
-	private MatrizGiroConfiguracao matrizConf;
-
-	public CalculoCurva(MatrizGiroConfiguracao matrizConf
-	) {
-		this.matrizConf = matrizConf;
-	}
+	@Autowired
+	MatrizGiroConfiguracao matrizConf;
 
 	private void getTotais(Map<ChaveGiro, Giro> giros, Map<Object, PeriodoGiro[]> totais) throws Exception {
  
@@ -272,8 +268,8 @@ public class CalculoCurva {
 		calcularParticipacao(giros);
 
 		//TODO: Resolver parametros
-		BigDecimal limCurvaB = BigDecimal.valueOf(MGEParameters.getParameterAsInt("limite.curva.b.matriz"));//(BigDecimal) MGECoreParameter.getParameter("limite.curva.b.matriz");
-		BigDecimal limCurvaC = BigDecimal.valueOf(MGEParameters.getParameterAsInt("limite.curva.c.matriz"));//(BigDecimal) MGECoreParameter.getParameter("limite.curva.c.matriz");
+		BigDecimal limCurvaB = BigDecimal.valueOf((Double) MGEParameters.getParameter("LIMCURVA_BPRO"));//(BigDecimal) MGECoreParameter.getParameter("limite.curva.b.matriz");
+		BigDecimal limCurvaC = BigDecimal.valueOf((Double) MGEParameters.getParameter("LIMCURVA_CPRO"));//(BigDecimal) MGECoreParameter.getParameter("limite.curva.c.matriz");
 		BigDecimal limiteCurvaB = BigDecimalUtil.CEM_VALUE.subtract((limCurvaB.add(limCurvaC)));
 		BigDecimal limiteCurvaC = BigDecimalUtil.CEM_VALUE.subtract(limCurvaC);
 		
