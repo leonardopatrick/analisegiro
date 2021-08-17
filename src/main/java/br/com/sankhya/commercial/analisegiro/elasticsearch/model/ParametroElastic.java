@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 
 @Getter
@@ -25,5 +26,7 @@ public class ParametroElastic implements Serializable {
     private String descricao;
     private String tipo;
     private String logico;
-    private int inteiro;
+    private Integer inteiro;
+    private Double numdec;
+    private Timestamp data;
 }

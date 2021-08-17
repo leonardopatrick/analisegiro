@@ -92,7 +92,7 @@ public class ParametroStrategyRelacional implements ParametroStrategy {
 
     @Override
     public String getParameterAsString(String paramName) throws Exception {
-        return null;
+        return  (String) getValueParameter(paramName);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class ParametroStrategyRelacional implements ParametroStrategy {
         } else if("I".equals(tipo) || "C".equals(tipo)) {
             paramValue = p.getInteiro();
         } else if("D".equals(tipo)) {
-            paramValue = p.getTexto(); //TODO DATA
+            paramValue = p.getData();
         } else if("T".equals(tipo)) {
             paramValue = p.getTexto();
         } else if("F".equals(tipo)) {

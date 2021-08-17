@@ -24,27 +24,27 @@ public class ParametroStrategyElastic implements ParametroStrategy {
 
     @Override
     public int getParameterAsInt(String paramName) throws Exception {
-        return 0;
+        return (int) getValueParameter(paramName);
     }
 
     @Override
     public Boolean asBoolean(String paramName) throws Exception {
-        return (Boolean) resolveValue(getParameterInfo(paramName));
+        return (Boolean) getValueParameter(paramName);
     }
 
     @Override
     public Double asDouble(String paramName) throws Exception {
-        return (Double) resolveValue(getParameterInfo(paramName));
+        return (Double) getValueParameter(paramName);
     }
 
     @Override
     public Boolean getParameterAsBoolean(String paramName) throws Exception {
-        return (Boolean) resolveValue(getParameterInfo(paramName));
+        return (Boolean) getValueParameter(paramName);
     }
 
     @Override
     public String getParameterAsString(String paramName) throws Exception {
-        return (String) resolveValue(getParameterInfo(paramName));
+        return (String) getValueParameter(paramName);
     }
 
     @Override
@@ -102,6 +102,10 @@ public class ParametroStrategyElastic implements ParametroStrategy {
         return null;
     }
 
+    public Object getValueParameter(String chave) throws Exception {
+        return resolveValue(getParameterInfo(chave));
+    }
+
     @Override
     public List<Parametro> getAllParameters(Iterable<String> chaves) throws Exception {
         return StreamSupport.stream(
@@ -122,7 +126,7 @@ public class ParametroStrategyElastic implements ParametroStrategy {
         } else if("I".equals(tipo) || "C".equals(tipo)) {
             paramValue = p.getInteiro();
         } else if("D".equals(tipo)) {
-            paramValue = p.getTexto(); //TODO DATA
+            paramValue = p.getData();
         } else if("T".equals(tipo)) {
             paramValue = p.getTexto();
         } else if("F".equals(tipo)) {

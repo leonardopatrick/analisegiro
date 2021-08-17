@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -26,4 +28,5 @@ public class Parametro implements Serializable {
     private String logico;
     private Integer inteiro;
     private Double numdec;
+    private Timestamp data;
 }
