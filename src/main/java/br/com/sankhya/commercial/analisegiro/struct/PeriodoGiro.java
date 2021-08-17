@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import br.com.sankhya.commercial.analisegiro.resultmodel.GiroResult;
+import br.com.sankhya.commercial.analisegiro.util.BigDecimalUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -88,7 +89,7 @@ public class PeriodoGiro {
 		if(vlrTot.compareTo(BigDecimal.ZERO) == 0) {
 			return BigDecimal.ZERO;
 		} else {
-			return lucro.divide(vlrTot).multiply(BigDecimal.valueOf(100)).setScale(8, RoundingMode.HALF_UP);
+			return lucro.divide(vlrTot).multiply(BigDecimalUtil.CEM_VALUE).setScale(8, RoundingMode.HALF_UP);
 		}
 	}
 
@@ -96,7 +97,7 @@ public class PeriodoGiro {
 		if(vlrTot.compareTo(BigDecimal.ZERO) == 0) {
 			return BigDecimal.ZERO;
 		} else {
-			return vlrGastoVar.divide(vlrTot).multiply(BigDecimal.valueOf(100)).setScale(8, RoundingMode.HALF_UP);
+			return vlrGastoVar.divide(vlrTot).multiply(BigDecimalUtil.CEM_VALUE).setScale(8, RoundingMode.HALF_UP);
 		}
 	}
 
@@ -104,7 +105,7 @@ public class PeriodoGiro {
 		if(vlrTot.compareTo(BigDecimal.ZERO) == 0) {
 			return BigDecimal.ZERO;
 		} else {
-			return vlrMargCont.divide(vlrTot).multiply(BigDecimal.valueOf(100)).setScale(8, RoundingMode.HALF_UP);
+			return vlrMargCont.divide(vlrTot).multiply(BigDecimalUtil.CEM_VALUE).setScale(8, RoundingMode.HALF_UP);
 		}
 	}
 

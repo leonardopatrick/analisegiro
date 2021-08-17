@@ -36,17 +36,35 @@ public class CalculoCurva {
 			
 			PeriodoGiro[] total = totais.get(chaveCurva);
 			if(total == null) {
-				total = new PeriodoGiro[12];
+				total = new PeriodoGiro[13];
+
+				for(int i=1; i<=12; i++ ){
+					total[i] = new PeriodoGiro();
+				}
+
 				totais.put(chaveCurva, total);
 			}
 			Collection<PeriodoGiro> periodos = giro.getPeriodos();
 			for(PeriodoGiro periodo : periodos){
 				PeriodoGiro totalizador = total[periodo.getIndice()];  
-				totalizador.setQtdVenda(totalizador.getQtdVenda().add(periodo.getQtdVenda()));
-				totalizador.setVlrTot(totalizador.getVlrTot().add(periodo.getVlrTot()));
-				totalizador.setLucro(totalizador.getLucro().add(periodo.getLucro()));
-				totalizador.setVlrGastoVar(totalizador.getVlrGastoVar().add(periodo.getVlrGastoVar()));
-				totalizador.setVlrMargCont(totalizador.getVlrMargCont().add(periodo.getVlrMargCont()));
+
+
+				totalizador.setQtdVenda(BigDecimalUtil.getValueOrZero(totalizador.getQtdVenda())
+									.add(BigDecimalUtil.getValueOrZero(periodo.getQtdVenda())));
+
+				totalizador.setVlrTot(
+						BigDecimalUtil.getValueOrZero(totalizador.getVlrTot())
+										.add(BigDecimalUtil.getValueOrZero(periodo.getVlrTot())));
+				totalizador.setLucro(
+						BigDecimalUtil.getValueOrZero(totalizador.getLucro())
+								.add(BigDecimalUtil.getValueOrZero(periodo.getLucro())));
+
+				totalizador.setVlrGastoVar(BigDecimalUtil.getValueOrZero(
+							totalizador.getVlrGastoVar())
+						.add(BigDecimalUtil.getValueOrZero(periodo.getVlrGastoVar())));
+
+				totalizador.setVlrMargCont(BigDecimalUtil.getValueOrZero(totalizador.getVlrMargCont())
+							.add(BigDecimalUtil.getValueOrZero(periodo.getVlrMargCont())));
 			}
 		}
 	}
@@ -267,9 +285,8 @@ public class CalculoCurva {
 	public void calcularCurvas(Map<ChaveGiro, Giro> giros, int nroPeriodos) throws Exception {
 		calcularParticipacao(giros);
 
-		//TODO: Resolver parametros
-		BigDecimal limCurvaB = BigDecimal.valueOf((Double) MGEParameters.getParameter("LIMCURVA_BPRO"));//(BigDecimal) MGECoreParameter.getParameter("limite.curva.b.matriz");
-		BigDecimal limCurvaC = BigDecimal.valueOf((Double) MGEParameters.getParameter("LIMCURVA_CPRO"));//(BigDecimal) MGECoreParameter.getParameter("limite.curva.c.matriz");
+		BigDecimal limCurvaB = BigDecimal.valueOf((Double) MGEParameters.getParameter("LIMCURVA_BPRO"));
+		BigDecimal limCurvaC = BigDecimal.valueOf((Double) MGEParameters.getParameter("LIMCURVA_CPRO"));
 		BigDecimal limiteCurvaB = BigDecimalUtil.CEM_VALUE.subtract((limCurvaB.add(limCurvaC)));
 		BigDecimal limiteCurvaC = BigDecimalUtil.CEM_VALUE.subtract(limCurvaC);
 		

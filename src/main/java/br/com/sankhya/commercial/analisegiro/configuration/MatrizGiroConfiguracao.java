@@ -60,7 +60,7 @@ public class MatrizGiroConfiguracao {
     private String apresentaLocal="N";				// Local
     private String apresentaControle;			// Controle
     private BigDecimal desprezarPeriodoGiro;		// Despreza período de giro
-    private String detalhe;						// Detalhar de acordo com
+    private String detalhe = "E";						// Detalhar de acordo com //TODO VERIFICAR VALOR PADRAO
     private String custo = "CUSSEMICM";						// Considerar custo
     private BigDecimal tabelaPreco;				// Tabela de preço
     private BigDecimal percAcrescimoSugestao;	// % Acréscimo na Sugestão de Compras

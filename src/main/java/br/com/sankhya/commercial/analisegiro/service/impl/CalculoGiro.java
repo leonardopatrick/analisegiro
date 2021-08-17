@@ -58,9 +58,6 @@ public class CalculoGiro {
     @Autowired
     PedidoPendenteRepository pedidoPendenteRepository;
 
-    //@Autowired
-    //PedidoPendenteStrategyInMemory pedPenVdaStrategyInMemory;
-
     @Autowired
     EstoqueRepository estoqueRepository;
 
@@ -80,9 +77,6 @@ public class CalculoGiro {
     CalculoCurva calculoCurva;
 
     @Autowired
-    ModelMapper modelMapper;
-
-    @Autowired
     MatrizGiroConfiguracao matrizConf;
 
 
@@ -96,6 +90,8 @@ public class CalculoGiro {
        }
        nroPeriodos = buscarGiro();
 
+       calculoCurva.calcularCurvas(giroRepository.getMapGiros(), nroPeriodos);
+
        buscarPedVdaPend();
        buscarPedCpaVdaPend();
        buscarEstoques();
@@ -103,8 +99,6 @@ public class CalculoGiro {
        buscarUltimaVenda();
        acrescentarSemGiro();
        calcular();
-
-       calculoCurva.calcularCurvas(giros, nroPeriodos);
 
     }
 
@@ -115,13 +109,15 @@ public class CalculoGiro {
     }
 
     private void prepararVariaveisComuns() throws Exception {
-        /*  TODO: Ajustar Chave dos parametros abaixo
-            subtrairDaSugestaoAQtdeBloqueadaNoWMS = parametroRepo.getParameterAsBoolean("subtrair.da.sug.compra.qtd.bloq.wms");
-            subtrairDoEsotqueAReserva = parametroRepo.getParameterAsBoolean("subtrair.do.estoque.a.reserva"); // criar param no xml.
-        */
+
+        subtrairDaSugestaoAQtdeBloqueadaNoWMS = MGEParameters.asBoolean("WMSDESCONESTBLQ");
+        // parametroRepo.getParameterAsBoolean("subtrair.da.sug.compra.qtd.bloq.wms");
+        subtrairDoEsotqueAReserva = MGEParameters.asBoolean("DEDUZIRRESESTAN");//Deduzir reserva do estoque na Análise de Giro
+        //parametroRepo.getParameterAsBoolean("subtrair.do.estoque.a.reserva");  -- criar param no xml.
+
         controlaCustoPorLocal = MGEParameters.asBoolean("UTILIZALOCAL");
         controlaCustoPorControle = MGEParameters.asBoolean("UTILIZACONTROLE");
-        controlaCustoPorEmpresa  = MGEParameters.asBoolean("UTILIZACONTROLE"); //TODO: Custo por empresa
+        controlaCustoPorEmpresa  = MGEParameters.asBoolean("CUSTOPOREMP");
         utilizarLocal = "S".equals(matrizConf.getApresentaLocal()) & MGEParameters.asBoolean("UTILIZALOCAL");
         utilizarControle = "S".equals(matrizConf.getApresentaControle()) & MGEParameters.asBoolean("UTILIZACONTROLE");
         if ("S".equals(matrizConf.getApresentaEmpresa())) {
@@ -176,7 +172,7 @@ public class CalculoGiro {
             sqlChave.append(" , ' ' AS CONTROLE ");
         }
         //nuTab = getTabelaPreco(matrizConf.getTabelaPreco());
-        // TODO: filtroGiro, filtroEstoque, filtroPedVdaPend, filtroPedCpaPend; = ... ver ProcessadorMatriz prepararFiltros;
+        // TODO: Verfificar filtros: filtroGiro, filtroEstoque, filtroPedVdaPend, filtroPedCpaPend; = ... ver ProcessadorMatriz prepararFiltros;
     }
 
 
@@ -202,7 +198,7 @@ public class CalculoGiro {
 
                 PeriodoGiro perGiro = new PeriodoGiro(item);
                 perGiro.setIndice(i);
-                perGiro.setDiasUteis(i); //TODO FUNCAO DIAS UTEIS
+                perGiro.setDiasUteis(i); //TODO: Implementar função para dias úteis
                 giro = giroRepository.findGiroByChaveGiro(item.toChaveGiro());
 
                 giro.setLeadTime(
@@ -210,7 +206,7 @@ public class CalculoGiro {
                 giro.setCodGrupoProd(item.getCODGRUPOPROD());
                 giro.setMarca(item.getMARCA());
                 giro.setPeso(item.getPESOBRUTO());
-                giro.addPeriodo(perGiro); //TODO AJUSTAR RELACIONAMENTO PERIODO
+                giro.addPeriodo(perGiro);
 
                 giroRepository.save(giro);
                 lisProdSemGiro.remove(item.getCODPROD());
@@ -222,7 +218,7 @@ public class CalculoGiro {
 
     private  void buscarPedVdaPend(){
         //pedPenVdaStrategyInMemory.deleteAll();
-        // TODO FILTRO PED VENDA
+        // TODO: Inserir filtro para pedido de venda
         List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes(
                  utilizarLocal,
                  usarEmpresa,
@@ -241,7 +237,7 @@ public class CalculoGiro {
 
     private  void buscarPedCpaVdaPend(){
 
-        //TODO FILTRO PED COMPRA
+        //TODO: Inserir filtro pedido de compra
         List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes(
                 utilizarLocal,
                 usarEmpresa,
@@ -340,7 +336,7 @@ public class CalculoGiro {
            // lisProdSemGiro.remove(item.getCODPROD());
         }
 
-        //TODO: Ajustar a inclusão dos filstros
+        //TODO: Ajustar a inclusão dos filtros
         //if("S".equals(matrizConf.getIncluirSemEstoque()))
         //TODO: Verificar o pq de utilizar a chave anterior --> chaveAnt = new ChaveGiro(rs);
     }
@@ -423,6 +419,8 @@ public class CalculoGiro {
 			}*/ //TODO: Por hora não estamos implementando a busca na tabela de preço por conta do custo.
 
             giro.calcular(matrizConf, BigDecimal.valueOf(nroPeriodos), calcularSugCompraParaEstMax, calcularDiasUteisParaLeadTime, somarLeadTime);
+
+            giroRepository.save(giro);
         }
     }
 }
