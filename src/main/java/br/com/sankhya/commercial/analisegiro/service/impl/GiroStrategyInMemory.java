@@ -39,7 +39,7 @@ public class GiroStrategyInMemory implements GiroStrategy {
 
     @Override
     public Collection<Giro> findAllByPeriod(Timestamp dtIni, Timestamp Dtfim) throws Exception {
-        
+
         Boolean podeUtilizar = Boolean.FALSE;
 
         if(!podeUtilizar)
