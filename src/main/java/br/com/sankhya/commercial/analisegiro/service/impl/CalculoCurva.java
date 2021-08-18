@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import br.com.sankhya.commercial.analisegiro.configuration.MatrizGiroConfiguracao;
-import br.com.sankhya.commercial.analisegiro.core.MGEParameters;
+import br.com.sankhya.commercial.analisegiro.core.SKParameters;
 import br.com.sankhya.commercial.analisegiro.model.ChaveGiro;
 import br.com.sankhya.commercial.analisegiro.model.Giro;
 import br.com.sankhya.commercial.analisegiro.struct.PeriodoGiro;
@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class CalculoCurva {
 
 	@Autowired
-	MGEParameters MGEParameters;
+	SKParameters MGEParameters;
 
 	@Autowired
 	MatrizGiroConfiguracao matrizConf;

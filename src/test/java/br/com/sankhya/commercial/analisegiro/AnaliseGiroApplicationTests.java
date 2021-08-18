@@ -1,7 +1,7 @@
 package br.com.sankhya.commercial.analisegiro;
 
 import br.com.sankhya.commercial.analisegiro.configuration.MGEParametersConfig;
-import br.com.sankhya.commercial.analisegiro.core.MGEParameters;
+import br.com.sankhya.commercial.analisegiro.core.SKParameters;
 import br.com.sankhya.commercial.analisegiro.model.Parametro;
 import br.com.sankhya.commercial.analisegiro.repository.ProdutoRepository;
 import br.com.sankhya.commercial.analisegiro.service.impl.ParametroStrategyRelacional;
@@ -27,7 +27,7 @@ class AnaliseGiroApplicationTests {
 	ProdutoRepository produtoRepository;
 
 	@Autowired
-    MGEParameters paramRepository;
+    SKParameters paramRepository;
 
 	@Test
 	void buscaParametroUsaControle() throws Exception {

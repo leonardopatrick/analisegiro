@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class MGEParameters implements ParametroStrategy{
+public class SKParameters implements ParametroStrategy{
 
     private ParametroStrategy strategy;
 

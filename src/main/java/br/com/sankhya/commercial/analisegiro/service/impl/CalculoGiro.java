@@ -1,7 +1,7 @@
 package br.com.sankhya.commercial.analisegiro.service.impl;
 
 import br.com.sankhya.commercial.analisegiro.configuration.MatrizGiroConfiguracao;
-import br.com.sankhya.commercial.analisegiro.core.MGEParameters;
+import br.com.sankhya.commercial.analisegiro.core.SKParameters;
 import br.com.sankhya.commercial.analisegiro.model.ChaveGiro;
 import br.com.sankhya.commercial.analisegiro.model.Giro;
 import br.com.sankhya.commercial.analisegiro.model.Produto;
@@ -9,7 +9,6 @@ import br.com.sankhya.commercial.analisegiro.resultmodel.*;
 import br.com.sankhya.commercial.analisegiro.repository.*;
 import br.com.sankhya.commercial.analisegiro.struct.PeriodoGiro;
 import br.com.sankhya.commercial.analisegiro.util.BigDecimalUtil;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
@@ -47,7 +46,7 @@ public class CalculoGiro {
     ProdutoRepository produtoRepository;
 
     @Autowired
-    MGEParameters MGEParameters;
+    SKParameters skParameters;
 
     @Autowired
     GiroCustomRepository giroCustomRepository;
@@ -110,16 +109,16 @@ public class CalculoGiro {
 
     private void prepararVariaveisComuns() throws Exception {
 
-        subtrairDaSugestaoAQtdeBloqueadaNoWMS = MGEParameters.asBoolean("WMSDESCONESTBLQ");
+        subtrairDaSugestaoAQtdeBloqueadaNoWMS = skParameters.asBoolean("WMSDESCONESTBLQ");
         // parametroRepo.getParameterAsBoolean("subtrair.da.sug.compra.qtd.bloq.wms");
-        subtrairDoEsotqueAReserva = MGEParameters.asBoolean("DEDUZIRRESESTAN");//Deduzir reserva do estoque na Análise de Giro
+        subtrairDoEsotqueAReserva = skParameters.asBoolean("DEDUZIRRESESTAN");//Deduzir reserva do estoque na Análise de Giro
         //parametroRepo.getParameterAsBoolean("subtrair.do.estoque.a.reserva");  -- criar param no xml.
 
-        controlaCustoPorLocal = MGEParameters.asBoolean("UTILIZALOCAL");
-        controlaCustoPorControle = MGEParameters.asBoolean("UTILIZACONTROLE");
-        controlaCustoPorEmpresa  = MGEParameters.asBoolean("CUSTOPOREMP");
-        utilizarLocal = "S".equals(matrizConf.getApresentaLocal()) & MGEParameters.asBoolean("UTILIZALOCAL");
-        utilizarControle = "S".equals(matrizConf.getApresentaControle()) & MGEParameters.asBoolean("UTILIZACONTROLE");
+        controlaCustoPorLocal = skParameters.asBoolean("UTILIZALOCAL");
+        controlaCustoPorControle = skParameters.asBoolean("UTILIZACONTROLE");
+        controlaCustoPorEmpresa  = skParameters.asBoolean("CUSTOPOREMP");
+        utilizarLocal = "S".equals(matrizConf.getApresentaLocal()) & skParameters.asBoolean("UTILIZALOCAL");
+        utilizarControle = "S".equals(matrizConf.getApresentaControle()) & skParameters.asBoolean("UTILIZACONTROLE");
         if ("S".equals(matrizConf.getApresentaEmpresa())) {
             usarEmpresa = "S".equals(matrizConf.getApresentaMatriz()) ? "M" : "S";
         } else {
@@ -351,10 +350,10 @@ public class CalculoGiro {
 
     private void calcular() throws Exception {
 
-        Boolean custoRepDaTabCotacao = MGEParameters.asBoolean("TABCOTFORMTZ");
-        Boolean calcularSugCompraParaEstMax = MGEParameters.asBoolean("SUGCOMPMIMAMTZ");
+        Boolean custoRepDaTabCotacao = skParameters.asBoolean("TABCOTFORMTZ");
+        Boolean calcularSugCompraParaEstMax = skParameters.asBoolean("SUGCOMPMIMAMTZ");
         Boolean calcularDiasUteisParaLeadTime = Boolean.FALSE;//MGEParameters.asBoolean("CONSDIASUTEIS"); //TODO: CRIAR PARAMETRO CONSDIASUTEIS
-        Boolean somarLeadTime = MGEParameters.asBoolean("SOMALEADTIME");
+        Boolean somarLeadTime = skParameters.asBoolean("SOMALEADTIME");
 
         if(calcularDiasUteisParaLeadTime){
             throw new Exception("Configuração calcular dias úteis para lead time não implementada.");
