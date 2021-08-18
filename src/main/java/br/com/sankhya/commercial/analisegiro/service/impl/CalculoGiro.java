@@ -43,10 +43,10 @@ public class CalculoGiro {
     private CallableStatement stp_Obtem_Preco;
 
     @Autowired
-    ProdutoRepository produtoRepository;
+    SKParameters skParameters;
 
     @Autowired
-    SKParameters skParameters;
+    ProdutoRepository produtoRepository;
 
     @Autowired
     GiroCustomRepository giroCustomRepository;
@@ -185,7 +185,7 @@ public class CalculoGiro {
             Timestamp inicio = periodo[0];
             Timestamp fim = periodo[1];
             i++;
-            List<GiroResult> giroResults = giroCustomRepository.findGirobyQueryCustom(sqlGroup.toString(),
+            List<GiroResult> giroResults = giroCustomRepository.findAllByPeriod(sqlGroup.toString(),
                     usarEmpresa,
                     sqlChave.toString(),
                     matrizConf,

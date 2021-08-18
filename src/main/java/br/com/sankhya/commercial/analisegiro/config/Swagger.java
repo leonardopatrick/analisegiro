@@ -41,9 +41,9 @@ public class Swagger {
 	                        new SecurityRequirement().addList("Bearer")))
 				 			
 	               .info(new Info()
-				.title("Turn Analysis")
+				.title("Análise de Giro")
 				 .version("1.0a")
-				 .description(" Proof of Concept. ")
+				 .description(" POC")
 				 
 				 .termsOfService("https://github.com/leonardopatrick/meuprojeto")
 				 .license(new License().name("Sankhya").url("https://github.com/leonardopatrick/meuprojeto")));

@@ -19,14 +19,12 @@ public class GiroCustomRepository {
         this.em = em;
     }
 
-    public List<GiroResult> findGirobyQueryCustom(String sqlGroup,
+    public List<GiroResult> findAllByPeriod(String sqlGroup,
                                                   String usarEmpresa,
                                                   String sqlchave,
                                                   MatrizGiroConfiguracao matrizConf,
                                                   Timestamp dtIni,
-                                                  Timestamp dtFin
-                            ){
-
+                                                  Timestamp dtFin){
         StringBuffer sql = new StringBuffer();
         sql.append(sqlchave);
         if("M".equals(usarEmpresa)) {
@@ -70,7 +68,6 @@ public class GiroCustomRepository {
         sql.append(" , PRO.CODGRUPOPROD ");
         sql.append(" , PRO.MARCA ");
         sql.append(" , PRO.PESOBRUTO ");
-
 
         Session session = em.unwrap(Session.class);
         List<GiroResult> rs = session.createSQLQuery(sql.toString())

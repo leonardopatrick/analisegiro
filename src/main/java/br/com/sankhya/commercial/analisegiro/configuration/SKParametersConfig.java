@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Primary;
 
 @Primary
 @Configuration
-public class MGEParametersConfig {
+public class SKParametersConfig {
 
     @Autowired
     ParametroStrategyRelacional parametro;
@@ -19,7 +19,6 @@ public class MGEParametersConfig {
 
         SKParameters parametroContextoRepository = new SKParameters();
         parametroContextoRepository.setStrategy(parametro);
-
         return parametroContextoRepository;
     }
 }

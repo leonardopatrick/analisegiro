@@ -1,6 +1,6 @@
 package br.com.sankhya.commercial.analisegiro;
 
-import br.com.sankhya.commercial.analisegiro.configuration.MGEParametersConfig;
+import br.com.sankhya.commercial.analisegiro.configuration.SKParametersConfig;
 import br.com.sankhya.commercial.analisegiro.core.SKParameters;
 import br.com.sankhya.commercial.analisegiro.model.Parametro;
 import br.com.sankhya.commercial.analisegiro.repository.ProdutoRepository;
@@ -19,7 +19,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@Import({MGEParametersConfig.class, ParametroStrategyRelacional.class})
+@Import({SKParametersConfig.class, ParametroStrategyRelacional.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class AnaliseGiroApplicationTests {
 
