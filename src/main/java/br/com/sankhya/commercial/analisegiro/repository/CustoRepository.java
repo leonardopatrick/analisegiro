@@ -1,24 +1,24 @@
 package br.com.sankhya.commercial.analisegiro.repository;
 
-import br.com.sankhya.commercial.analisegiro.configuration.MatrizGiroConfiguracao;
-import br.com.sankhya.commercial.analisegiro.resultmodel.CustoResult;
-import br.com.sankhya.commercial.analisegiro.resultmodel.EstoqueResult;
+import br.com.sankhya.commercial.analisegiro.core.MatrizGiroConfiguracao;
 import br.com.sankhya.commercial.analisegiro.util.BigDecimalUtil;
 import br.com.sankhya.commercial.analisegiro.util.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.query.NativeQuery;
-import org.hibernate.transform.Transformers;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import java.math.BigDecimal;
-import java.util.List;
 
 @SuppressWarnings("ALL")
 @Repository
 public class CustoRepository {
+
+    @Autowired
+    MatrizGiroConfiguracao matrizConf;
 
     private final EntityManager em;
 
@@ -26,10 +26,7 @@ public class CustoRepository {
         this.em = em;
     }
 
-    public BigDecimal findCusto(        Boolean controlaCustoPorEmpresa,
-                                          Boolean controlaCustoPorControle,
-                                          Boolean controlaCustoPorLocal,
-                                          BigDecimal codProd,
+    public BigDecimal findCusto(BigDecimal codProd,
                                           BigDecimal codLocal,
                                           BigDecimal codEmp,
                                           char controle
@@ -41,26 +38,26 @@ public class CustoRepository {
 
         sqlBuf.append(" FROM TGFCUS CUS");
         sqlBuf.append(" WHERE CUS.CODPROD = :CODPROD");
-        if (controlaCustoPorEmpresa) {
+        if (matrizConf.getControlaCustoPorEmpresa()) {
             sqlBuf.append(" AND CUS.CODEMP = :CODEMP");
         }
-        if (controlaCustoPorLocal) {
+        if (matrizConf.getControlaCustoPorLocal()) {
             sqlBuf.append(" AND CUS.CODLOCAL = :CODLOCAL");
         }
-        if (controlaCustoPorControle) {
+        if (matrizConf.getControlaCustoPorControle()) {
             sqlBuf.append(" AND CUS.CONTROLE = :CONTROLE");
         }
         sqlBuf.append(" AND CUS.DTATUAL <= SYSDATE");
         sqlBuf.append(" AND CUS.DTATUAL = (SELECT MAX(CN.DTATUAL)");
         sqlBuf.append(" FROM TGFCUS CN");
         sqlBuf.append(" WHERE CN.CODPROD = :CODPROD");
-        if (controlaCustoPorEmpresa) {
+        if (matrizConf.getControlaCustoPorEmpresa()) {
             sqlBuf.append(" AND CN.CODEMP = :CODEMP");
         }
-        if (controlaCustoPorLocal) {
+        if (matrizConf.getControlaCustoPorLocal()) {
             sqlBuf.append(" AND CN.CODLOCAL = :CODLOCAL");
         }
-        if (controlaCustoPorControle) {
+        if (matrizConf.getControlaCustoPorControle()) {
             sqlBuf.append(" AND CN.CONTROLE = :CONTROLE");
         }
         sqlBuf.append(" AND CUS.DTATUAL <= SYSDATE)"); // TODO: é suficiente sysdate para oracle e sql server ?
@@ -70,13 +67,13 @@ public class CustoRepository {
         NativeQuery nativeSql = session.createNativeQuery(sqlBuf.toString());
 
         nativeSql.setParameter("CODPROD", codProd);
-        if (controlaCustoPorEmpresa) {
+        if (matrizConf.getControlaCustoPorEmpresa()) {
             nativeSql.setParameter("CODEMP", BigDecimalUtil.getValueOrZero(codEmp));
         }
-        if (controlaCustoPorLocal) {
+        if (matrizConf.getControlaCustoPorLocal()) {
             nativeSql.setParameter("CODLOCAL", BigDecimalUtil.getValueOrZero(codLocal));
         }
-        if (controlaCustoPorControle) {
+        if (matrizConf.getControlaCustoPorControle()) {
             nativeSql.setParameter("CONTROLE", (StringUtils.getEmptyAsNull(controle) != null) ? controle : " ");
         }
 

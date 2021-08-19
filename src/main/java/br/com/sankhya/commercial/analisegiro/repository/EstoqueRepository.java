@@ -1,11 +1,11 @@
 package br.com.sankhya.commercial.analisegiro.repository;
 
-import br.com.sankhya.commercial.analisegiro.configuration.MatrizGiroConfiguracao;
+import br.com.sankhya.commercial.analisegiro.core.MatrizGiroConfiguracao;
 import br.com.sankhya.commercial.analisegiro.resultmodel.EstoqueResult;
-import br.com.sankhya.commercial.analisegiro.resultmodel.PedidoPendenteResult;
 import br.com.sankhya.commercial.analisegiro.util.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -15,29 +15,27 @@ import java.util.List;
 @Repository
 public class EstoqueRepository {
 
+    @Autowired
+    MatrizGiroConfiguracao matrizConf;
+
     private final EntityManager em;
 
     public EstoqueRepository(EntityManager em){
         this.em = em;
     }
 
-    public List<EstoqueResult> findEstoque(Boolean subtrairDaSugestaoAQtdeBloqueadaNoWMS,
-                                            Boolean subtrairDoEsotqueAReserva,
-                                            MatrizGiroConfiguracao matrizConf,
-                                            String sqlChave,
-                                            String sqlGroup,
-                                            String filtroEstoque
-                            ){
+    public List<EstoqueResult> findEstoque(String filtroEstoque){
 
         StringBuilder sql = new StringBuilder();
-        sql.append(StringUtils.replaceString(sqlChave.toString(), "ITE.", "EST."));
+
+        sql.append(StringUtils.replaceString(matrizConf.getSqlChave().toString(), "ITE.", "EST."));
         sql.append(" , CASE WHEN MIN(PEM.ESTMIN) IS NOT NULL THEN MIN(PEM.ESTMIN) ELSE SUM(EST.ESTMIN) END AS ESTMIN ");
         sql.append(" , CASE WHEN MIN(PEM.ESTMAX) IS NOT NULL THEN MIN(PEM.ESTMAX) ELSE SUM(EST.ESTMAX) END AS ESTMAX ");
         sql.append(" , SUM(EST.ESTOQUE ");
-        if(subtrairDoEsotqueAReserva) {
+        if(matrizConf.getSubtrairDoEsotqueAReserva()) {
             sql.append(" - NVL(EST.RESERVADO,0) ");
         }
-        if(subtrairDaSugestaoAQtdeBloqueadaNoWMS) {
+        if(matrizConf.getSubtrairDaSugestaoAQtdeBloqueadaNoWMS()) {
             sql.append(" - NVL(EST.WMSBLOQUEADO,0) ");
         }
         sql.append(") AS ESTOQUE ");
@@ -50,7 +48,7 @@ public class EstoqueRepository {
             sql.append(" AND (" + filtroEstoque + ") ");
         }
 
-        sql.append(StringUtils.replaceString(sqlGroup, "ITE.", "EST."));
+        sql.append(StringUtils.replaceString(matrizConf.getSqlGroup().toString(), "ITE.", "EST."));
 
         Session session = em.unwrap(Session.class);
         List<EstoqueResult> rs = session.createSQLQuery(sql.toString())

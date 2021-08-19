@@ -1,14 +1,12 @@
 package br.com.sankhya.commercial.analisegiro.model;
 
-import br.com.sankhya.commercial.analisegiro.configuration.MatrizGiroConfiguracao;
+import br.com.sankhya.commercial.analisegiro.core.MatrizGiroConfiguracao;
 import br.com.sankhya.commercial.analisegiro.util.BigDecimalUtil;
 import br.com.sankhya.commercial.analisegiro.util.TimeUtils;
 import lombok.*;
 import br.com.sankhya.commercial.analisegiro.struct.PeriodoGiro;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;

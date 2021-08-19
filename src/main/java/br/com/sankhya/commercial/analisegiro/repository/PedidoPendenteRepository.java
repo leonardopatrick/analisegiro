@@ -1,9 +1,10 @@
 package br.com.sankhya.commercial.analisegiro.repository;
 
-import br.com.sankhya.commercial.analisegiro.configuration.MatrizGiroConfiguracao;
+import br.com.sankhya.commercial.analisegiro.core.MatrizGiroConfiguracao;
 import br.com.sankhya.commercial.analisegiro.resultmodel.PedidoPendenteResult;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -13,19 +14,24 @@ import java.util.List;
 @Repository
 public class PedidoPendenteRepository {
 
+    @Autowired
+    MatrizGiroConfiguracao matrizConf;
+
     private final EntityManager em;
 
     public PedidoPendenteRepository(EntityManager em){
         this.em = em;
     }
 
-    public List<PedidoPendenteResult> findPedidosPendentes(Boolean utilizarLocal,
-                                                           String usarEmpresa,
-                                                           MatrizGiroConfiguracao matrizConf,
-                                                           Boolean utilizarControle
-                            ){
-        StringBuffer sql = new StringBuffer();
+    public List<PedidoPendenteResult> findPedidosPendentes(){
 
+        /*utilizarLocal,
+                usarEmpresa,
+                matrizConf,
+                utilizarControle*/
+
+
+      StringBuffer sql = new StringBuffer();
       sql.append(" SELECT  ");
         if("S".equals(matrizConf.getAgrupaProdAltern())) {
             sql.append("Snk_GetProdutoAgrupadoGiro(ITE.CODPROD, 'S') AS CODPROD ");
@@ -35,19 +41,19 @@ public class PedidoPendenteRepository {
             sql.append("ITE.CODPROD");
         }
 
-        if("M".equals(usarEmpresa)) {
+        if("M".equals(matrizConf.getUsarEmpresa())) {
             sql.append(" , NVL(EMP.CODEMPMATRIZ, EMP.CODEMP) AS CODEMP ");
-        } else if("S".equals(usarEmpresa)) {
+        } else if("S".equals(matrizConf.getUsarEmpresa())) {
             sql.append(" , ITE.CODEMP ");
         } else {
             sql.append(" , 0 AS CODEMP ");
         }
-        if(utilizarLocal) {
+        if(matrizConf.getUtilizarLocal()) {
             sql.append(" , ITE.CODLOCALORIG AS CODLOCAL ");
         } else {
             sql.append(" , 0 AS CODLOCAL ");
         }
-        if(utilizarControle) {
+        if(matrizConf.getUtilizarControle()) {
             sql.append(" , ITE.CONTROLE ");
         } else {
             sql.append(" , ' ' AS CONTROLE ");
@@ -82,16 +88,16 @@ public class PedidoPendenteRepository {
             sql.append("ITE.CODPROD");
         }
 
-        if("M".equals(usarEmpresa)) {
+        if("M".equals(matrizConf.getUsarEmpresa())) {
             sql.append(" , NVL(EMP.CODEMPMATRIZ, EMP.CODEMP) ");
-        } else if("S".equals(usarEmpresa)) {
+        } else if("S".equals(matrizConf.getUsarEmpresa())) {
             sql.append(", ITE.CODEMP ");
         }
 
-        if(utilizarLocal) {
+        if(matrizConf.getUtilizarLocal()) {
             sql.append(" , ITE.CODLOCALORIG ");
         }
-        if(utilizarControle) {
+        if(matrizConf.getUtilizarControle()) {
             sql.append(" , ITE.CONTROLE ");
         }
 

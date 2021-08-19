@@ -34,6 +34,8 @@ public class GiroStrategyRelacional implements GiroStrategy {
 
     @Override
     public Collection<Giro> findAllByPeriod(Timestamp dtIni, Timestamp Dtfim) {
+
+        List<GiroResult> listGiro = giroRepository.findAllByPeriod(dtIni,Dtfim);
         return null;
     }
 

@@ -15,7 +15,7 @@ public class SKParametersConfig {
     ParametroStrategyRelacional parametro;
 
     @Bean
-    public SKParameters MGEParameters(){
+    public SKParameters SKParameters(){
 
         SKParameters parametroContextoRepository = new SKParameters();
         parametroContextoRepository.setStrategy(parametro);

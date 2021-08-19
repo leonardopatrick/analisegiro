@@ -1,6 +1,6 @@
 package br.com.sankhya.commercial.analisegiro.service;
 
-import br.com.sankhya.commercial.analisegiro.configuration.MatrizGiroConfiguracao;
+import br.com.sankhya.commercial.analisegiro.core.MatrizGiroConfiguracao;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,9 +1,10 @@
 package br.com.sankhya.commercial.analisegiro.repository;
 
-import br.com.sankhya.commercial.analisegiro.configuration.MatrizGiroConfiguracao;
+import br.com.sankhya.commercial.analisegiro.core.MatrizGiroConfiguracao;
 import br.com.sankhya.commercial.analisegiro.resultmodel.GiroResult;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -13,23 +14,22 @@ import java.sql.Timestamp;
 @Repository
 public class GiroCustomRepository {
 
+    @Autowired
+    MatrizGiroConfiguracao matrizConf;
+
     private final EntityManager em;
 
     public GiroCustomRepository(EntityManager em){
         this.em = em;
     }
 
-    public List<GiroResult> findAllByPeriod(String sqlGroup,
-                                                  String usarEmpresa,
-                                                  String sqlchave,
-                                                  MatrizGiroConfiguracao matrizConf,
-                                                  Timestamp dtIni,
-                                                  Timestamp dtFin){
+    public List<GiroResult> findAllByPeriod(Timestamp dtIni, Timestamp dtFin){
+
         StringBuffer sql = new StringBuffer();
-        sql.append(sqlchave);
-        if("M".equals(usarEmpresa)) {
+        sql.append(matrizConf.getSqlChave().toString());
+        if("M".equals(matrizConf.getUsarEmpresa())) {
             sql.append(", MAX(COALESCE(COALESCE(PEM.LEADTIME, PRO.LEADTIME),0)) AS LEADTIME ");
-        } else if("S".equals(usarEmpresa)) {
+        } else if("S".equals(matrizConf.getUsarEmpresa())) {
             sql.append(", MAX(COALESCE(COALESCE(PEM.LEADTIME, PRO.LEADTIME),0)) AS LEADTIME  ");
         } else {
             sql.append(", MAX(PRO.LEADTIME) AS LEADTIME ");
@@ -47,9 +47,9 @@ public class GiroCustomRepository {
         sql.append("     INNER JOIN TGFPRO PRO ON PRO.CODPROD = ITE.CODPROD ");
         sql.append("     INNER JOIN TGFGRU GRU ON GRU.CODGRUPOPROD = PRO.CODGRUPOPROD ");
 
-        if("M".equals(usarEmpresa)) {
+        if("M".equals(matrizConf.getUsarEmpresa())) {
             sql.append(" INNER JOIN TSIEMP EMP ON EMP.CODEMP = ITE.CODEMP LEFT JOIN TGFPEM PEM ON PEM.CODEMP = EMP.CODEMP AND PEM.CODPROD = PRO.CODPROD ");
-        } else if("S".equals(usarEmpresa)) {
+        } else if("S".equals(matrizConf.getUsarEmpresa())) {
             sql.append(" LEFT JOIN TGFPEM PEM ON PEM.CODEMP = ITE.CODEMP AND PEM.CODPROD = PRO.CODPROD ");
         }
         /* TODO SEM FILTRO = SEM TOP
@@ -64,7 +64,7 @@ public class GiroCustomRepository {
             sql.append(" AND (" + filtroGiro + ") ");
         }*/
 
-        sql.append(sqlGroup);
+        sql.append(matrizConf.getSqlGroup().toString());
         sql.append(" , PRO.CODGRUPOPROD ");
         sql.append(" , PRO.MARCA ");
         sql.append(" , PRO.PESOBRUTO ");

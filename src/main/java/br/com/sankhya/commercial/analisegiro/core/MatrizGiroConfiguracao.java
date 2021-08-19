@@ -1,10 +1,11 @@
-package br.com.sankhya.commercial.analisegiro.configuration;
+package br.com.sankhya.commercial.analisegiro.core;
 
 import br.com.sankhya.commercial.analisegiro.util.TimeUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -16,8 +17,11 @@ import java.util.Map;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class MatrizGiroConfiguracao {
+
+    @Autowired
+    SKParameters skParameters;
+
     public static final String SEMANAL = "SEM";
     public static final String MENSAL = "MES";
     public static final String BIMESTRAL = "BIM";
@@ -69,6 +73,21 @@ public class MatrizGiroConfiguracao {
     private String naoAtuSugestaoZero;	// Atualizar estoque mínimo quando a sugestão for ZERO
     private Map<String, Map<String, Object>> filterParams;
     private String desconsiderarPedidosCompraVenda;// Desconsiderar filtros de Pedidos de Compra/Venda pendentes
+
+    private StringBuffer sqlGroup = new StringBuffer();;
+    private StringBuffer sqlChave = new StringBuffer();;
+    private Boolean controlaCustoPorControle = Boolean.FALSE;
+    private Boolean utilizarLocal = Boolean.FALSE;
+    private Boolean utilizarControle = Boolean.FALSE;
+    private Boolean subtrairDaSugestaoAQtdeBloqueadaNoWMS = Boolean.FALSE;
+    private Boolean subtrairDoEsotqueAReserva =  Boolean.FALSE; ; // criar param no xml.
+    private Boolean controlaCustoPorEmpresa = Boolean.FALSE;
+    private String usarEmpresa = "N";
+    private Boolean controlaCustoPorLocal = Boolean.FALSE;
+    private String 	strCodProd;
+
+    private StringBuffer sqlGroupUltimaVdaCpa = new StringBuffer();;
+
 
     public Collection<Timestamp[]> buildPeriodos() {
 
@@ -140,6 +159,103 @@ public class MatrizGiroConfiguracao {
         int mesInicio = (int) (periodoAtual - 1) * qtdMeses;
         cal.set(GregorianCalendar.DATE, 1);
         cal.set(GregorianCalendar.MONTH, mesInicio);
+    }
+
+    public MatrizGiroConfiguracao() throws Exception {
+
+        subtrairDaSugestaoAQtdeBloqueadaNoWMS = skParameters.asBoolean("WMSDESCONESTBLQ");
+        // parametroRepo.getParameterAsBoolean("subtrair.da.sug.compra.qtd.bloq.wms");
+        subtrairDoEsotqueAReserva = skParameters.asBoolean("DEDUZIRRESESTAN");//Deduzir reserva do estoque na Análise de Giro
+        //parametroRepo.getParameterAsBoolean("subtrair.do.estoque.a.reserva");  -- criar param no xml.
+
+        controlaCustoPorLocal = skParameters.asBoolean("UTILIZALOCAL");
+        controlaCustoPorControle = skParameters.asBoolean("UTILIZACONTROLE");
+        controlaCustoPorEmpresa  = skParameters.asBoolean("CUSTOPOREMP");
+        utilizarLocal = "S".equals(apresentaLocal) & skParameters.asBoolean("UTILIZALOCAL");
+        utilizarControle = "S".equals(apresentaControle) & skParameters.asBoolean("UTILIZACONTROLE");
+        if ("S".equals(apresentaEmpresa)) {
+            usarEmpresa = "S".equals(apresentaMatriz) ? "M" : "S";
+        } else {
+            usarEmpresa = "N";
+        }
+
+        if("S".equals(agrupaProdAltern)) {
+            strCodProd = "Snk_GetProdutoAgrupadoGiro(ITE.CODPROD, 'S')";
+        } else if("G".equals(agrupaProdAltern)) {
+            strCodProd = "Snk_GetProdutoAgrupadoGiro(ITE.CODPROD, 'G')";
+        } else {
+            strCodProd = "ITE.CODPROD";
+        }
+
+        sqlGroup = new StringBuffer();
+        sqlGroup.append(" GROUP BY  ");
+        sqlGroup.append(strCodProd);
+
+        if("M".equals(usarEmpresa)) {
+            sqlGroup.append(" , NVL(EMP.CODEMPMATRIZ, EMP.CODEMP) ");
+        } else if("S".equals(usarEmpresa)) {
+            sqlGroup.append(", ITE.CODEMP ");
+        }
+
+        if(utilizarLocal) {
+            sqlGroup.append(" , ITE.CODLOCALORIG ");
+        }
+        if(utilizarControle) {
+            sqlGroup.append(" , ITE.CONTROLE ");
+        }
+
+        sqlChave.append(" SELECT  ");
+        sqlChave.append(strCodProd + " AS CODPROD ");
+
+        if("M".equals(usarEmpresa)) {
+            sqlChave.append(" , NVL(EMP.CODEMPMATRIZ, EMP.CODEMP) AS CODEMP ");
+        } else if("S".equals(usarEmpresa)) {
+            sqlChave.append(" , ITE.CODEMP ");
+        } else {
+            sqlChave.append(" , 0 AS CODEMP ");
+        }
+        if(utilizarLocal) {
+            sqlChave.append(" , ITE.CODLOCALORIG AS CODLOCAL ");
+        } else {
+            sqlChave.append(" , 0 AS CODLOCAL ");
+        }
+        if(utilizarControle) {
+            sqlChave.append(" , ITE.CONTROLE ");
+        } else {
+            sqlChave.append(" , ' ' AS CONTROLE ");
+        }
+
+
+        sqlGroupUltimaVdaCpa.append(" GROUP BY  ");
+
+        if("S".equals(agrupaProdAltern)) {
+            sqlGroupUltimaVdaCpa.append("Snk_GetProdutoAgrupadoGiro(ITE.CODPROD, 'S')  ");
+        } else if("G".equals(agrupaProdAltern)) {
+            sqlGroupUltimaVdaCpa.append("Snk_GetProdutoAgrupadoGiro(ITE.CODPROD, 'G')  ");
+        } else {
+            sqlGroupUltimaVdaCpa.append("ITE.CODPROD");
+        }
+
+        if("M".equals(usarEmpresa)) {
+            sqlGroupUltimaVdaCpa.append(" , NVL(EMP.CODEMPMATRIZ, EMP.CODEMP) ");
+        } else if("S".equals(usarEmpresa)) {
+            sqlGroupUltimaVdaCpa.append(" , ITE.CODEMP ");
+        } else {
+            sqlGroupUltimaVdaCpa.append(" , 0 ");
+        }
+        if(utilizarLocal) {
+            sqlGroupUltimaVdaCpa.append(" , ITE.CODLOCALORIG ");
+        } else {
+            sqlGroupUltimaVdaCpa.append(" , 0 ");
+        }
+        if(utilizarControle) {
+            sqlGroupUltimaVdaCpa.append(" , ITE.CONTROLE ");
+        } else {
+            sqlGroupUltimaVdaCpa.append(" , ' ' ");
+        }
+
+        //nuTab = getTabelaPreco(matrizConf.getTabelaPreco());
+        // TODO: Verfificar filtros: filtroGiro, filtroEstoque, filtroPedVdaPend, filtroPedCpaPend; = ... ver ProcessadorMatriz prepararFiltros;
     }
 
 

@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import br.com.sankhya.commercial.analisegiro.configuration.MatrizGiroConfiguracao;
+import br.com.sankhya.commercial.analisegiro.core.MatrizGiroConfiguracao;
 import br.com.sankhya.commercial.analisegiro.core.SKParameters;
 import br.com.sankhya.commercial.analisegiro.model.ChaveGiro;
 import br.com.sankhya.commercial.analisegiro.model.Giro;

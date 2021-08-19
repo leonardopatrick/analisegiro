@@ -1,6 +1,6 @@
 package br.com.sankhya.commercial.analisegiro.service.impl;
 
-import br.com.sankhya.commercial.analisegiro.configuration.MatrizGiroConfiguracao;
+import br.com.sankhya.commercial.analisegiro.core.MatrizGiroConfiguracao;
 import br.com.sankhya.commercial.analisegiro.core.SKParameters;
 import br.com.sankhya.commercial.analisegiro.model.ChaveGiro;
 import br.com.sankhya.commercial.analisegiro.model.Giro;
@@ -18,12 +18,14 @@ import java.util.*;
 
 public class CalculoGiro {
 
-    private Boolean controlaCustoPorLocal = Boolean.FALSE;
-    private String 	strCodProd;
+
     private String filtroGiro;
     private String filtroEstoque;
     private String filtroPedVdaPend;
     private String filtroPedCpaPend;
+   /*
+    private Boolean controlaCustoPorLocal = Boolean.FALSE;
+    private String 	strCodProd;
     private StringBuffer sqlGroup = new StringBuffer();;
     private StringBuffer sqlChave = new StringBuffer();;
     private Boolean controlaCustoPorControle = Boolean.FALSE;
@@ -32,7 +34,7 @@ public class CalculoGiro {
     private Boolean subtrairDaSugestaoAQtdeBloqueadaNoWMS = Boolean.FALSE;
     private Boolean subtrairDoEsotqueAReserva =  Boolean.FALSE; ; // criar param no xml.
     private Boolean controlaCustoPorEmpresa = Boolean.FALSE;
-    private String usarEmpresa = "N";
+    private String usarEmpresa = "N";*/
     private int nroPeriodos = 0;
     private BigDecimal nuTab = BigDecimal.ONE.negate();
     private Map<BigDecimal, BigDecimal> mapTabPrecoCot = new HashMap<BigDecimal, BigDecimal>();
@@ -81,8 +83,6 @@ public class CalculoGiro {
 
     public void gerar() throws Exception {
 
-        prepararVariaveisComuns();
-
         lisProdSemGiro.clear();
        if("S".equals(matrizConf.getIncluirSemEstoque())) {
            gerarListaProdutos();
@@ -107,73 +107,6 @@ public class CalculoGiro {
         lisProdSemGiro.addAll(lista);
     }
 
-    private void prepararVariaveisComuns() throws Exception {
-
-        subtrairDaSugestaoAQtdeBloqueadaNoWMS = skParameters.asBoolean("WMSDESCONESTBLQ");
-        // parametroRepo.getParameterAsBoolean("subtrair.da.sug.compra.qtd.bloq.wms");
-        subtrairDoEsotqueAReserva = skParameters.asBoolean("DEDUZIRRESESTAN");//Deduzir reserva do estoque na Análise de Giro
-        //parametroRepo.getParameterAsBoolean("subtrair.do.estoque.a.reserva");  -- criar param no xml.
-
-        controlaCustoPorLocal = skParameters.asBoolean("UTILIZALOCAL");
-        controlaCustoPorControle = skParameters.asBoolean("UTILIZACONTROLE");
-        controlaCustoPorEmpresa  = skParameters.asBoolean("CUSTOPOREMP");
-        utilizarLocal = "S".equals(matrizConf.getApresentaLocal()) & skParameters.asBoolean("UTILIZALOCAL");
-        utilizarControle = "S".equals(matrizConf.getApresentaControle()) & skParameters.asBoolean("UTILIZACONTROLE");
-        if ("S".equals(matrizConf.getApresentaEmpresa())) {
-            usarEmpresa = "S".equals(matrizConf.getApresentaMatriz()) ? "M" : "S";
-        } else {
-            usarEmpresa = "N";
-        }
-
-        if("S".equals(matrizConf.getAgrupaProdAltern())) {
-            strCodProd = "Snk_GetProdutoAgrupadoGiro(ITE.CODPROD, 'S')";
-        } else if("G".equals(matrizConf.getAgrupaProdAltern())) {
-            strCodProd = "Snk_GetProdutoAgrupadoGiro(ITE.CODPROD, 'G')";
-        } else {
-            strCodProd = "ITE.CODPROD";
-        }
-
-        sqlGroup = new StringBuffer();
-        sqlGroup.append(" GROUP BY  ");
-        sqlGroup.append(strCodProd);
-
-        if("M".equals(usarEmpresa)) {
-            sqlGroup.append(" , NVL(EMP.CODEMPMATRIZ, EMP.CODEMP) ");
-        } else if("S".equals(usarEmpresa)) {
-            sqlGroup.append(", ITE.CODEMP ");
-        }
-
-        if(utilizarLocal) {
-            sqlGroup.append(" , ITE.CODLOCALORIG ");
-        }
-        if(utilizarControle) {
-            sqlGroup.append(" , ITE.CONTROLE ");
-        }
-
-        sqlChave.append(" SELECT  ");
-        sqlChave.append(strCodProd + " AS CODPROD ");
-
-        if("M".equals(usarEmpresa)) {
-            sqlChave.append(" , NVL(EMP.CODEMPMATRIZ, EMP.CODEMP) AS CODEMP ");
-        } else if("S".equals(usarEmpresa)) {
-            sqlChave.append(" , ITE.CODEMP ");
-        } else {
-            sqlChave.append(" , 0 AS CODEMP ");
-        }
-        if(utilizarLocal) {
-            sqlChave.append(" , ITE.CODLOCALORIG AS CODLOCAL ");
-        } else {
-            sqlChave.append(" , 0 AS CODLOCAL ");
-        }
-        if(utilizarControle) {
-            sqlChave.append(" , ITE.CONTROLE ");
-        } else {
-            sqlChave.append(" , ' ' AS CONTROLE ");
-        }
-        //nuTab = getTabelaPreco(matrizConf.getTabelaPreco());
-        // TODO: Verfificar filtros: filtroGiro, filtroEstoque, filtroPedVdaPend, filtroPedCpaPend; = ... ver ProcessadorMatriz prepararFiltros;
-    }
-
 
     private int buscarGiro() throws Exception {
         Giro giro;
@@ -185,10 +118,7 @@ public class CalculoGiro {
             Timestamp inicio = periodo[0];
             Timestamp fim = periodo[1];
             i++;
-            List<GiroResult> giroResults = giroCustomRepository.findAllByPeriod(sqlGroup.toString(),
-                    usarEmpresa,
-                    sqlChave.toString(),
-                    matrizConf,
+            List<GiroResult> giroResults = giroCustomRepository.findAllByPeriod(
                     inicio,
                     fim
             );
@@ -218,12 +148,7 @@ public class CalculoGiro {
     private  void buscarPedVdaPend(){
         //pedPenVdaStrategyInMemory.deleteAll();
         // TODO: Inserir filtro para pedido de venda
-        List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes(
-                 utilizarLocal,
-                 usarEmpresa,
-                 matrizConf,
-                 utilizarControle
-        );
+        List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes();
 
    for (PedidoPendenteResult item :  pedPenResults ){
             Giro giro = giroRepository.findGiroByChaveGiro(item.toChaveGiro());
@@ -237,12 +162,8 @@ public class CalculoGiro {
     private  void buscarPedCpaVdaPend(){
 
         //TODO: Inserir filtro pedido de compra
-        List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes(
-                utilizarLocal,
-                usarEmpresa,
-                matrizConf,
-                utilizarControle
-        );
+        List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes();
+
         for (PedidoPendenteResult item :  pedPenResults ){
             Giro giro = giroRepository.findGiroByChaveGiro(item.toChaveGiro());
            // Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
@@ -254,14 +175,7 @@ public class CalculoGiro {
 
     private  void buscarEstoques(){
 
-        List<EstoqueResult> estoqueResults = estoqueRepository.findEstoque(
-                 subtrairDaSugestaoAQtdeBloqueadaNoWMS,
-                 subtrairDoEsotqueAReserva,
-                 matrizConf,
-                 sqlChave.toString(),
-                 sqlGroup.toString(),
-                 filtroEstoque
-        );
+        List<EstoqueResult> estoqueResults = estoqueRepository.findEstoque(filtroEstoque);
 
         for (EstoqueResult item :  estoqueResults ){
             Giro giro = giroRepository.findGiroByChaveGiro(item.toChaveGiro());
@@ -287,12 +201,7 @@ public class CalculoGiro {
                     temUltVendaFaturamento,
                     mesesRetroagir);
 
-        List<UltimaVendaResult> ultimaVendaResutls = ultimaVendaRepository.findUltimaVenda(
-                 matrizConf,
-                 usarEmpresa,
-                 utilizarLocal,
-                 utilizarControle
-        );
+        List<UltimaVendaResult> ultimaVendaResutls = ultimaVendaRepository.findUltimaVenda();
 
         for (UltimaVendaResult item :  ultimaVendaResutls ) {
             Giro giro = giroRepository.findGiroByChaveGiro(item.toChaveGiro());
@@ -318,12 +227,7 @@ public class CalculoGiro {
                     temUltVendaFaturamento,
                     mesesRetroagir);
 
-        List<UltimaCompraResult> ultimaCompraResults = ultimaCompraRepository.findUltimaCompra(
-                matrizConf,
-                usarEmpresa,
-                utilizarLocal,
-                utilizarControle
-        );
+        List<UltimaCompraResult> ultimaCompraResults = ultimaCompraRepository.findUltimaCompra();
 
         for (UltimaCompraResult item :  ultimaCompraResults) {
             Giro giro = giroRepository.findGiroByChaveGiro(item.toChaveGiro());
@@ -399,9 +303,6 @@ public class CalculoGiro {
             }
 
            BigDecimal custo =  custoRepository.findCusto(
-                                    controlaCustoPorEmpresa,
-                                    controlaCustoPorControle,
-                                    controlaCustoPorLocal,
                                     giro.getChave().getCodProd(),
                                     giro.getChave().getCodLocal(),
                                     giro.getChave().getCodEmp(),
