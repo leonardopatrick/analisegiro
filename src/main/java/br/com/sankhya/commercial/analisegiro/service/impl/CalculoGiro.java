@@ -1,6 +1,7 @@
 package br.com.sankhya.commercial.analisegiro.service.impl;
 
 import br.com.sankhya.commercial.analisegiro.core.MatrizGiroConfiguracao;
+import br.com.sankhya.commercial.analisegiro.core.SKGiro;
 import br.com.sankhya.commercial.analisegiro.core.SKParameters;
 import br.com.sankhya.commercial.analisegiro.model.ChaveGiro;
 import br.com.sankhya.commercial.analisegiro.model.Giro;
@@ -48,13 +49,10 @@ public class CalculoGiro {
     SKParameters skParameters;
 
     @Autowired
+    SKGiro skGiro;
+
+    @Autowired
     ProdutoRepository produtoRepository;
-
-    @Autowired
-    GiroCustomRepository giroCustomRepository;
-
-    @Autowired
-    GiroStrategyInMemory giroRepository;
 
     @Autowired
     PedidoPendenteRepository pedidoPendenteRepository;
@@ -89,7 +87,7 @@ public class CalculoGiro {
        }
        nroPeriodos = buscarGiro();
 
-       calculoCurva.calcularCurvas(giroRepository.getMapGiros(), nroPeriodos);
+       calculoCurva.calcularCurvas(skGiro.getMapGiros(), nroPeriodos);
 
        buscarPedVdaPend();
        buscarPedCpaVdaPend();
@@ -118,17 +116,14 @@ public class CalculoGiro {
             Timestamp inicio = periodo[0];
             Timestamp fim = periodo[1];
             i++;
-            List<GiroResult> giroResults = giroCustomRepository.findAllByPeriod(
-                    inicio,
-                    fim
-            );
+            List<GiroResult> giroResults = skGiro.findAllByPeriod(inicio, fim);
 
             for (GiroResult item : giroResults) {
 
                 PeriodoGiro perGiro = new PeriodoGiro(item);
                 perGiro.setIndice(i);
                 perGiro.setDiasUteis(i); //TODO: Implementar função para dias úteis
-                giro = giroRepository.findGiroByChaveGiro(item.toChaveGiro());
+                giro = skGiro.findGiroByChaveGiro(item.toChaveGiro());
 
                 giro.setLeadTime(
                         BigDecimalUtil.getValueOrZero(item.getLEADTIME()));
@@ -137,7 +132,7 @@ public class CalculoGiro {
                 giro.setPeso(item.getPESOBRUTO());
                 giro.addPeriodo(perGiro);
 
-                giroRepository.save(giro);
+                skGiro.save(giro);
                 lisProdSemGiro.remove(item.getCODPROD());
 
             }
@@ -145,45 +140,41 @@ public class CalculoGiro {
         return i;
     }
 
-    private  void buscarPedVdaPend(){
-        //pedPenVdaStrategyInMemory.deleteAll();
+    private  void buscarPedVdaPend() throws Exception {
         // TODO: Inserir filtro para pedido de venda
         List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes();
 
    for (PedidoPendenteResult item :  pedPenResults ){
-            Giro giro = giroRepository.findGiroByChaveGiro(item.toChaveGiro());
-            //Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
+            Giro giro = skGiro.findGiroByChaveGiro(item.toChaveGiro());
             giro.setPedVdaPend(item.getQTDE());
-            giroRepository.save(giro);
+       skGiro.save(giro);
             lisProdSemGiro.remove(item.getCODPROD());
         }
     }
 
-    private  void buscarPedCpaVdaPend(){
-
+    private  void buscarPedCpaVdaPend() throws Exception {
         //TODO: Inserir filtro pedido de compra
         List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes();
 
         for (PedidoPendenteResult item :  pedPenResults ){
-            Giro giro = giroRepository.findGiroByChaveGiro(item.toChaveGiro());
-           // Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(item));
+            Giro giro = skGiro.findGiroByChaveGiro(item.toChaveGiro());
             giro.setPedCpaPend(item.getQTDE());
-            giroRepository.save(giro);
+            skGiro.save(giro);
             lisProdSemGiro.remove(item.getCODPROD());
         }
     }
 
-    private  void buscarEstoques(){
+    private  void buscarEstoques() throws Exception {
 
         List<EstoqueResult> estoqueResults = estoqueRepository.findEstoque(filtroEstoque);
 
         for (EstoqueResult item :  estoqueResults ){
-            Giro giro = giroRepository.findGiroByChaveGiro(item.toChaveGiro());
+            Giro giro = skGiro.findGiroByChaveGiro(item.toChaveGiro());
             giro.setEstMin(item.getESTMIN());
             giro.setEstMax(item.getESTMAX());
             giro.setEstoque(item.getESTOQUE());
             giro.setWmsBloqueado(item.getWMSBLOQUEADO());
-            giroRepository.save(giro);
+            skGiro.save(giro);
             lisProdSemGiro.remove(item.getCODPROD());
         }
     }
@@ -204,9 +195,9 @@ public class CalculoGiro {
         List<UltimaVendaResult> ultimaVendaResutls = ultimaVendaRepository.findUltimaVenda();
 
         for (UltimaVendaResult item :  ultimaVendaResutls ) {
-            Giro giro = giroRepository.findGiroByChaveGiro(item.toChaveGiro());
+            Giro giro = skGiro.findGiroByChaveGiro(item.toChaveGiro());
             giro.setUltVenda(item.getDTREF());
-            giroRepository.save(giro);
+            skGiro.save(giro);
             lisProdSemGiro.remove(item.getCODPROD());
         }
 
@@ -230,12 +221,12 @@ public class CalculoGiro {
         List<UltimaCompraResult> ultimaCompraResults = ultimaCompraRepository.findUltimaCompra();
 
         for (UltimaCompraResult item :  ultimaCompraResults) {
-            Giro giro = giroRepository.findGiroByChaveGiro(item.toChaveGiro());
+            Giro giro = skGiro.findGiroByChaveGiro(item.toChaveGiro());
             giro.setUltCompra( item.getDTREF());
             giro.setQtdUltCompra(item.getQTDNEG());
             giro.setAliqCred(item.getALIQICMS());
             giro.setVlrUltCompra(item.getVLRTOT());
-            giroRepository.save(giro);
+            skGiro.save(giro);
            // lisProdSemGiro.remove(item.getCODPROD());
         }
 
@@ -246,8 +237,8 @@ public class CalculoGiro {
 
     private void acrescentarSemGiro() {
         for(BigDecimal codProd : lisProdSemGiro){
-            Giro giro = giroRepository.findGiroByChaveGiro(new ChaveGiro(codProd));
-            giroRepository.save(giro);
+            Giro giro = skGiro.findGiroByChaveGiro(new ChaveGiro(codProd));
+            skGiro.save(giro);
         }
         lisProdSemGiro.clear();
     }
@@ -269,7 +260,7 @@ public class CalculoGiro {
             temTGFPMA =  singleQueryExecutor.existe("COUNT(1) AS QTD","TGFPMA", "1=1") ;
         }
 
-        for(Giro giro : giroRepository.findAll()) {
+        for(Giro giro : skGiro.findAll()) {
 
             String marca;
             Optional<Produto>  produtoOptional =  produtoRepository.findById(giro.getChave().getCodProd());
@@ -319,8 +310,7 @@ public class CalculoGiro {
 			}*/ //TODO: Por hora não estamos implementando a busca na tabela de preço por conta do custo.
 
             giro.calcular(matrizConf, BigDecimal.valueOf(nroPeriodos), calcularSugCompraParaEstMax, calcularDiasUteisParaLeadTime, somarLeadTime);
-
-            giroRepository.save(giro);
+            skGiro.save(giro);
         }
     }
 }

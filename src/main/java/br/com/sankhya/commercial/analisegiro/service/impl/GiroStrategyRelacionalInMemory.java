@@ -14,18 +14,22 @@ import java.sql.Timestamp;
 import java.util.*;
 
 @Service
-public class GiroStrategyRelacional implements GiroStrategy {
+public class GiroStrategyRelacionalInMemory implements GiroStrategy {
 
     @Autowired
-    GiroCustomRepository giroRepository;
+    GiroCustomRepository giroRelacional;
+
+    @Autowired
+    GiroStrategyInMemory giroStrategyInMemory;
 
     @Override
     public Giro findGiroByChaveGiro(ChaveGiro chave) throws Exception {
-        return null;
+        return giroStrategyInMemory.findGiroByChaveGiro(chave);
     }
 
     @Override
     public void save(Giro giro) {
+         giroStrategyInMemory.save(giro);
     }
 
     public Collection<Giro> findAll(){
@@ -33,10 +37,10 @@ public class GiroStrategyRelacional implements GiroStrategy {
     }
 
     @Override
-    public Collection<Giro> findAllByPeriod(Timestamp dtIni, Timestamp Dtfim) {
+    public List<GiroResult> findAllByPeriod(Timestamp dtIni, Timestamp Dtfim) {
 
-        List<GiroResult> listGiro = giroRepository.findAllByPeriod(dtIni,Dtfim);
-        return null;
+        List<GiroResult> listGiro = giroRelacional.findAllByPeriod(dtIni,Dtfim);
+        return listGiro;
     }
 
     @Override

@@ -2,11 +2,13 @@ package br.com.sankhya.commercial.analisegiro.core;
 
 import br.com.sankhya.commercial.analisegiro.model.ChaveGiro;
 import br.com.sankhya.commercial.analisegiro.model.Giro;
+import br.com.sankhya.commercial.analisegiro.resultmodel.GiroResult;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -36,7 +38,7 @@ public class SKGiro implements GiroStrategy{
     }
 
     @Override
-    public Collection<Giro> findAllByPeriod(Timestamp dtIni, Timestamp Dtfim) throws Exception {
+    public List<GiroResult> findAllByPeriod(Timestamp dtIni, Timestamp Dtfim) throws Exception {
         return strategy.findAllByPeriod(dtIni, Dtfim);
     }
 }
