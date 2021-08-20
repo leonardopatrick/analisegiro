@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class MatrizGiroConfiguracaoConf {
 
     @Bean
-    public MatrizGiroConfiguracao matrizGiroConfiguracao(){
+    public MatrizGiroConfiguracao matrizGiroConfiguracao() throws Exception {
         return new MatrizGiroConfiguracao();
     }
 }

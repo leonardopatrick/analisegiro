@@ -147,7 +147,7 @@ public class CalculoGiro {
    for (PedidoPendenteResult item :  pedPenResults ){
             Giro giro = skGiro.findGiroByChaveGiro(item.toChaveGiro());
             giro.setPedVdaPend(item.getQTDE());
-       skGiro.save(giro);
+            skGiro.save(giro);
             lisProdSemGiro.remove(item.getCODPROD());
         }
     }
@@ -235,7 +235,7 @@ public class CalculoGiro {
         //TODO: Verificar o pq de utilizar a chave anterior --> chaveAnt = new ChaveGiro(rs);
     }
 
-    private void acrescentarSemGiro() {
+    private void acrescentarSemGiro() throws Exception {
         for(BigDecimal codProd : lisProdSemGiro){
             Giro giro = skGiro.findGiroByChaveGiro(new ChaveGiro(codProd));
             skGiro.save(giro);

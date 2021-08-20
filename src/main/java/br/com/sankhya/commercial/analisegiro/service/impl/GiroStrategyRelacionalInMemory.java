@@ -33,7 +33,7 @@ public class GiroStrategyRelacionalInMemory implements GiroStrategy {
     }
 
     public Collection<Giro> findAll(){
-        return null;
+        return giroStrategyInMemory.findAll();
     }
 
     @Override

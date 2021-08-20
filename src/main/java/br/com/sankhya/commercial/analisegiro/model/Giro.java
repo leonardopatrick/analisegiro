@@ -207,13 +207,13 @@ public class Giro {
         int indMaior = 1;
         int indMenorDiaUtil = 1;
         int indMaiorDiaUtil = 1;
-
-        int cont = 0;
+        int contPeriodos = nroPeriodos.intValue();
+        int contComGiro  = 0;
         for(PeriodoGiro periodo :  periodos){
             qtdVenda = periodo.getQtde();//TODO: Verificar se realmente é esse valor esperado para a variavel
             qtdVendaDiaUtil = periodo.getQtdVendDiaUtil();
-            cont++;
-            if(cont == 1) {
+            contComGiro ++;
+            if(contComGiro  == 1) {
                 qtdMinima = qtdVenda;
                 qtdMaxima = qtdVenda;
                 qtdMinimaDiaUtil = qtdVendaDiaUtil;
@@ -239,34 +239,39 @@ public class Giro {
         qtdTotal = totQtdVenda;
         qtdMedia = totQtdVenda.divide(nroPeriodos);
 
-        if(cont>4) { // TODO: conversar com Bruce, média precisa no mínimo de 3 ocorrencias.
+        if(contComGiro >4) { // TODO: conversar com Bruce, média precisa no mínimo de 3 ocorrencias.
             if(matrizConf.getDesprezarPeriodoGiro().intValue() == 1) {  // Maior
                 totQtdVendaDiaUtil = totQtdVendaDiaUtil.subtract(qtdMaximaDiaUtil);
                 totQtdVenda = totQtdVenda.subtract(qtdMaxima);
-                cont--;
+                contComGiro --;
+                contPeriodos --;
             } else if(matrizConf.getDesprezarPeriodoGiro().intValue() == 2 ) { // Menor
                 totQtdVendaDiaUtil = totQtdVendaDiaUtil.subtract(qtdMinimaDiaUtil);
                 totQtdVenda = totQtdVenda.subtract(qtdMinima);
-                cont--;
+                contComGiro --;
+                contPeriodos --;
             } else if(matrizConf.getDesprezarPeriodoGiro().intValue() == 3) {  // Ambos
                 totQtdVendaDiaUtil = totQtdVendaDiaUtil.subtract(qtdMaximaDiaUtil);
                 totQtdVenda = totQtdVenda.subtract(qtdMaxima);
-                cont--;
+                contComGiro --;
+                contPeriodos --;
                 totQtdVendaDiaUtil = totQtdVendaDiaUtil.subtract(qtdMinimaDiaUtil);
                 totQtdVenda = totQtdVenda.subtract(qtdMinima);
-                cont--;
+                contComGiro --;
+                contPeriodos --;
             }
         }
-        estMin = BigDecimalUtil.getValueOrZero(estMin);
-        estMin = estMin.add(estMin.multiply(BigDecimalUtil.getValueOrZero(matrizConf.getPercAcrescimoSugestao())).divide(BigDecimalUtil.CEM_VALUE));
-        BigDecimal estoq = estoque.add(pedCpaPend).subtract(pedVdaPend);
 
         BigDecimal divisor;
         if("S".equals(matrizConf.getEstMinIncluiVendaZero())) { // TODO: não deveria usar q AUMENTA o GIRO e pode levar a comprar produto desnecessário, EXCETO para produtos que começaram a venda depois do início do período analisado
-            divisor = nroPeriodos;
+            divisor = BigDecimal.valueOf(contPeriodos);
         } else {
-            divisor = BigDecimal.valueOf(cont);
+            divisor = BigDecimal.valueOf(contComGiro);
         }
+
+        estMin = BigDecimalUtil.getValueOrZero(estMin);
+        estMin = estMin.add(estMin.multiply(BigDecimalUtil.getValueOrZero(matrizConf.getPercAcrescimoSugestao())).divide(BigDecimalUtil.CEM_VALUE));
+        BigDecimal estoq = estoque.add(pedCpaPend).subtract(pedVdaPend);
 
         leadTime = BigDecimalUtil.getValueOrZero(leadTime);
 
