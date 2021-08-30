@@ -22,8 +22,6 @@ import java.util.List;
 @Repository
 public class UltimaCompraRepository {
 
-    @Autowired
-    MatrizGiroConfiguracao matrizConf;
 
     private final EntityManager em;
 
@@ -33,7 +31,7 @@ public class UltimaCompraRepository {
     }
 
     @SuppressWarnings("unchecked")
-    public List<UltimaCompraResult> findUltimaCompra() {
+    public List<UltimaCompraResult> findUltimaCompra( MatrizGiroConfiguracao matrizConf) {
 
         StringBuffer sql = new StringBuffer();
         sql.append(matrizConf.getSqlChave());

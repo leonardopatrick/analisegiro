@@ -13,17 +13,13 @@ import java.sql.Timestamp;
 @SuppressWarnings("ALL")
 @Repository
 public class GiroCustomRepository {
-
-    @Autowired
-    MatrizGiroConfiguracao matrizConf;
-
     private final EntityManager em;
 
     public GiroCustomRepository(EntityManager em){
         this.em = em;
     }
 
-    public List<GiroResult> findAllByPeriod(Timestamp dtIni, Timestamp dtFin){
+    public List<GiroResult> findAllByPeriod(Timestamp dtIni, Timestamp dtFin, MatrizGiroConfiguracao matrizConf){
 
         StringBuffer sql = new StringBuffer();
         sql.append(matrizConf.getSqlChave().toString());

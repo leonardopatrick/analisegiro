@@ -19,9 +19,6 @@ import java.util.List;
 
 @Repository
 public class UltimaVendaRepository {
-    @Autowired
-    MatrizGiroConfiguracao matrizConf;
-
     private final EntityManager em;
 
     public UltimaVendaRepository(EntityManager em){
@@ -30,7 +27,7 @@ public class UltimaVendaRepository {
     }
 
     @SuppressWarnings("unchecked")
-    public List<UltimaVendaResult> findUltimaVenda() {
+    public List<UltimaVendaResult> findUltimaVenda(MatrizGiroConfiguracao matrizConf) {
 
 
         StringBuffer sql = new StringBuffer();

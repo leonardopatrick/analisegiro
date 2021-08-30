@@ -15,16 +15,13 @@ import java.util.List;
 @Repository
 public class EstoqueRepository {
 
-    @Autowired
-    MatrizGiroConfiguracao matrizConf;
-
     private final EntityManager em;
 
     public EstoqueRepository(EntityManager em){
         this.em = em;
     }
 
-    public List<EstoqueResult> findEstoque(String filtroEstoque){
+    public List<EstoqueResult> findEstoque(String filtroEstoque, MatrizGiroConfiguracao matrizConf){
 
         StringBuilder sql = new StringBuilder();
 

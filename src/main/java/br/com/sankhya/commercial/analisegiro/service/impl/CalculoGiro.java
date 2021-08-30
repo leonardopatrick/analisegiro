@@ -142,7 +142,7 @@ public class CalculoGiro {
 
     private  void buscarPedVdaPend() throws Exception {
         // TODO: Inserir filtro para pedido de venda
-        List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes();
+        List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes( matrizConf);
 
    for (PedidoPendenteResult item :  pedPenResults ){
             Giro giro = skGiro.findGiroByChaveGiro(item.toChaveGiro());
@@ -154,7 +154,7 @@ public class CalculoGiro {
 
     private  void buscarPedCpaVdaPend() throws Exception {
         //TODO: Inserir filtro pedido de compra
-        List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes();
+        List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes( matrizConf);
 
         for (PedidoPendenteResult item :  pedPenResults ){
             Giro giro = skGiro.findGiroByChaveGiro(item.toChaveGiro());
@@ -166,7 +166,7 @@ public class CalculoGiro {
 
     private  void buscarEstoques() throws Exception {
 
-        List<EstoqueResult> estoqueResults = estoqueRepository.findEstoque(filtroEstoque);
+        List<EstoqueResult> estoqueResults = estoqueRepository.findEstoque(filtroEstoque, matrizConf);
 
         for (EstoqueResult item :  estoqueResults ){
             Giro giro = skGiro.findGiroByChaveGiro(item.toChaveGiro());
@@ -192,7 +192,7 @@ public class CalculoGiro {
                     temUltVendaFaturamento,
                     mesesRetroagir);
 
-        List<UltimaVendaResult> ultimaVendaResutls = ultimaVendaRepository.findUltimaVenda();
+        List<UltimaVendaResult> ultimaVendaResutls = ultimaVendaRepository.findUltimaVenda(matrizConf);
 
         for (UltimaVendaResult item :  ultimaVendaResutls ) {
             Giro giro = skGiro.findGiroByChaveGiro(item.toChaveGiro());
@@ -218,7 +218,7 @@ public class CalculoGiro {
                     temUltVendaFaturamento,
                     mesesRetroagir);
 
-        List<UltimaCompraResult> ultimaCompraResults = ultimaCompraRepository.findUltimaCompra();
+        List<UltimaCompraResult> ultimaCompraResults = ultimaCompraRepository.findUltimaCompra(matrizConf);
 
         for (UltimaCompraResult item :  ultimaCompraResults) {
             Giro giro = skGiro.findGiroByChaveGiro(item.toChaveGiro());
@@ -297,7 +297,8 @@ public class CalculoGiro {
                                     giro.getChave().getCodProd(),
                                     giro.getChave().getCodLocal(),
                                     giro.getChave().getCodEmp(),
-                                    giro.getChave().getControle()
+                                    giro.getChave().getControle(),
+                                    matrizConf
                                     );
             giro.setCustoGer(custo);
             giro.setCustoRep(custo); //TODO: Ajustar para pegar o objeto de custo e entrar mais a fundo na logica do repositorio

@@ -14,8 +14,6 @@ import java.util.List;
 @Repository
 public class PedidoPendenteRepository {
 
-    @Autowired
-    MatrizGiroConfiguracao matrizConf;
 
     private final EntityManager em;
 
@@ -23,7 +21,7 @@ public class PedidoPendenteRepository {
         this.em = em;
     }
 
-    public List<PedidoPendenteResult> findPedidosPendentes(){
+    public List<PedidoPendenteResult> findPedidosPendentes( MatrizGiroConfiguracao matrizConf){
 
         /*utilizarLocal,
                 usarEmpresa,

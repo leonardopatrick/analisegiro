@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -17,6 +18,7 @@ import java.util.Map;
 @Getter
 @Setter
 @AllArgsConstructor
+@Primary
 public class MatrizGiroConfiguracao {
 
     @Autowired

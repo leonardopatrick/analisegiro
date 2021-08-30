@@ -17,9 +17,6 @@ import java.math.BigDecimal;
 @Repository
 public class CustoRepository {
 
-    @Autowired
-    MatrizGiroConfiguracao matrizConf;
-
     private final EntityManager em;
 
     public CustoRepository(EntityManager em){
@@ -29,7 +26,8 @@ public class CustoRepository {
     public BigDecimal findCusto(BigDecimal codProd,
                                           BigDecimal codLocal,
                                           BigDecimal codEmp,
-                                          char controle
+                                          char controle,
+                                MatrizGiroConfiguracao matrizConf
                             ){
         StringBuffer sqlBuf = new StringBuffer();
 
