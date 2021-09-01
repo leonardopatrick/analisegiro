@@ -9,24 +9,19 @@ import br.com.sankhya.commercial.analisegiro.util.TimeUtils;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
 
-
 @Repository
 public class UltimaCompraRepository {
-
 
     private final EntityManager em;
 
     public UltimaCompraRepository(EntityManager em){
-
         this.em = em;
     }
 
@@ -54,7 +49,8 @@ public class UltimaCompraRepository {
 
     @Transactional
     public void atualizarTGFUVC(int mesesRetroagir) throws Exception {
-		if (existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMACOMP IN ('E', 'G', 'M')" )) {
+
+			if (existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMACOMP IN ('E', 'G', 'M')" )) {
 			StringBuffer queUltCompra = SqlUtils.loadSql("queUltCompra.sql");
 
 			if (existe("COUNT(1) AS QTD", "TGFTOP", "ATUALULTIMACOMP ='E' ")) {

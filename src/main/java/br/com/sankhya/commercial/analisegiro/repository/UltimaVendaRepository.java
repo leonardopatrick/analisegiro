@@ -49,7 +49,7 @@ public class UltimaVendaRepository {
     @Transactional
 	public void atualizarTGFUVC(int mesesRetroagir) throws Exception {
 
-		if (existe("COUNT(1) AS QTD", "TGFTOP", "ATUALULTIMAVEND IN ('F', 'G', 'S')")) {
+			if (existe("COUNT(1) AS QTD", "TGFTOP", "ATUALULTIMAVEND IN ('F', 'G', 'S')")) {
 			StringBuffer queUltVenda = SqlUtils.loadSql("queUltVenda.sql");
 
 			if (existe("COUNT(1) AS QTD", "TGFTOP", "ATUALULTIMAVEND ='S' ")) {
