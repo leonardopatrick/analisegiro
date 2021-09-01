@@ -3,35 +3,29 @@ package br.com.sankhya.commercial.analisegiro.repository;
 import br.com.sankhya.commercial.analisegiro.core.MatrizGiroConfiguracao;
 import br.com.sankhya.commercial.analisegiro.helper.QueryExecutorHelper;
 import br.com.sankhya.commercial.analisegiro.resultmodel.UltimaVendaResult;
-import br.com.sankhya.commercial.analisegiro.util.BigDecimalUtil;
 import br.com.sankhya.commercial.analisegiro.util.SqlUtils;
 import br.com.sankhya.commercial.analisegiro.util.StringUtils;
 import br.com.sankhya.commercial.analisegiro.util.TimeUtils;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import javax.transaction.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.math.BigDecimal;
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
-
 
 @Repository
 public class UltimaVendaRepository {
     private final EntityManager em;
 
     public UltimaVendaRepository(EntityManager em){
-
         this.em = em;
     }
 
     @SuppressWarnings("unchecked")
     public List<UltimaVendaResult> findUltimaVenda(MatrizGiroConfiguracao matrizConf) {
-
 
         StringBuffer sql = new StringBuffer();
         sql.append(matrizConf.getSqlChave());
