@@ -68,7 +68,7 @@ public class CalculoGiro {
     UltimaCompraRepository ultimaCompraRepository;
 
     @Autowired
-    SingleQueryExecutor  singleQueryExecutor;
+    QueryExecutorSingleResult singleQueryExecutor;
 
     @Autowired
     CustoRepository custoRepository;

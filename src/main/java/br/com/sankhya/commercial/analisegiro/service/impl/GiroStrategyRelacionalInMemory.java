@@ -1,6 +1,7 @@
 package br.com.sankhya.commercial.analisegiro.service.impl;
 
 import br.com.sankhya.commercial.analisegiro.core.GiroStrategy;
+import br.com.sankhya.commercial.analisegiro.core.MatrizGiroConfiguracao;
 import br.com.sankhya.commercial.analisegiro.model.ChaveGiro;
 import br.com.sankhya.commercial.analisegiro.model.Giro;
 import br.com.sankhya.commercial.analisegiro.model.Parametro;
@@ -22,6 +23,9 @@ public class GiroStrategyRelacionalInMemory implements GiroStrategy {
     @Autowired
     GiroStrategyInMemory giroStrategyInMemory;
 
+    @Autowired
+    MatrizGiroConfiguracao matrizConf;
+
     @Override
     public Giro findGiroByChaveGiro(ChaveGiro chave) throws Exception {
         return giroStrategyInMemory.findGiroByChaveGiro(chave);
@@ -39,7 +43,7 @@ public class GiroStrategyRelacionalInMemory implements GiroStrategy {
     @Override
     public List<GiroResult> findAllByPeriod(Timestamp dtIni, Timestamp Dtfim) {
 
-        List<GiroResult> listGiro = giroRelacional.findAllByPeriod(dtIni,Dtfim);
+        List<GiroResult> listGiro = giroRelacional.findAllByPeriod(dtIni,Dtfim, matrizConf);
         return listGiro;
     }
 

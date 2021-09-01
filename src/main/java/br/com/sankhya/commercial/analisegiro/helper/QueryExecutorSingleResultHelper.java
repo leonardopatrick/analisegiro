@@ -6,7 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.math.BigDecimal;
 
-public class QueryExecutorHelper {
+public class QueryExecutorSingleResultHelper {
 
     public static Object execute(EntityManager em, String campo, String tabela, String condicao
     ){
