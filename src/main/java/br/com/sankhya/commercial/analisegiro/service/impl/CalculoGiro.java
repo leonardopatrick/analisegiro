@@ -10,6 +10,8 @@ import br.com.sankhya.commercial.analisegiro.resultmodel.*;
 import br.com.sankhya.commercial.analisegiro.repository.*;
 import br.com.sankhya.commercial.analisegiro.struct.PeriodoGiro;
 import br.com.sankhya.commercial.analisegiro.util.BigDecimalUtil;
+import br.com.sankhya.jape.metadata.EntityMetaData;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
@@ -142,19 +144,21 @@ public class CalculoGiro {
 
     private  void buscarPedVdaPend() throws Exception {
         // TODO: Inserir filtro para pedido de venda
-        List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes( matrizConf);
+    	filtroPedVdaPend = "CAB.TIPMOV IN ('P','V') ABD CAB.DTNEG > (SYSDATE - 180)";
+        List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes(filtroPedVdaPend, matrizConf);
 
-   for (PedidoPendenteResult item :  pedPenResults ){
-            Giro giro = skGiro.findGiroByChaveGiro(item.toChaveGiro());
-            giro.setPedVdaPend(item.getQTDE());
-            skGiro.save(giro);
-            lisProdSemGiro.remove(item.getCODPROD());
-        }
+	   for (PedidoPendenteResult item :  pedPenResults ){
+	            Giro giro = skGiro.findGiroByChaveGiro(item.toChaveGiro());
+	            giro.setPedVdaPend(item.getQTDE());
+	            skGiro.save(giro);
+	            lisProdSemGiro.remove(item.getCODPROD());
+	   }
     }
 
     private  void buscarPedCpaVdaPend() throws Exception {
         //TODO: Inserir filtro pedido de compra
-        List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes( matrizConf);
+    	filtroPedCpaPend = "CAB.TIPMOV IN ('O','C') ABD CAB.DTNEG > (SYSDATE - 180)";
+    	List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes(filtroPedCpaPend, matrizConf);
 
         for (PedidoPendenteResult item :  pedPenResults ){
             Giro giro = skGiro.findGiroByChaveGiro(item.toChaveGiro());
@@ -207,15 +211,15 @@ public class CalculoGiro {
 
     private void buscarUltimaCompra() throws Exception {
 
-        Boolean temUltVenda = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND IN ('F', 'G', 'S')" );
-        Boolean temUltVendaSaida = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND ='S' " );
-        Boolean temUltVendaFaturamento = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND ='F' " );
+        Boolean temUltCompra = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMACOMP IN ('E', 'G', 'M')" );
+        Boolean temUltCompraEntrada = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMACOMP ='E' " );
+        Boolean temUltCompraMovimento = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMACOMP ='M' " );
         int  mesesRetroagir = 1;/*parametroRepo.getParameterAsInt("UTILIZALOCAL");*/ //TODO: Verificar qual parametro é responsável pelo dias a retroceder
 
-        if(temUltVenda)
+        if(temUltCompra)
             ultimaCompraRepository.atualizarTGFUVC(
-                    temUltVendaSaida,
-                    temUltVendaFaturamento,
+            		temUltCompraEntrada,
+                    temUltCompraMovimento,
                     mesesRetroagir);
 
         List<UltimaCompraResult> ultimaCompraResults = ultimaCompraRepository.findUltimaCompra(matrizConf);

@@ -21,41 +21,10 @@ public class PedidoPendenteRepository {
         this.em = em;
     }
 
-    public List<PedidoPendenteResult> findPedidosPendentes( MatrizGiroConfiguracao matrizConf){
+    public List<PedidoPendenteResult> findPedidosPendentes(String filtro,  MatrizGiroConfiguracao matrizConf){
 
-        /*utilizarLocal,
-                usarEmpresa,
-                matrizConf,
-                utilizarControle*/
-
-
-      StringBuffer sql = new StringBuffer();
-      sql.append(" SELECT  ");
-        if("S".equals(matrizConf.getAgrupaProdAltern())) {
-            sql.append("Snk_GetProdutoAgrupadoGiro(ITE.CODPROD, 'S') AS CODPROD ");
-        } else if("G".equals(matrizConf.getAgrupaProdAltern())) {
-            sql.append("Snk_GetProdutoAgrupadoGiro(ITE.CODPROD, 'G') AS CODPROD ");
-        } else {
-            sql.append("ITE.CODPROD");
-        }
-
-        if("M".equals(matrizConf.getUsarEmpresa())) {
-            sql.append(" , NVL(EMP.CODEMPMATRIZ, EMP.CODEMP) AS CODEMP ");
-        } else if("S".equals(matrizConf.getUsarEmpresa())) {
-            sql.append(" , ITE.CODEMP ");
-        } else {
-            sql.append(" , 0 AS CODEMP ");
-        }
-        if(matrizConf.getUtilizarLocal()) {
-            sql.append(" , ITE.CODLOCALORIG AS CODLOCAL ");
-        } else {
-            sql.append(" , 0 AS CODLOCAL ");
-        }
-        if(matrizConf.getUtilizarControle()) {
-            sql.append(" , ITE.CONTROLE ");
-        } else {
-            sql.append(" , ' ' AS CONTROLE ");
-        }
+    	StringBuffer sql = new StringBuffer();
+    	sql.append(matrizConf.getSqlChave().toString());
 
         sql.append("  , SUM(ITE.QTDNEG - ITE.QTDENTREGUE) AS QTDE ");
         sql.append(" FROM TGFITE ITE ");
@@ -72,32 +41,11 @@ public class PedidoPendenteRepository {
         sql.append("                     (TPO.ATUALESTMP != 0 AND ITE.USOPROD IN ('M','D'))) ");
         sql.append("          THEN 'S' ELSE 'N' END ");
         sql.append("     END = 'S' ");
-       /* if(StringUtils.getEmptyAsNull(filtro) != null) {
+        if(StringUtils.getEmptyAsNull(filtro) != null) {
             sql.append(" AND (" + filtro + ") ");
-        }**/
-        // TODO FILTRO
-
-        sql.append(" GROUP BY  ");
-        if("S".equals(matrizConf.getAgrupaProdAltern())) {
-            sql.append("Snk_GetProdutoAgrupadoGiro(ITE.CODPROD, 'S') ");
-        } else if("G".equals(matrizConf.getAgrupaProdAltern())) {
-            sql.append("Snk_GetProdutoAgrupadoGiro(ITE.CODPROD, 'G') ");
-        } else {
-            sql.append("ITE.CODPROD");
         }
 
-        if("M".equals(matrizConf.getUsarEmpresa())) {
-            sql.append(" , NVL(EMP.CODEMPMATRIZ, EMP.CODEMP) ");
-        } else if("S".equals(matrizConf.getUsarEmpresa())) {
-            sql.append(", ITE.CODEMP ");
-        }
-
-        if(matrizConf.getUtilizarLocal()) {
-            sql.append(" , ITE.CODLOCALORIG ");
-        }
-        if(matrizConf.getUtilizarControle()) {
-            sql.append(" , ITE.CONTROLE ");
-        }
+    	sql.append(matrizConf.getSqlGroup().toString());
 
         Session session = em.unwrap(Session.class);
         List<PedidoPendenteResult> rs = session.createSQLQuery(sql.toString())
