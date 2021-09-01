@@ -42,7 +42,7 @@ public class PedidoPendenteRepository {
         sql.append("                     (TPO.ATUALESTMP != 0 AND ITE.USOPROD IN ('M','D'))) ");
         sql.append("          THEN 'S' ELSE 'N' END ");
         sql.append("     END = 'S' ");
-        
+
         if(StringUtils.getEmptyAsNull(filtro) != null) {
             sql.append(" AND (" + filtro + ") ");
         }

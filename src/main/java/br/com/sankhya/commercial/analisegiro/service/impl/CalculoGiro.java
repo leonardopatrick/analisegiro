@@ -143,7 +143,7 @@ public class CalculoGiro {
 
     private  void buscarPedVdaPend() throws Exception {
         // TODO: Inserir filtro para pedido de venda
-    	filtroPedVdaPend = "CAB.TIPMOV IN ('P','V') ABD CAB.DTNEG > (SYSDATE - 180)";
+    	filtroPedVdaPend = "CAB.TIPMOV IN ('P','V') AND CAB.DTNEG > (SYSDATE - 180)";
         List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes(filtroPedVdaPend, matrizConf);
 
 	   for (PedidoPendenteResult item :  pedPenResults ){
@@ -156,7 +156,7 @@ public class CalculoGiro {
 
     private  void buscarPedCpaVdaPend() throws Exception {
         //TODO: Inserir filtro pedido de compra
-    	filtroPedCpaPend = "CAB.TIPMOV IN ('O','C') ABD CAB.DTNEG > (SYSDATE - 180)";
+    	filtroPedCpaPend = "CAB.TIPMOV IN ('O','C') AND CAB.DTNEG > (SYSDATE - 180)";
     	List<PedidoPendenteResult> pedPenResults = pedidoPendenteRepository.findPedidosPendentes(filtroPedCpaPend, matrizConf);
 
         for (PedidoPendenteResult item :  pedPenResults ){
@@ -184,17 +184,11 @@ public class CalculoGiro {
 
     private void buscarUltimaVenda() throws Exception {
 
-        Boolean temUltVenda = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND IN ('F', 'G', 'S')" );
-        Boolean temUltVendaSaida = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND ='S' " );
-        Boolean temUltVendaFaturamento = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMAVEND ='F' " );
         int  mesesRetroagir = 1;/*parametroRepo.getParameterAsInt("UTILIZALOCAL");*/ //TODO: verificar qual parametro é responsável por armazenar os dias a retroceder.
 
-        if(temUltVenda)
-            ultimaVendaRepository.atualizarTGFUVC(
-                    temUltVendaSaida,
-                    temUltVendaFaturamento,
-                    mesesRetroagir);
+        ultimaVendaRepository.atualizarTGFUVC(mesesRetroagir);
 
+        //TODO: Ajustar a aplicação dos filtros.
         List<UltimaVendaResult> ultimaVendaResutls = ultimaVendaRepository.findUltimaVenda(matrizConf);
 
         for (UltimaVendaResult item :  ultimaVendaResutls ) {
@@ -204,23 +198,15 @@ public class CalculoGiro {
             lisProdSemGiro.remove(item.getCODPROD());
         }
 
-        //TODO: Ajustar a aplicação dos filtros.
-        //if("S".equals(matrizConf.getIncluirSemEstoque()))
     }
 
     private void buscarUltimaCompra() throws Exception {
 
-        Boolean temUltCompra = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMACOMP IN ('E', 'G', 'M')" );
-        Boolean temUltCompraEntrada = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMACOMP ='E' " );
-        Boolean temUltCompraMovimento = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFTOP","ATUALULTIMACOMP ='M' " );
         int  mesesRetroagir = 1;/*parametroRepo.getParameterAsInt("UTILIZALOCAL");*/ //TODO: Verificar qual parametro é responsável pelo dias a retroceder
 
-        if(temUltCompra)
-            ultimaCompraRepository.atualizarTGFUVC(
-            		temUltCompraEntrada,
-                    temUltCompraMovimento,
-                    mesesRetroagir);
+        ultimaCompraRepository.atualizarTGFUVC(mesesRetroagir);
 
+        //TODO: Ajustar a inclusão dos filtros
         List<UltimaCompraResult> ultimaCompraResults = ultimaCompraRepository.findUltimaCompra(matrizConf);
 
         for (UltimaCompraResult item :  ultimaCompraResults) {
@@ -230,12 +216,8 @@ public class CalculoGiro {
             giro.setAliqCred(item.getALIQICMS());
             giro.setVlrUltCompra(item.getVLRTOT());
             skGiro.save(giro);
-           // lisProdSemGiro.remove(item.getCODPROD());
+            lisProdSemGiro.remove(item.getCODPROD());
         }
-
-        //TODO: Ajustar a inclusão dos filtros
-        //if("S".equals(matrizConf.getIncluirSemEstoque()))
-        //TODO: Verificar o pq de utilizar a chave anterior --> chaveAnt = new ChaveGiro(rs);
     }
 
     private void acrescentarSemGiro() throws Exception {
