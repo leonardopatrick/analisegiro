@@ -10,7 +10,6 @@ import br.com.sankhya.commercial.analisegiro.resultmodel.*;
 import br.com.sankhya.commercial.analisegiro.repository.*;
 import br.com.sankhya.commercial.analisegiro.struct.PeriodoGiro;
 import br.com.sankhya.commercial.analisegiro.util.BigDecimalUtil;
-import br.com.sankhya.jape.metadata.EntityMetaData;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;

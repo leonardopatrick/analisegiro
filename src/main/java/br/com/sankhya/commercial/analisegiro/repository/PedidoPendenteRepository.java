@@ -2,6 +2,7 @@ package br.com.sankhya.commercial.analisegiro.repository;
 
 import br.com.sankhya.commercial.analisegiro.core.MatrizGiroConfiguracao;
 import br.com.sankhya.commercial.analisegiro.resultmodel.PedidoPendenteResult;
+import br.com.sankhya.commercial.analisegiro.util.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ public class PedidoPendenteRepository {
         sql.append("                     (TPO.ATUALESTMP != 0 AND ITE.USOPROD IN ('M','D'))) ");
         sql.append("          THEN 'S' ELSE 'N' END ");
         sql.append("     END = 'S' ");
+        
         if(StringUtils.getEmptyAsNull(filtro) != null) {
             sql.append(" AND (" + filtro + ") ");
         }
