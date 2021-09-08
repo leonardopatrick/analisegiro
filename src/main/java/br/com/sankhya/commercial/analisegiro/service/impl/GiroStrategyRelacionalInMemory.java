@@ -49,7 +49,7 @@ public class GiroStrategyRelacionalInMemory implements GiroStrategy {
 
     @Override
     public Map<ChaveGiro,Giro> getMapGiros(){
-        return null;
+        return giroStrategyInMemory.getMapGiros();
     }
 
 }

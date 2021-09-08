@@ -89,17 +89,57 @@ public class CalculoGiro {
        }
        nroPeriodos = buscarGiro();
 
-
-
+        long tempoInicial = System.currentTimeMillis();
        buscarPedVdaPend();
-       buscarPedCpaVdaPend();
-       buscarEstoques();
-       buscarUltimaCompra();
-       buscarUltimaVenda();
-       acrescentarSemGiro();
-       calcular();
+       long tempoFinal = System.currentTimeMillis();
+        System.out.printf("\nbuscarPedVdaPend %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
 
+        tempoInicial = System.currentTimeMillis();
+        buscarPedCpaVdaPend();
+        tempoFinal = System.currentTimeMillis();
+        System.out.printf("\nbuscarPedCpaVdaPend %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+
+
+        tempoInicial = System.currentTimeMillis();
+        buscarEstoques();
+        tempoFinal = System.currentTimeMillis();
+        System.out.printf("\nbuscarEstoques %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+
+        tempoInicial = System.currentTimeMillis();
+        buscarUltimaCompra();
+        tempoFinal = System.currentTimeMillis();
+        System.out.printf("\nbuscarUltimaCompra %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+
+        tempoInicial = System.currentTimeMillis();
+        buscarUltimaCompra();
+        tempoFinal = System.currentTimeMillis();
+        System.out.printf("\nbuscarUltimaCompra %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+
+        tempoInicial = System.currentTimeMillis();
+        buscarUltimaVenda();
+        tempoFinal = System.currentTimeMillis();
+        System.out.printf("\nbuscarUltimaVenda %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+
+        tempoInicial = System.currentTimeMillis();
+        buscarUltimaVenda();
+        tempoFinal = System.currentTimeMillis();
+        System.out.printf("\nbuscarUltimaVenda %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+
+        tempoInicial = System.currentTimeMillis();
+        acrescentarSemGiro();
+        tempoFinal = System.currentTimeMillis();
+        System.out.printf("\nacrescentarSemGiro %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+
+        tempoInicial = System.currentTimeMillis();
+        calcular();
+        tempoFinal = System.currentTimeMillis();
+        System.out.printf("\ncalcular %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+
+        tempoInicial = System.currentTimeMillis();
         calculoCurva.calcularCurvas(skGiro.getMapGiros(), nroPeriodos);
+        tempoFinal = System.currentTimeMillis();
+        System.out.printf("\ncalcularCurvas %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+
     }
 
     public void gerarListaProdutos() throws Exception {
