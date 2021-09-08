@@ -146,9 +146,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>ojdbc6</artifactId>
-			<version>11.2.0</version>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc8</artifactId>
+			<version>12.2.0.1</version>
 		</dependency>
 
 		<dependency>

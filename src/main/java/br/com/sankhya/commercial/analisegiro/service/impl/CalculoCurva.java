@@ -283,6 +283,7 @@ public class CalculoCurva {
     }
 
 	public void calcularCurvas(Map<ChaveGiro, Giro> giros, int nroPeriodos) throws Exception {
+		matrizConf.init();
 		calcularParticipacao(giros);
 
 		BigDecimal limCurvaB = BigDecimal.valueOf((Double) MGEParameters.getParameter("LIMCURVA_BPRO"));

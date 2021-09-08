@@ -89,7 +89,7 @@ public class CalculoGiro {
        }
        nroPeriodos = buscarGiro();
 
-       calculoCurva.calcularCurvas(skGiro.getMapGiros(), nroPeriodos);
+
 
        buscarPedVdaPend();
        buscarPedCpaVdaPend();
@@ -99,6 +99,7 @@ public class CalculoGiro {
        acrescentarSemGiro();
        calcular();
 
+        calculoCurva.calcularCurvas(skGiro.getMapGiros(), nroPeriodos);
     }
 
     public void gerarListaProdutos() throws Exception {
