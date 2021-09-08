@@ -92,43 +92,43 @@ public class CalculoGiro {
         long tempoInicial = System.currentTimeMillis();
        buscarPedVdaPend();
        long tempoFinal = System.currentTimeMillis();
-        System.out.printf("\nbuscarPedVdaPend %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+        System.out.printf("\nbuscarPedVdaPend %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
 
         tempoInicial = System.currentTimeMillis();
         buscarPedCpaVdaPend();
         tempoFinal = System.currentTimeMillis();
-        System.out.printf("\nbuscarPedCpaVdaPend %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+        System.out.printf("\nbuscarPedCpaVdaPend %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
 
 
         tempoInicial = System.currentTimeMillis();
         buscarEstoques();
         tempoFinal = System.currentTimeMillis();
-        System.out.printf("\nbuscarEstoques %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+        System.out.printf("\nbuscarEstoques %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
 
         tempoInicial = System.currentTimeMillis();
         buscarUltimaCompra();
         tempoFinal = System.currentTimeMillis();
-        System.out.printf("\nbuscarUltimaCompra %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+        System.out.printf("\nbuscarUltimaCompra %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
 
         tempoInicial = System.currentTimeMillis();
         buscarUltimaCompra();
         tempoFinal = System.currentTimeMillis();
-        System.out.printf("\nbuscarUltimaCompra %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+        System.out.printf("\nbuscarUltimaCompra %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
 
         tempoInicial = System.currentTimeMillis();
         buscarUltimaVenda();
         tempoFinal = System.currentTimeMillis();
-        System.out.printf("\nbuscarUltimaVenda %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+        System.out.printf("\nbuscarUltimaVenda %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
 
         tempoInicial = System.currentTimeMillis();
         buscarUltimaVenda();
         tempoFinal = System.currentTimeMillis();
-        System.out.printf("\nbuscarUltimaVenda %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+        System.out.printf("\nbuscarUltimaVenda %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
 
         tempoInicial = System.currentTimeMillis();
         acrescentarSemGiro();
         tempoFinal = System.currentTimeMillis();
-        System.out.printf("\nacrescentarSemGiro %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+        System.out.printf("\nacrescentarSemGiro %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
 
         tempoInicial = System.currentTimeMillis();
         calcular();
@@ -138,7 +138,7 @@ public class CalculoGiro {
         tempoInicial = System.currentTimeMillis();
         calculoCurva.calcularCurvas(skGiro.getMapGiros(), nroPeriodos);
         tempoFinal = System.currentTimeMillis();
-        System.out.printf("\ncalcularCurvas %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+        System.out.printf("\ncalcularCurvas %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
 
     }
 
@@ -320,13 +320,13 @@ public class CalculoGiro {
                 }*/
             }
 
-           BigDecimal custo =  custoRepository.findCusto(
+           BigDecimal custo = BigDecimal.ONE; /*custoRepository.findCusto(
                                     giro.getChave().getCodProd(),
                                     giro.getChave().getCodLocal(),
                                     giro.getChave().getCodEmp(),
                                     giro.getChave().getControle(),
                                     matrizConf
-                                    );
+                                    );*/
             giro.setCustoGer(custo);
             giro.setCustoRep(custo); //TODO: Ajustar para pegar o objeto de custo e entrar mais a fundo na logica do repositorio
 
