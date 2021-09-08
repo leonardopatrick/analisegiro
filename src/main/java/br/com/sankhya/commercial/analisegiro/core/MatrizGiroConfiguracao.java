@@ -3,7 +3,6 @@ package br.com.sankhya.commercial.analisegiro.core;
 import br.com.sankhya.commercial.analisegiro.util.TimeUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -90,6 +89,7 @@ public class MatrizGiroConfiguracao {
 
     private StringBuffer sqlGroupUltimaVdaCpa = new StringBuffer();;
 
+    public MatrizGiroConfiguracao(){}
 
     public Collection<Timestamp[]> buildPeriodos() {
 
@@ -163,7 +163,7 @@ public class MatrizGiroConfiguracao {
         cal.set(GregorianCalendar.MONTH, mesInicio);
     }
 
-    public MatrizGiroConfiguracao() throws Exception {
+    public void init() throws Exception {
 
         subtrairDaSugestaoAQtdeBloqueadaNoWMS = skParameters.asBoolean("WMSDESCONESTBLQ");
         // parametroRepo.getParameterAsBoolean("subtrair.da.sug.compra.qtd.bloq.wms");

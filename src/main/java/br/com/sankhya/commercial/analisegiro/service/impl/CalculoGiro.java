@@ -81,6 +81,7 @@ public class CalculoGiro {
 
 
     public void gerar() throws Exception {
+        matrizConf.init();
 
         lisProdSemGiro.clear();
        if("S".equals(matrizConf.getIncluirSemEstoque())) {
