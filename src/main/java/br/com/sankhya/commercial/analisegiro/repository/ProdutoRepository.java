@@ -14,4 +14,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, BigDecimal> {
 
     Produto findByCodprod(BigDecimal codprod);
 
+    @Query("SELECT p FROM Produto p WHERE ativo = 'S' AND permcompprod = 'S' ")
+    List<Produto> findAllCalGiro();
+
 }

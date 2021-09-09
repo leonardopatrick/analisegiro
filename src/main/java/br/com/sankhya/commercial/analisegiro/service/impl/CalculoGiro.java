@@ -79,6 +79,9 @@ public class CalculoGiro {
     @Autowired
     MatrizGiroConfiguracao matrizConf;
 
+    @Autowired
+    ProdutoStrategyInMemory produtoStrategyInMemory;
+
 
     public void gerar() throws Exception {
         matrizConf.init();
@@ -133,7 +136,7 @@ public class CalculoGiro {
         tempoInicial = System.currentTimeMillis();
         calcular();
         tempoFinal = System.currentTimeMillis();
-        System.out.printf("\ncalcular %.3f ms%n", (tempoFinal - tempoInicial) / 1000d);
+        System.out.printf("\ncalcular %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
 
         tempoInicial = System.currentTimeMillis();
         calculoCurva.calcularCurvas(skGiro.getMapGiros(), nroPeriodos);
@@ -144,8 +147,13 @@ public class CalculoGiro {
 
     public void gerarListaProdutos() throws Exception {
         //TODO: Adicionar a String strCodProd para buscar no repositório
-        List<BigDecimal> lista = produtoRepository.listProdutosCalGiro();
-        lisProdSemGiro.addAll(lista);
+
+        List<Produto> produtos = produtoRepository.findAllCalGiro();
+
+        for (Produto produto: produtos) {
+            lisProdSemGiro.add(produto.getCodprod());
+            produtoStrategyInMemory.save(produto);
+        }
     }
 
 
@@ -290,10 +298,12 @@ public class CalculoGiro {
         for(Giro giro : skGiro.findAll()) {
 
             String marca;
-            Optional<Produto>  produtoOptional =  produtoRepository.findById(giro.getChave().getCodProd());
 
-            if(produtoOptional.isPresent()){
-                Produto produto = produtoOptional.get();
+            Produto produto = produtoStrategyInMemory.findGiroById(giro.getChave().getCodProd());
+            //Optional<Produto>  produtoOptional =  produtoRepository.findById(giro.getChave().getCodProd());
+
+            if(produto!=null){
+               // Produto produto = produtoOptional.get();
                 if(giro.getEstMin() == null) {
                     giro.setEstMin(produto.getEstmin());
                 }
