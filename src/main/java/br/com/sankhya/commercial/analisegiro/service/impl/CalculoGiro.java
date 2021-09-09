@@ -340,7 +340,7 @@ public class CalculoGiro {
             giro.setCustoGer(custo);
             giro.setCustoRep(custo); //TODO: Ajustar para pegar o objeto de custo e entrar mais a fundo na logica do repositorio
 
-            Boolean temProdutoGenerico = singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFGXE","CODPROD = " + giro.getChave().getCodProd().toString() );
+            Boolean temProdutoGenerico = Boolean.FALSE;// singleQueryExecutor.existe("COUNT(1) AS QTD", "TGFGXE","CODPROD = " + giro.getChave().getCodProd().toString() );
             if(temProdutoGenerico){
                 giro.setDescMax(BigDecimal.ZERO);
             }/*else  if(nuTab != null) {
