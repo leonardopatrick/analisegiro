@@ -7,6 +7,7 @@ import br.com.sankhya.commercial.analisegiro.util.BigDecimalUtil;
 import br.com.sankhya.commercial.analisegiro.util.SqlUtils;
 import br.com.sankhya.commercial.analisegiro.util.StringUtils;
 import org.hibernate.Session;
+import org.hibernate.internal.SessionImpl;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.*;
 import java.util.List;
 
 @SuppressWarnings("ALL")
@@ -31,7 +33,7 @@ public class CustoRepository {
 
     public List<UltimoCustoResult> findCusto(
                                     MatrizGiroConfiguracao matrizConf
-                            ) throws IOException {
+                            ) throws IOException, SQLException {
 
         StringBuffer queCusto = SqlUtils.loadSql("queCusto.sql");
 
@@ -48,6 +50,35 @@ public class CustoRepository {
         List<UltimoCustoResult> rs = session.createNativeQuery(queCusto.toString())
                 .setResultTransformer(Transformers.aliasToBean(UltimoCustoResult.class)).list();
 
+        /* */
+       /* Connection connection = em.unwrap(SessionImpl.class).connection();
+
+        try (Statement stmt = connection.createStatement();) {
+
+            boolean results = stmt.execute(queCusto.toString());
+            int rsCount = 0;
+
+            // Loop through the available result sets.
+            do {
+                if (results) {
+                    ResultSet rs = stmt.getResultSet();
+                    rsCount++;
+
+                    // Show data from the result set.
+                    System.out.println("RESULT SET #" + rsCount);
+                    while (rs.next()) {
+                       // System.out.println(rs.getString("LastName") + ", " + rs.getString("FirstName"));
+                    }
+                }
+                System.out.println();
+                results = stmt.getMoreResults();
+            } while (results);
+        }
+        // Handle any errors that may have occurred.
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    */
         return rs;
 
     }

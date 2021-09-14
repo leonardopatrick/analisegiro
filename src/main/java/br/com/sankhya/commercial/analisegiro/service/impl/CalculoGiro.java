@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -145,7 +146,7 @@ public class CalculoGiro {
 
     }
 
-    public void buscarCustos() throws IOException {
+    public void buscarCustos() throws IOException, SQLException {
 
        List<UltimoCustoResult> custos = custoRepository.findCusto(matrizConf);
     }
