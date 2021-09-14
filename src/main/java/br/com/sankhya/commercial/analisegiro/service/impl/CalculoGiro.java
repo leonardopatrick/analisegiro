@@ -114,16 +114,6 @@ public class CalculoGiro {
         System.out.printf("\nbuscarUltimaCompra %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
 
         tempoInicial = System.currentTimeMillis();
-        buscarUltimaCompra();
-        tempoFinal = System.currentTimeMillis();
-        System.out.printf("\nbuscarUltimaCompra %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
-
-        tempoInicial = System.currentTimeMillis();
-        buscarUltimaVenda();
-        tempoFinal = System.currentTimeMillis();
-        System.out.printf("\nbuscarUltimaVenda %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
-
-        tempoInicial = System.currentTimeMillis();
         buscarUltimaVenda();
         tempoFinal = System.currentTimeMillis();
         System.out.printf("\nbuscarUltimaVenda %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
