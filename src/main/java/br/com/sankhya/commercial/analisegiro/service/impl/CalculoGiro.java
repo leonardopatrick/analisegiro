@@ -12,6 +12,8 @@ import br.com.sankhya.commercial.analisegiro.struct.PeriodoGiro;
 import br.com.sankhya.commercial.analisegiro.util.BigDecimalUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Timestamp;
@@ -90,18 +92,26 @@ public class CalculoGiro {
        if("S".equals(matrizConf.getIncluirSemEstoque())) {
            gerarListaProdutos();
        }
-       nroPeriodos = buscarGiro();
 
         long tempoInicial = System.currentTimeMillis();
-       buscarPedVdaPend();
-       long tempoFinal = System.currentTimeMillis();
+        nroPeriodos = buscarGiro();
+        long tempoFinal = System.currentTimeMillis();
+        System.out.printf("\nbuscarGiro %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
+
+        tempoInicial = System.currentTimeMillis();
+        buscarCustos();
+        tempoFinal = System.currentTimeMillis();
+        System.out.printf("\nbuscarCustos %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
+
+        tempoInicial = System.currentTimeMillis();
+        buscarPedVdaPend();
+        tempoFinal = System.currentTimeMillis();
         System.out.printf("\nbuscarPedVdaPend %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
 
         tempoInicial = System.currentTimeMillis();
         buscarPedCpaVdaPend();
         tempoFinal = System.currentTimeMillis();
         System.out.printf("\nbuscarPedCpaVdaPend %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
-
 
         tempoInicial = System.currentTimeMillis();
         buscarEstoques();
@@ -133,6 +143,11 @@ public class CalculoGiro {
         tempoFinal = System.currentTimeMillis();
         System.out.printf("\ncalcularCurvas %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
 
+    }
+
+    public void buscarCustos() throws IOException {
+
+       List<UltimoCustoResult> custos = custoRepository.findCusto(matrizConf);
     }
 
     public void gerarListaProdutos() throws Exception {
