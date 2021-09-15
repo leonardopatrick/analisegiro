@@ -12,12 +12,12 @@ public class UltimoCustoResult {
     private BigDecimal CODPROD;
     private BigDecimal CODEMP;
     private BigDecimal CODLOCAL;
-    private char CONTROLE;
+    private String CONTROLE;
     private Timestamp DTATUAL;
     private BigDecimal CUSREP;
     private Timestamp ULTDT;
 
     public ChaveGiro toChaveGiro() {
-        return new ChaveGiro(CODPROD, CODEMP, CODLOCAL, CONTROLE);
+        return new ChaveGiro(CODPROD, CODEMP, CODLOCAL, ' ');
     }
 }

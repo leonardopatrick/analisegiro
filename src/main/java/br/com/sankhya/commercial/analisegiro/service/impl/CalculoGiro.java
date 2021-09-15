@@ -149,6 +149,7 @@ public class CalculoGiro {
     public void buscarCustos() throws IOException, SQLException {
 
        List<UltimoCustoResult> custos = custoRepository.findCusto(matrizConf);
+
     }
 
     public void gerarListaProdutos() throws Exception {
