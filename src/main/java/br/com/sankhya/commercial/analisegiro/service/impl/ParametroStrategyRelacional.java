@@ -19,9 +19,9 @@ public class ParametroStrategyRelacional implements ParametroStrategy {
     public Parametro getParameterInfo(String chave) throws Exception {
         Optional<Parametro> p = parametroRepository.findById(chave);
 
-        if(p.isEmpty()){
+      /*  if(p.isEmpty()){
             throw  new Exception("Parametro não encontrado. ");
-        }
+        }*/
         return p.get();
     }
 

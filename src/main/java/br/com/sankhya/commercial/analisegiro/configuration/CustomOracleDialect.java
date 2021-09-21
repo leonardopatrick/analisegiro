@@ -7,6 +7,7 @@ public class CustomOracleDialect extends Oracle10gDialect {
     @Override
     public String getQuerySequencesString() {
 
+
         StringBuffer seq = new StringBuffer();
 
         seq.append("SELECT SEQUENCE_OWNER, SEQUENCE_NAME, ");
