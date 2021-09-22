@@ -64,8 +64,8 @@ public class PeriodoGiro {
 	}
 
 	public BigDecimal getQtdVendDiaUtil() {
-
-		return qtde.divide(BigDecimal.valueOf(diasUteis));
+		diasUteis = 23;
+		return BigDecimal.valueOf(diasUteis); //qtde.divide(BigDecimal.valueOf(diasUteis));
 	}
 
 	public BigDecimal getVlrTot() {

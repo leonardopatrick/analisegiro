@@ -25,7 +25,35 @@ public class CustoRepository {
                                     MatrizGiroConfiguracao matrizConf
                             ) throws IOException, SQLException {
 
-        StringBuffer queCusto = SqlUtils.loadSql("queCusto.sql");
+        StringBuffer queCusto = new StringBuffer();
+        queCusto.append("WITH CUSTO AS (\n" +
+                "    SELECT\n" +
+                "        CUS.CODPROD    AS CODPROD,\n" +
+                "        CUS.CODEMP     AS CODEMP,\n" +
+                "        CUS.CODLOCAL   AS CODLOCAL,\n" +
+                "        CUS.CONTROLE   AS CONTROLE,\n" +
+                "        CUS.DTATUAL    AS DTATUAL,\n" +
+                "        CUS.CUSREP     AS CUSREP,\n" +
+                "        MAX(CUS.DTATUAL) OVER(\n" +
+                "            PARTITION BY CUS.CODPROD, CUS.CODEMP, CUS.CODLOCAL, CUS.CONTROLE\n" +
+                "                ORDER BY CUS.CODPROD, CUS.CODEMP, CUS.CODLOCAL, CUS.CONTROLE\n" +
+                "        ) ULTDT\n" +
+                "    FROM\n" +
+                "        TGFCUS CUS\n" +
+                ")\n" +
+                "SELECT\n" +
+                "    CODPROD,\n" +
+                "    CODEMP,\n" +
+                "    CODLOCAL,\n" +
+                "    CONTROLE,\n" +
+                "    CUSREP,\n" +
+                "    ULTDT,\n" +
+                "    DTATUAL\n" +
+                "FROM\n" +
+                "    CUSTO\n" +
+                "WHERE\n" +
+                "    DTATUAL = ULTDT");
+        // StringBuffer queCusto = SqlUtils.loadSql("queCusto.sql");
 
       /*  if(!matrizConf.getControlaCustoPorEmpresa())
         StringUtils.replaceString("CN.CODEMP", "0", queCusto);

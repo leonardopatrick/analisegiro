@@ -205,7 +205,7 @@ public class MatrizGiroConfiguracao {
         if(utilizarControle) {
             sqlGroup.append(" , ITE.CONTROLE ");
         }
-
+        sqlChave= new StringBuffer();
         sqlChave.append(" SELECT  ");
         sqlChave.append(strCodProd + " AS CODPROD ");
 

@@ -29,14 +29,14 @@ public class Security extends WebSecurityConfigurerAdapter {
 		.and().withUser("roberto").password("123").roles("USER");
 	}
 	
-	@Bean
+	//@Bean
 	@Override
 	protected AuthenticationManager authenticationManager() throws Exception {
 		return super.authenticationManager();
 	}
 	
 	@SuppressWarnings("deprecation")
-	@Bean
+	//@Bean
 	public PasswordEncoder passwordEncoder() {
 		return NoOpPasswordEncoder.getInstance();
 	}

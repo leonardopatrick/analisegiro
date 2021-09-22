@@ -14,9 +14,9 @@ public class AnaliseGiroController {
 	@Autowired
 	CalculoGiro calculoGiro;
 
-	@PostMapping("/calcularGiro")
-	@Operation(summary = "Calcular Giro [ROLE_ADMIN]")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@GetMapping("/calcularGiro")
+	@Operation(summary = "Calcular Giro")
+	//@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity calcularGiro() throws Exception {
 
 		calculoGiro.gerar();
@@ -30,4 +30,6 @@ public class AnaliseGiroController {
 			return "Hello World " + " !";
 
 		}
+
+
 }

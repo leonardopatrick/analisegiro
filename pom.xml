@@ -12,7 +12,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.sankhya</groupId>
-	<artifactId>SankhyaTurnAnalysus</artifactId>
+	<artifactId>AnaliseGiro</artifactId>
 	<version>1.0.2-SNAPSHOT</version>
 	<name>Analise Giro</name>
 	<description>Analise Giro - POC</description>
@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
-			<exclusions>
+			<!--<exclusions>
 				<exclusion>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-logging</artifactId>
@@ -34,7 +34,7 @@
 					<groupId>ch.qos.logback</groupId>
 					<artifactId>logback-classic</artifactId>
 				</exclusion>
-			</exclusions>
+			</exclusions>-->
 		</dependency>
 		
 	<dependency>
@@ -80,7 +80,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
-			<exclusions>
+			<!--<exclusions>
 				<exclusion>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-logging</artifactId>
@@ -89,10 +89,8 @@
 					<groupId>ch.qos.logback</groupId>
 					<artifactId>logback-classic</artifactId>
 				</exclusion>
-			</exclusions>
+			</exclusions>-->
 		</dependency>
-
-
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -106,10 +104,10 @@
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-tomcat</artifactId>
 				</exclusion>
-				<exclusion>
+				<!--<exclusion>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-logging</artifactId>
-				</exclusion>
+				</exclusion>-->
 
 			</exclusions>
 		</dependency>
@@ -118,57 +116,57 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-undertow</artifactId>
 			 <scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-logging</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>ch.qos.logback</groupId>
-					<artifactId>logback-classic</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+		<!--<exclusions>
+            <exclusion>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-logging</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+            </exclusion>
+        </exclusions>-->
+    </dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
-		</dependency>
-		
-			<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-				<exclusions>
-					<exclusion>
-						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-starter-logging</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>ch.qos.logback</groupId>
-						<artifactId>logback-classic</artifactId>
-					</exclusion>
-				</exclusions>
-		</dependency>
-		
-	   <dependency>
-		<groupId>org.springframework.security.oauth.boot</groupId>
-		<artifactId>spring-security-oauth2-autoconfigure</artifactId>
-		<version>2.0.1.RELEASE</version>
-	  </dependency>
-  
-  	<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<!--
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
-		</dependency>-->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+        <optional>true</optional>
+    </dependency>
+
+        <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>
+           <!-- <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>-->
+    </dependency>
+
+   <dependency>
+    <groupId>org.springframework.security.oauth.boot</groupId>
+    <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+    <version>2.0.1.RELEASE</version>
+  </dependency>
+
+  <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
+    </dependency>
+    <!--
+    <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <scope>runtime</scope>
+    </dependency>-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -200,7 +198,7 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-elasticsearch</artifactId>
-			<exclusions>
+			<!--<exclusions>
 				<exclusion>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-logging</artifactId>
@@ -209,7 +207,7 @@
 					<groupId>ch.qos.logback</groupId>
 					<artifactId>logback-classic</artifactId>
 				</exclusion>
-			</exclusions>
+			</exclusions>-->
 		</dependency>
 
 		<dependency>
@@ -261,7 +259,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>3.3.2</version>
+				<version>3.2.2</version>
 				<configuration>
 					<path>/</path>
 					<webResources>
