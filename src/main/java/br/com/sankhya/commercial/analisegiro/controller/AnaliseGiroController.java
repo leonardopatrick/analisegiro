@@ -18,18 +18,14 @@ public class AnaliseGiroController {
 	@Operation(summary = "Calcular Giro")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity calcularGiro() throws Exception {
-
 		calculoGiro.gerar();
-
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-		@RequestMapping("/hello")
-		@GetMapping
-		String hello() {
-			return "Hello World " + " !";
-
-		}
-
+	@RequestMapping("/hello")
+	@GetMapping
+	String hello() {
+		return "Hello World " + " !";
+	}
 
 }
