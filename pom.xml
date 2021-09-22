@@ -13,7 +13,7 @@
 	</parent>
 	<groupId>br.com.sankhya</groupId>
 	<artifactId>AnaliseGiro</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.4-SNAPSHOT</version>
 	<name>Analise Giro</name>
 	<description>Analise Giro - POC</description>
 	<properties>
