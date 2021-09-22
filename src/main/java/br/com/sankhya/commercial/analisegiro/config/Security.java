@@ -63,7 +63,7 @@ public class Security extends WebSecurityConfigurerAdapter {
 	      public void configure(WebSecurity web) throws Exception {
 
 	              web.ignoring()
-					 .antMatchers("/v3/api-docs",
+					 .antMatchers("/giro/v3/api-docs",
 							  "/configuration/ui",
 							  "/swagger-resources/**",
 							  "/swagger-ui/**",
@@ -73,7 +73,8 @@ public class Security extends WebSecurityConfigurerAdapter {
 							  ,"/participant/**"
 							  ,"/error/**"
 							  ,"/swagger-ui/index.html"
-								 ,"/actuator/**");
+							  ,"/actuator/**"
+					 		  ,"/v3/api-docs");
 	      }
 
 
