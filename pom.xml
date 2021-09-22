@@ -265,6 +265,7 @@
 							<directory>${project.basedir}/WebContent/WEB-INF</directory>
 							<targetPath>WEB-INF</targetPath>
 							<includes>
+								<include>/sql/**</include>
 								<include>jboss-web.xml</include>
 								<include>jboss-deployment-structure.xml</include>
 							</includes>

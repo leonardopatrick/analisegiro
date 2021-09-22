@@ -1,0 +1,125 @@
+INSERT INTO TGFUVC (
+	TIPMOV,
+	CODPROD,
+	CODEMP,
+	CODLOCALORIG,
+	CONTROLE,
+	RESERVA,
+	DTREF,
+	QTDNEG,
+	ALIQICMS,
+	VLRTOT
+)
+SELECT
+   X.TIPMOV,
+   X.CODPROD,
+   X.CODEMP,
+   X.CODLOCALORIG,
+   X.CONTROLE,
+   X.RESERVA,
+   X.DTREF,
+   SUM(QTDNEG) AS QTDNEG,
+   X.ALIQICMS,
+   SUM(X.VLRTOT) AS VLRTOT
+FROM (
+/* TEM_ENTSAI INICIO */
+    SELECT 'V' AS TIPMOV,
+             ITE.CODPROD,
+             ITE.CODEMP,
+             ITE.CODLOCALORIG,
+             ITE.CONTROLE,
+             ITE.RESERVA,
+             CAB.DTENTSAI AS DTREF,
+             SUM (ITE.QTDNEG) AS QTDNEG,
+             0 AS ALIQICMS,
+             SUM(ITE.VLRTOT) AS VLRTOT
+        FROM TGFITE ITE,
+             TGFCAB CAB,
+             TGFTOP TPO
+       WHERE     ITE.QTDNEG > 0
+             AND ITE.STATUSNOTA = 'L'
+             AND ITE.RESERVA = 'N'
+             AND ITE.NUNOTA = CAB.NUNOTA
+             AND CAB.CODTIPOPER = TPO.CODTIPOPER
+             AND CAB.DHTIPOPER = TPO.DHALTER
+             AND TPO.ATUALULTIMAVEND = 'S'
+             AND CAB.DTENTSAI IS NOT NULL
+             AND CAB.DTENTSAI BETWEEN :DTINI AND :DTFIM
+    GROUP BY ITE.CODPROD,
+             ITE.CODEMP,
+             ITE.CODLOCALORIG,
+             ITE.CONTROLE,
+             ITE.RESERVA,
+             CAB.DTENTSAI
+	UNION ALL
+/* TEM_ENTSAI FIM */
+/* TEM_MOV INICIO */
+    SELECT 'V' AS TIPMOV,
+             ITE.CODPROD,
+             ITE.CODEMP,
+             ITE.CODLOCALORIG,
+             ITE.CONTROLE,
+             ITE.RESERVA,
+             CAB.DTMOV AS DTREF,
+             SUM (ITE.QTDNEG) AS QTDNEG,
+             0 AS ALIQICMS,
+             SUM(ITE.VLRTOT) AS VLRTOT
+        FROM TGFITE ITE,
+             TGFCAB CAB,
+             TGFTOP TPO
+       WHERE     ITE.QTDNEG > 0
+             AND ITE.STATUSNOTA = 'L'
+             AND ITE.RESERVA = 'N'
+             AND ITE.NUNOTA = CAB.NUNOTA
+             AND CAB.CODTIPOPER = TPO.CODTIPOPER
+             AND CAB.DHTIPOPER = TPO.DHALTER
+             AND TPO.ATUALULTIMAVEND = 'F'
+             AND CAB.DTMOV IS NOT NULL
+			 AND CAB.DTMOV BETWEEN :DTINI AND :DTFIM
+    GROUP BY ITE.CODPROD,
+             ITE.CODEMP,
+             ITE.CODLOCALORIG,
+             ITE.CONTROLE,
+             ITE.RESERVA,
+             CAB.DTMOV
+	UNION ALL
+/* TEM_MOV FIM */
+    SELECT 'V' AS TIPMOV,
+             ITE.CODPROD,
+             ITE.CODEMP,
+             ITE.CODLOCALORIG,
+             ITE.CONTROLE,
+             ITE.RESERVA,
+             CAB.DTNEG AS DTREF,
+             SUM (ITE.QTDNEG) AS QTDNEG,
+             0 AS ALIQICMS,
+             SUM(ITE.VLRTOT) AS VLRTOT
+        FROM TGFITE ITE,
+             TGFCAB CAB,
+             TGFTOP TPO
+       WHERE     ITE.QTDNEG > 0
+             AND ITE.STATUSNOTA = 'L'
+             AND ITE.RESERVA = 'N'
+             AND ITE.NUNOTA = CAB.NUNOTA
+             AND CAB.CODTIPOPER = TPO.CODTIPOPER
+             AND CAB.DHTIPOPER = TPO.DHALTER
+             AND TPO.ATUALULTIMAVEND IN ('S', 'G', 'F')
+             AND NOT(TPO.ATUALULTIMAVEND = 'S' AND CAB.DTENTSAI IS NOT NULL)
+			 AND NOT(TPO.ATUALULTIMAVEND = 'F' AND CAB.DTMOV IS NOT NULL)
+			 AND CAB.DTNEG BETWEEN :DTINI AND :DTFIM
+    GROUP BY ITE.CODPROD,
+             ITE.CODEMP,
+             ITE.CODLOCALORIG,
+             ITE.CONTROLE,
+             ITE.RESERVA,
+             CAB.DTNEG
+) X
+GROUP BY
+   X.TIPMOV,
+   X.CODPROD,
+   X.CODEMP,
+   X.CODLOCALORIG,
+   X.CONTROLE,
+   X.RESERVA,
+   X.DTREF,
+   X.ALIQICMS
