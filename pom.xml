@@ -21,7 +21,6 @@
 	</properties>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -261,7 +260,6 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>3.2.2</version>
 				<configuration>
-					<path>/</path>
 					<webResources>
 						<resource>
 							<directory>${project.basedir}/WebContent/WEB-INF</directory>
@@ -299,8 +297,6 @@
 					<target>1.8</target>
 				</configuration>
             </plugin>
-
-
         </plugins>
 	</build>
 
