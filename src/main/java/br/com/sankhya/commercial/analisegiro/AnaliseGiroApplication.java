@@ -16,7 +16,6 @@ public class AnaliseGiroApplication extends SpringBootServletInitializer {
 	}
 
 	public static void main(String[] args) {
-
 		SpringApplication.run(AnaliseGiroApplication.class, args);
 	}
 

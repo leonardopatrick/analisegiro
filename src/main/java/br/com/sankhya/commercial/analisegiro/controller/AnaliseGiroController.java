@@ -23,4 +23,11 @@ public class AnaliseGiroController {
 
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+
+		@RequestMapping("/hello")
+		@GetMapping
+		String hello() {
+			return "Hello World " + " !";
+
+		}
 }
