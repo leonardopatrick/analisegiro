@@ -97,7 +97,7 @@ public class CalculoGiro {
         long tempoInicial = System.currentTimeMillis();
         nroPeriodos = buscarGiro();
         long tempoFinal = System.currentTimeMillis();
-        System.out.printf("\nbuscarGiro %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
+        System.out.printf("\nbuscarGiro2 %.3f s%n", (tempoFinal - tempoInicial) / 1000d);
 
         tempoInicial = System.currentTimeMillis();
         buscarCustos();
