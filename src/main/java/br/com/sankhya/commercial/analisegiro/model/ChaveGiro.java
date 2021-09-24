@@ -36,47 +36,11 @@ public class ChaveGiro implements Serializable {
 				controle == chave.getControle();
 	}
 
-
 	public ChaveGiro(BigDecimal codProd, BigDecimal codEmp, BigDecimal codLocal, char controle) {
 		this.codProd = codProd;
 		this.codEmp = BigDecimal.ZERO;
 		this.codLocal = BigDecimal.ZERO;
 		this.controle = Character.valueOf(' ');
-	}
-
-	public ChaveGiro(GiroResult gr)  {
-		this.codProd = gr.getCODPROD();
-		this.codEmp = gr.getCODEMP();
-		this.codLocal = gr.getCODLOCAL();
-		this.controle = gr.getCONTROLE();
-	}
-
-	public ChaveGiro(PedidoPendenteResult pr) {
-		this.codProd = pr.getCODPROD();
-		this.codEmp = pr.getCODEMP();
-		this.codLocal = pr.getCODLOCAL();
-		this.controle = pr.getCONTROLE();
-	}
-
-	public ChaveGiro(EstoqueResult pr) {
-		this.codProd = pr.getCODPROD();
-		this.codEmp = pr.getCODEMP();
-		this.codLocal = pr.getCODLOCAL();
-		this.controle = pr.getCONTROLE();
-	}
-
-	public ChaveGiro(UltimaVendaResult pr) {
-		this.codProd = pr.getCODPROD();
-		this.codEmp = pr.getCODEMP();
-		this.codLocal = pr.getCODLOCAL();
-		this.controle = pr.getCONTROLE();
-	}
-
-	public ChaveGiro(UltimaCompraResult pr) {
-		this.codProd = pr.getCODPROD();
-		this.codEmp = pr.getCODEMP();
-		this.codLocal = pr.getCODLOCAL();
-		this.controle = pr.getCONTROLE();
 	}
 
 }

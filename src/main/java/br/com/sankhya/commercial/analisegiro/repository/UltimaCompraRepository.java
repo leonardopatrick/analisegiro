@@ -2,11 +2,14 @@ package br.com.sankhya.commercial.analisegiro.repository;
 
 import br.com.sankhya.commercial.analisegiro.core.MatrizGiroConfiguracao;
 import br.com.sankhya.commercial.analisegiro.helper.QueryExecutorSingleResultHelper;
+import br.com.sankhya.commercial.analisegiro.resultmodel.PedidoPendenteResult;
 import br.com.sankhya.commercial.analisegiro.resultmodel.UltimaCompraResult;
+import br.com.sankhya.commercial.analisegiro.resultmodel.UltimaVendaResult;
 import br.com.sankhya.commercial.analisegiro.util.SqlUtils;
 import br.com.sankhya.commercial.analisegiro.util.StringUtils;
 import br.com.sankhya.commercial.analisegiro.util.TimeUtils;
 import org.hibernate.Session;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
@@ -43,7 +46,10 @@ public class UltimaCompraRepository {
         Session session = em.unwrap(Session.class);
         List<UltimaCompraResult> rs = session.createSQLQuery(sql.toString())
                 .setResultTransformer(Transformers.aliasToBean(UltimaCompraResult.class)).list();
-
+		/*Session session = em.unwrap(Session.class);
+		NativeQuery q = session.createNativeQuery(sql.toString());
+		NativeQuery<UltimaCompraResult> nativeQuery = q.setResultTransformer(Transformers.aliasToBean(PedidoPendenteResult.class));
+		List<UltimaCompraResult> rs = nativeQuery.list();*/
         return rs;
     }
 

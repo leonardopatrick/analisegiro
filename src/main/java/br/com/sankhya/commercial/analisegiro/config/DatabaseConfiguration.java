@@ -9,13 +9,11 @@ import javax.sql.DataSource;
 @Configuration
 public class DatabaseConfiguration {
 
-
-@Bean
-@Primary
-public DataSource dataSource()
-{
-        JndiDataSourceLookup dataSourceLookup = new JndiDataSourceLookup();
-        DataSource dataSource = dataSourceLookup.getDataSource("java:/MGEDS");
-        return dataSource;
-}
+        @Bean
+        @Primary
+        public DataSource dataSource() {
+                JndiDataSourceLookup dataSourceLookup = new JndiDataSourceLookup();
+                DataSource dataSource = dataSourceLookup.getDataSource("java:/MGEDS");
+                return dataSource;
+        }
 }

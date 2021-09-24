@@ -4,6 +4,8 @@ import br.com.sankhya.commercial.analisegiro.core.MatrizGiroConfiguracao;
 import br.com.sankhya.commercial.analisegiro.resultmodel.PedidoPendenteResult;
 import br.com.sankhya.commercial.analisegiro.util.StringUtils;
 import org.hibernate.Session;
+import org.hibernate.query.NativeQuery;
+import org.hibernate.query.QueryProducer;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -49,7 +51,11 @@ public class PedidoPendenteRepository {
     	sql.append(matrizConf.getSqlGroup().toString());
 
         Session session = em.unwrap(Session.class);
-        List<PedidoPendenteResult> rs = session.createSQLQuery(sql.toString())
+        NativeQuery q = session.createNativeQuery(sql.toString());
+
+      /*  NativeQuery<PedidoPendenteResult> nativeQuery = q.setResultTransformer(Transformers.aliasToBean(PedidoPendenteResult.class));
+        List<PedidoPendenteResult> rs = nativeQuery.list();*/
+       List<PedidoPendenteResult> rs = session.createSQLQuery(sql.toString())
                 .setResultTransformer(Transformers.aliasToBean(PedidoPendenteResult.class)).list();
         return rs;
     }

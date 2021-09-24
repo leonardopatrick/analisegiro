@@ -25,8 +25,8 @@ public class CustoRepository {
                                     MatrizGiroConfiguracao matrizConf
                             ) throws IOException, SQLException {
 
-        StringBuffer queCusto = SqlUtils.loadSql("queCusto.sql");
-        /*
+        //StringBuffer queCusto = SqlUtils.loadSql("queCusto.sql");
+
         StringBuffer queCusto = new StringBuffer();
         queCusto.append("WITH CUSTO AS (\n" +
                 "    SELECT\n" +
@@ -56,7 +56,7 @@ public class CustoRepository {
                 "WHERE\n" +
                 "    DTATUAL = ULTDT");
         // StringBuffer queCusto = SqlUtils.loadSql("queCusto.sql");
-        */
+
       /*  if(!matrizConf.getControlaCustoPorEmpresa())
         StringUtils.replaceString("CN.CODEMP", "0", queCusto);
 

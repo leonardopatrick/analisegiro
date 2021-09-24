@@ -2,8 +2,11 @@ package br.com.sankhya.commercial.analisegiro.repository;
 
 import br.com.sankhya.commercial.analisegiro.core.MatrizGiroConfiguracao;
 import br.com.sankhya.commercial.analisegiro.resultmodel.EstoqueResult;
+import br.com.sankhya.commercial.analisegiro.resultmodel.GiroResult;
+import br.com.sankhya.commercial.analisegiro.resultmodel.PedidoPendenteResult;
 import br.com.sankhya.commercial.analisegiro.util.StringUtils;
 import org.hibernate.Session;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -47,9 +50,14 @@ public class EstoqueRepository {
 
         sql.append(StringUtils.replaceString(matrizConf.getSqlGroup().toString(), "ITE.", "EST."));
 
-        Session session = em.unwrap(Session.class);
-        List<EstoqueResult> rs = session.createSQLQuery(sql.toString())
+     Session session = em.unwrap(Session.class);
+     List<EstoqueResult> rs = session.createSQLQuery(sql.toString())
                 .setResultTransformer(Transformers.aliasToBean(EstoqueResult.class)).list();
+
+       /* NativeQuery q = session.createNativeQuery(sql.toString());
+        NativeQuery<EstoqueResult> nativeQuery = q.setResultTransformer(Transformers.aliasToBean(PedidoPendenteResult.class));
+        List<EstoqueResult> rs = nativeQuery.list();
+        */
         return rs;
     }
 }

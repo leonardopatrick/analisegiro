@@ -2,7 +2,9 @@ package br.com.sankhya.commercial.analisegiro.repository;
 
 import br.com.sankhya.commercial.analisegiro.core.MatrizGiroConfiguracao;
 import br.com.sankhya.commercial.analisegiro.resultmodel.GiroResult;
+import br.com.sankhya.commercial.analisegiro.resultmodel.PedidoPendenteResult;
 import org.hibernate.Session;
+import org.hibernate.query.NativeQuery;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -66,6 +68,14 @@ public class GiroCustomRepository {
         sql.append(" , PRO.PESOBRUTO ");
 
         Session session = em.unwrap(Session.class);
+
+        NativeQuery q = session.createNativeQuery(sql.toString());
+       /* q.setParameter("DTINI", dtIni)
+                .setParameter("DTFIN",  dtFin);
+
+        NativeQuery<GiroResult> nativeQuery = q.setResultTransformer(Transformers.aliasToBean(PedidoPendenteResult.class));
+        List<GiroResult> rs = nativeQuery.list();
+        */
         List<GiroResult> rs = session.createSQLQuery(sql.toString())
                 .setParameter("DTINI", dtIni)
                 .setParameter("DTFIN",  dtFin)
