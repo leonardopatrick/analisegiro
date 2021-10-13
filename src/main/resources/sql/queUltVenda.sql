@@ -53,6 +53,7 @@ FROM (
              CAB.DTENTSAI
 	UNION ALL
 /* TEM_ENTSAI FIM */
+
 /* TEM_MOV INICIO */
     SELECT 'V' AS TIPMOV,
              ITE.CODPROD,
